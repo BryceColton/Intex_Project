@@ -24,7 +24,7 @@ app.use(express.urlencoded({extended: true}));
 const knex = require("knex") ({
     client : "pg",
     connection : {
-        host : process.env.RDS_HOST,
+        host : process.env.RDS_HOSTNAME,
         user : process.env.RDS_USERNAME,
         password : process.env.RDS_PASSWORD,
         database : process.env.RDS_DATABASE,
