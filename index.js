@@ -11,7 +11,7 @@ const path = require("path");
 
 const dotenv = require('dotenv')
 
-const port = process.env.PORT
+const port = process.env.PORT || 3000
 // Assigning the port number to 5000
 
 app.set("view engine", "ejs");
