@@ -38,7 +38,7 @@ const knex = require("knex") ({
 // This is the get method for the root file
 
 app.get('/', (req, res) => {
-
+    res.send("hello")
   });
 
 
