@@ -76,6 +76,10 @@ app.get("/manageEvents", (req, res) => {
     });
 });
 
+//This is the post route to delete an event
+
+//This is the post route to post an edited event to the database
+
 // This is the get method to render the manageVolunteers page and display data from the volunteers table
 app.get("/manageVolunteers", (req, res) => {
   knex("volunteers")
@@ -88,6 +92,42 @@ app.get("/manageVolunteers", (req, res) => {
     })
     .catch((error) => {
       console.error("Error querying database:", error);
+      res.status(500).send("Internal Server Error");
+    });
+});
+
+// This is the get route to add a volunteer from the admin page
+app.get("/adminAddVolunteer", (req, res) => {
+  res.render("adminAddVolunteer");
+});
+// This is the post route to add a volunteer from the admin page
+app.post("/adminAddVolunteer", (req, res) => {
+  // Extract form values from req.body
+  const vol_email = req.body.vol_email;
+  const vol_first_name = req.body.vol_first_name;
+  const vol_last_name = req.body.vol_last_name;
+  const vol_phone = req.body.vol_phone;
+  const sewing_level = parseInt(req.body.sewing_level, 10);
+  const num_hours = parseFloat(req.body.num_hours, 10);
+  const origin = req.body.origin;
+  const zip = req.body.zip;
+  // Insert the database
+  knex("volunteers")
+    .insert({
+      vol_email: vol_email,
+      vol_first_name: vol_first_name,
+      vol_last_name: vol_last_name,
+      vol_phone: vol_phone,
+      sewing_level: sewing_level,
+      num_hours: num_hours,
+      origin: origin,
+      zip: zip,
+    })
+    .then(() => {
+      res.redirect("/manageVolunteers"); // Redirect to admin manage volunteers after submit
+    })
+    .catch((error) => {
+      console.error("Error adding Volunteer:", error);
       res.status(500).send("Internal Server Error");
     });
 });
@@ -123,8 +163,8 @@ app.post("/editVolunteer/:vol_email", (req, res) => {
   const vol_phone = req.body.vol_phone;
   const origin = req.body.origin;
   const zip = req.body.zip;
-  const sewing_level = req.body.sewing_level;
-  const num_hours = req.body.num_hours;
+  const sewing_level = parseInt(req.body.sewing_level);
+  const num_hours = parseInt(req.body.num_hours);
   // Update the Planet in the database
   knex("volunteers")
     .where("vol_email", id)
