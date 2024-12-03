@@ -9,6 +9,8 @@ const path = require("path");
 
 const dotenv = require("dotenv");
 
+dotenv.config();
+
 const port = process.env.PORT || 3000;
 // Assigning the port number to 5000
 
