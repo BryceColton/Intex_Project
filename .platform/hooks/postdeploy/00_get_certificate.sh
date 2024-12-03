@@ -1,13 +1,27 @@
-#!/usr/bin/env bash
-# Place in .platform/hooks/postdeploy directory
-#!/usr/bin/env bash
-# Place in .platform/hooks/postdeploy directory
+#!/bin/bash
 
-# Ensure Nginx is running before getting the certificate
-sudo systemctl start nginx
+# Adjust Nginx settings
+NGINX_CONF="/etc/nginx/nginx.conf"
 
-# Certbot command to obtain and install the SSL certificate
-sudo certbot -n -d thisistheapp-env.eba-e4mhqj2t.us-east-1.elasticbeanstalk.com --nginx --agree-tos --email bcolton9@byu.edu
+# Add custom settings if not already present
+if ! grep -q "types_hash_max_size" $NGINX_CONF; then
+    echo "Adding types_hash_max_size to Nginx config..."
+    sed -i '/http {/a \    types_hash_max_size 2048;' $NGINX_CONF
+fi
 
-# Restart Nginx to apply the SSL certificate
-sudo systemctl reload nginx
+if ! grep -q "types_hash_bucket_size" $NGINX_CONF; then
+    echo "Adding types_hash_bucket_size to Nginx config..."
+    sed -i '/http {/a \    types_hash_bucket_size 128;' $NGINX_CONF
+fi
+
+if ! grep -q "server_names_hash_bucket_size" $NGINX_CONF; then
+    echo "Adding server_names_hash_bucket_size to Nginx config..."
+    sed -i '/http {/a \    server_names_hash_bucket_size 128;' $NGINX_CONF
+fi
+
+# Restart Nginx
+nginx -t && service nginx restart
+
+# Install certificate for Elastic Beanstalk
+certbot install --cert-name thisistheapp-env.eba-e4mhqj2t.us-east-1.elasticbeanstalk.com
+
