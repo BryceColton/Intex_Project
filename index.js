@@ -76,7 +76,18 @@ app.get("/manageEvents", (req, res) => {
 
 // This is the get method to render the manageVolunteers page and display data from the volunteers table
 app.get("/manageVolunteers", (req, res) => {
-  res.render("manageVolunteers");
+  knex("volunteers")
+    .select()
+    .then((volunteers) => {
+      //.then() says, I just queried all this data, send it to this variable planets.
+      //the array of rows gets stored in this variable called planets.
+      // Render the maintainPlanets template and pass the data
+      res.render("manageVolunteers", { volunteers }); //render index.ejs and pass it planets.
+    })
+    .catch((error) => {
+      console.error("Error querying database:", error);
+      res.status(500).send("Internal Server Error");
+    });
 });
 
 // This is to add a volunteer to the database
