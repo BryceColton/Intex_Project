@@ -24,12 +24,12 @@ app.use(express.urlencoded({ extended: true }));
 const knex = require("knex")({
     client: "pg",
     connection: {
-        host: process.env.RDS_HOSTNAME || "localhost",
-        user: process.env.RDS_USERNAME || "postgres",
-        password: process.env.RDS_PASSWORD || "MyEducator",
-        database: process.env.RDS_DATABASE || "ebdb",
+        host: process.env.RDS_HOSTNAME ,
+        user: process.env.RDS_USERNAME ,
+        password: process.env.RDS_PASSWORD,
+        database: process.env.RDS_DATABASE,
         port: process.env.RDS_PORT || 5432,
-        ssl: process.env.DB_SSL ? { rejectUnauthorized: false } : false,
+        ssl: process.env.DB_SSL ? { rejectUnauthorized: false } : false
     }
 });
 // This is all of the information needed to access postgres
@@ -59,22 +59,26 @@ app.post('/submitVolunteerForm', (req, res) => {
   const vol_last_name = req.body.vol_last_name;  
   const vol_phone = req.body.vol_phone; 
   const sewing_level = parseInt(req.body.sewing_level, 10); 
-  const sewing_ = parseInt(req.body.sewing_level, 10); 
-  // Insert the new Pokémon into the database
-  knex('pokemon')
+  const num_hours = parseFloat(req.body.num_hours, 10); 
+  const origin = req.body.origin; 
+  const zip = req.body.zip; 
+  // Insert the database
+  knex('volunteers')
       .insert({
-          description: description.toUpperCase(), // Ensure description is uppercase
-          base_total: base_total,
-          date_created: date_created,
-          active_poke: active_poke,
-          gender: gender,
-          poke_type_id: poke_type_id,
+          vol_email: vol_email, // Ensure description is uppercase
+          vol_first_name: vol_first_name,
+          vol_last_name: vol_last_name,
+          vol_phone: vol_phone,
+          sewing_level: sewing_level,
+          num_hours: num_hours,
+          origin: origin,
+          zip: zip
       })
       .then(() => {
-          res.redirect('/'); // Redirect to the Pokémon list page after adding
+          res.redirect('/'); // Redirect to the home page after adding
       })
       .catch(error => {
-          console.error('Error adding Pokémon:', error);
+          console.error('Error adding Volunteer:', error);
           res.status(500).send('Internal Server Error');
       });
 });
