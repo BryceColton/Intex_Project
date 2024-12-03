@@ -11,6 +11,9 @@ const path = require("path");
 
 const dotenv = require('dotenv')
 
+dotenv.config();
+
+
 const port = process.env.PORT || 3000
 // Assigning the port number to 5000
 
@@ -38,8 +41,16 @@ const knex = require("knex") ({
 // This is the get method for the root file
 
 app.get('/', (req, res) => {
-    res.send("hello")
-  });
+    knex('users')
+        .select()  
+        .then(users => {
+            res.render("index", { users: users });
+        })
+        .catch(err => {
+            console.error("Error fetching users:", err);
+            res.status(500).send("Error fetching data from the database");
+        });
+      });
 
 
 //   });
