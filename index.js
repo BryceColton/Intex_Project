@@ -26,7 +26,7 @@ const knex = require("knex")({
     host: process.env.RDS_HOSTNAME,
     user: process.env.RDS_USERNAME,
     password: process.env.RDS_PASSWORD,
-    database: process.env.RDS_DATABASE,
+    database: process.env.RDS_DB_NAME,
     port: process.env.RDS_PORT,
     ssl: process.env.DB_SSL ? { rejectUnauthorized: false } : false,
   },
