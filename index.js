@@ -202,6 +202,51 @@ app.post("/deleteVolunteer/:vol_email", (req, res) => {
     });
 });
 
+// Submit event form
+app.post("/submitEventForm", (req, res) => {
+  const {
+    event_name,
+    organization,
+    organizer_first_name,
+    organizer_last_name,
+    org_phone,
+    org_email,
+    event_type,
+    event_address,
+    city,
+    state,
+    zip,
+    is_public,
+    has_guest_speaker,
+  } = req.body;
+
+  knex("events")
+    .insert({
+      event_name,
+      organization,
+      organizer_first_name,
+      organizer_last_name,
+      org_phone,
+      org_email,
+      event_type,
+      event_address,
+      city,
+      state,
+      zip,
+      public: is_public === "on", // Convert checkbox to boolean
+      guest_speaker: has_guest_speaker === "on", // Convert checkbox to boolean
+    })
+    .returning("eventid")
+    .then(([eventid]) => {
+      res.redirect(`/eventstep2?id=${eventid}`);
+    })
+    .catch((err) => {
+      console.error("Database insert error:", err);
+      res.status(500).json({ message: "Error saving the event", error: err });
+    });
+});
+
+
 // This is to add a volunteer to the database
 app.post("/submitVolunteerForm", (req, res) => {
   // Extract form values from req.body
