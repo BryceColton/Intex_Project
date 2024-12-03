@@ -8,7 +8,7 @@ app.use(express.static(path.join(__dirname, "public")));
 // Load environment variables from .env file
 dotenv.config();
 
-const port = process.env.PORT || 3000;
+const port = 8081
 
 // Set view engine to ejs
 app.set("view engine", "ejs");
