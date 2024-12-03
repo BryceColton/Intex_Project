@@ -90,6 +90,42 @@ app.get("/manageVolunteers", (req, res) => {
     });
 });
 
+// This is the route to edit a volunteer's data from the admin page
+app.get("/editVolunteer/:id", (req, res) => {
+  //This is the route for editVolunteer. The /: means there is a parameter passed in called vol_email.
+  const id = req.params.id;
+  // Query the Volunteer by email first
+  knex("volunteers")
+    .where("vol_email", id)
+    .first() //returns an object representing one record
+    .then((volunteer) => {
+      //This variable represents one object that has attributes, which are the column names
+      if (!volunteer) {
+        return res.status(404).send("Volunteer not found");
+      }
+      res.render("editVolunteer", { volunteer });
+    })
+    .catch((error) => {
+      console.error("Error fetching Volunteer for editing:", error);
+      res.status(500).send("Internal Server Error");
+    });
+});
+
+// This is the route to delete a volunteer from the volunteers table
+app.post("/deleteVolunteer/:vol_email", (req, res) => {
+  const id = req.params.vol_email;
+  knex("volunteers")
+    .where("vol_email", id)
+    .del() // Deletes the record with the specified ID
+    .then(() => {
+      res.redirect("/manageVolunteers"); // Redirect to the volunteers list after deletion
+    })
+    .catch((error) => {
+      console.error("Error deleting Volunteer:", error);
+      res.status(500).send("Internal Server Error");
+    });
+});
+
 // This is to add a volunteer to the database
 app.post("/submitVolunteerForm", (req, res) => {
   // Extract form values from req.body
