@@ -53,6 +53,21 @@ app.get("/jensStory", (req, res) => {
   res.render("jensStory");
 });
 
+// This is the get method to render the admin page
+app.get("/admin", (req, res) => {
+  res.render("admin");
+});
+
+// This is the get method to render the manageEvents page
+app.get("/manageEvents", (req, res) => {
+  res.render("manageEvents");
+});
+
+// This is the get method to render the manageVolunteers page
+app.get("/manageVolunteers", (req, res) => {
+  res.render("manageVolunteers");
+});
+
 // This is to add a volunteer to the database
 app.post("/submitVolunteerForm", (req, res) => {
   // Extract form values from req.body
