@@ -1,53 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Users List</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        h1 {
-            color: #333;
-        }
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        li {
-            background-color: #f9f9f9;
-            margin: 10px 0;
-            padding: 15px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        li strong {
-            font-size: 1.2em;
-        }
-        li p {
-            margin: 5px 0;
-        }
-    </style>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Turtle Shelter Project</title>
+    <link rel="icon" type="image/png" href="/img/logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="/styles.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="navbar-logo">Turtle Shelter Project</div>
+      <div class="navbar-buttons">
+        <button class="btn">Volunteer</button>
+        <button class="btn">Host an Event</button>
+        <button class="btn btn-donate">Donate</button>
+      </div>
+    </nav>
 
-    <h1>Users List</h1>
+    <main>
+      <section class="hero">
+        <div class="hero-content">
+          <h1 class="hero-description">
+            Helping to save lives of people experiencing homelessness
+          </h1>
+          <p class="hero-title">Starts with you</p>
+        </div>
+      </section>
 
-    <% if (users.length > 0) { %>
-        <ul>
-            <% users.forEach(function(user) { %>
-                <li>
-                    <strong><%= user.name %></strong>
-                    <p>Email: <%= user.email %></p>
-                    <p>Age: <%= user.age %></p>
-                    <!-- Add more fields here as necessary, e.g., user.phone or user.address -->
-                </li>
-            <% }); %>
-        </ul>
-    <% } else { %>
-        <p>No users found.</p>
-    <% } %>
+      <section class="project-details">
+        <h2 class="project-details-title">About the Turtle Shelter Project</h2>
+        <div class="project-details-content">
+          <p>
+            One winter when Jen was homeless, 7 of her friends froze to death. Jen is no longer
+            homeless and has figured out a solution: High tech foam vests that are inexpensive, keep
+            a person warm to 10 degree below zero, help SAVE lives and alleviate suffering. YOU can
+            request vests for your community - and you can make vests and have your friends,
+            business colleagues, church members or club make vests, too!
+          </p>
+        </div>
+      </section>
+    </main>
 
-</body>
+    <footer class="footer">
+      <div class="footer-info">Turtle Shelter Project, PO Box 382, Kaysville, UT 84037</div>
+      <div class="footer-info">801-872-3190</div>
+      <div class="footer-info">turtleshelterproject@gmail.com</div>
+    </footer>
+  </body>
 </html>
