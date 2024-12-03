@@ -32,22 +32,24 @@ const knex = require("knex")({
         ssl: process.env.DB_SSL ? { rejectUnauthorized: false } : false,
     }
 });
+// This is all of the information needed to access postgres
 
-app.get('/', (req, res) => {
-    res.render("index")
-})
-
-app.get('/display', (req, res) => {
-    knex('volunteers')
-        .select()
-        .then(volunteers => {
-            res.render("display", { volunteers: volunteers });
-        })
-        .catch(err => {
-            console.error("Error fetching users:", err);
-            res.status(500).send("Error fetching data from the database");
-        });
+// This is the get method for the root file
+app.get("/", (req, res) => {
+  res.render("index");
 });
 
-// Start the server
+app.get("/volunteer", (req, res) => {
+  res.render("volunteer");
+});
+
+app.get("/hostEvent", (req, res) => {
+  res.render("hostEvent");
+});
+
+app.get("/jensStory", (req, res) => {
+  res.render("jensStory");
+});
+
+// This starts the server to start listening to requests
 app.listen(port, () => console.log(`Listening on port ${port}`));
