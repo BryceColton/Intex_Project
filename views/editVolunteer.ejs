@@ -90,7 +90,7 @@
               <div class="form-group">
                 <label for="sewing_level">Sewing Level</label>
                 <select id="sewing_level" name="sewing_level" required>
-                  <option value="" disabled selected><%= volunteer.sewing_level %></option>
+                  <option value="" disabled selected><%= volunteer.sewing_level == 3 ? "Advanced" : volunteer.sewing_level == 2 ? "Intermediate" : "Beginner"%></option>
                   <option value="1">Beginner</option>
                   <option value="2">Intermediate</option>
                   <option value="3">Advanced</option>

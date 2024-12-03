@@ -23,7 +23,9 @@ app.use(express.urlencoded({ extended: true }));
 const knex = require("knex")({
   client: "pg",
   connection: {
-    host: process.env.RDS_HOSTNAME || "awseb-e-auisjkadk8-stack-awsebrdsdatabase-evtdlb1elxoo.c98cyywwyjtd.us-east-1.rds.amazonaws.com",
+    host:
+      process.env.RDS_HOSTNAME ||
+      "awseb-e-auisjkadk8-stack-awsebrdsdatabase-evtdlb1elxoo.c98cyywwyjtd.us-east-1.rds.amazonaws.com",
     user: process.env.RDS_USERNAME || "ebroot",
     password: process.env.RDS_PASSWORD || "Yodayoda663!",
     database: process.env.RDS_DB_NAME || "ebdb",
@@ -90,10 +92,10 @@ app.get("/manageVolunteers", (req, res) => {
     });
 });
 
-// This is the route to edit a volunteer's data from the admin page
-app.get("/editVolunteer/:id", (req, res) => {
+// This is the get route to edit a volunteer's data from the admin page
+app.get("/editVolunteer/:vol_email", (req, res) => {
   //This is the route for editVolunteer. The /: means there is a parameter passed in called vol_email.
-  const id = req.params.id;
+  const id = req.params.vol_email;
   // Query the Volunteer by email first
   knex("volunteers")
     .where("vol_email", id)
@@ -107,6 +109,40 @@ app.get("/editVolunteer/:id", (req, res) => {
     })
     .catch((error) => {
       console.error("Error fetching Volunteer for editing:", error);
+      res.status(500).send("Internal Server Error");
+    });
+});
+
+// This is the post route to edit a volunteer's data from the admin page
+app.post("/editVolunteer/:vol_email", (req, res) => {
+  const id = req.params.vol_email;
+
+  const vol_email = req.body.vol_email;
+  const vol_first_name = req.body.vol_first_name;
+  const vol_last_name = req.body.vol_last_name;
+  const vol_phone = req.body.vol_phone;
+  const origin = req.body.origin;
+  const zip = req.body.zip;
+  const sewing_level = req.body.sewing_level;
+  const num_hours = req.body.num_hours;
+  // Update the Planet in the database
+  knex("volunteers")
+    .where("vol_email", id)
+    .update({
+      vol_email: vol_email,
+      vol_first_name: vol_first_name,
+      vol_last_name: vol_last_name,
+      vol_phone: vol_phone,
+      origin: origin,
+      zip: zip,
+      sewing_level: sewing_level,
+      num_hours: num_hours,
+    })
+    .then(() => {
+      res.redirect("/manageVolunteers"); // Redirect to the list of Volunteers after saving
+    })
+    .catch((error) => {
+      console.error("Error updating Volunteer:", error);
       res.status(500).send("Internal Server Error");
     });
 });
