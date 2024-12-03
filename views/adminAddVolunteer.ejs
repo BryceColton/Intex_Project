@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Volunteer Form - Turtle Shelter Project</title>
+    <link rel="icon" type="image/png" href="/img/logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="/styles.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="navbar-logo">Turtle Shelter Project</div>
+      <div class="navbar-buttons">
+        <form action="/jensStory" method="GET">
+          <button class="btn" type="submit">Jen's Story</button>
+        </form>
+        <form action="/volunteer" method="GET">
+          <button class="btn" type="submit">Volunteer</button>
+        </form>
+        <form action="/hostevent" method="GET">
+          <button class="btn" type="submit">Host an Event</button>
+        </form>
+        <button class="btn btn-donate">Donate</button>
+      </div>
+    </nav>
+
+    <main style="display: flex; justify-content: center; align-items: center; height: 100vh">
+      <section class="form-section">
+        <h2 class="form-title">Volunteer Sign-Up</h2>
+        <form action="/adminAddVolunteer" method="POST" class="volunteer-form">
+          <fieldset>
+            <legend>Volunteer Information</legend>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input
+                type="email"
+                id="email"
+                name="vol_email"
+                placeholder="example@example.com"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="firstname">First Name</label>
+              <input type="text" id="firstname" name="vol_first_name" placeholder="John" required />
+            </div>
+            <div class="form-group">
+              <label for="lastname">Last Name</label>
+              <input type="text" id="lastname" name="vol_last_name" placeholder="Doe" required />
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone</label>
+              <input
+                type="tel"
+                id="phone"
+                name="vol_phone"
+                placeholder="123-456-7890"
+                title="Please enter a phone number in the format 123-456-7890"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="zip">Zip Code</label>
+              <input type="text" id="zip" name="zip" placeholder="12345" required />
+            </div>
+            <div class="form-group">
+              <label for="sewing-level">Sewing Level</label>
+              <select id="sewing-level" name="sewing_level" required>
+                <option value="" disabled selected>Select your sewing level</option>
+                <option value="1">Beginner</option>
+                <option value="2">Intermediate</option>
+                <option value="3">Advanced</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="hours">Number of Hours Willing to Volunteer Per Month</label>
+              <input
+                type="number"
+                id="hours"
+                name="num_hours"
+                placeholder="e.g., 10"
+                min="1"
+                step=".1"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="origin">How Did You Hear About Us?</label>
+              <select id="origin" name="origin" required>
+                <option value="" disabled selected>Select an option</option>
+                <option value="Friend Referral">Friend Referral</option>
+                <option value="Social Media">Social Media</option>
+                <option value="Community Event">Community Event</option>
+                <option value="Company Website">Company Website</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </fieldset>
+
+          <button type="submit" class="btn">Submit</button>
+        </form>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-info">Turtle Shelter Project, PO Box 382, Kaysville, UT 84037</div>
+      <div class="footer-info">801-872-3190</div>
+      <div class="footer-info">turtleshelterproject@gmail.com</div>
+    </footer>
+  </body>
+</html>
