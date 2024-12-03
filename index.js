@@ -23,11 +23,13 @@ app.use(express.urlencoded({ extended: true }));
 const knex = require("knex")({
   client: "pg",
   connection: {
-    host: process.env.RDS_HOSTNAME,
-    user: process.env.RDS_USERNAME,
-    password: process.env.RDS_PASSWORD,
-    database: process.env.RDS_DATABASE,
-    port: process.env.RDS_PORT,
+    host:
+      process.env.RDS_HOSTNAME ||
+      "awseb-e-auisjkadk8-stack-awsebrdsdatabase-evtdlb1elxoo.c98cyywwyjtd.us-east-1.rds.amazonaws.com",
+    user: process.env.RDS_USERNAME || "ebroot",
+    password: process.env.RDS_PASSWORD || "Yodayoda663!",
+    database: process.env.RDS_DB_NAME || "ebdb",
+    port: process.env.RDS_PORT || 5432,
     ssl: process.env.DB_SSL ? { rejectUnauthorized: false } : false,
   },
 });
@@ -76,7 +78,88 @@ app.get("/manageEvents", (req, res) => {
 
 // This is the get method to render the manageVolunteers page and display data from the volunteers table
 app.get("/manageVolunteers", (req, res) => {
-  res.render("manageVolunteers");
+  knex("volunteers")
+    .select()
+    .then((volunteers) => {
+      //.then() says, I just queried all this data, send it to this variable planets.
+      //the array of rows gets stored in this variable called planets.
+      // Render the maintainPlanets template and pass the data
+      res.render("manageVolunteers", { volunteers }); //render index.ejs and pass it planets.
+    })
+    .catch((error) => {
+      console.error("Error querying database:", error);
+      res.status(500).send("Internal Server Error");
+    });
+});
+
+// This is the get route to edit a volunteer's data from the admin page
+app.get("/editVolunteer/:vol_email", (req, res) => {
+  //This is the route for editVolunteer. The /: means there is a parameter passed in called vol_email.
+  const id = req.params.vol_email;
+  // Query the Volunteer by email first
+  knex("volunteers")
+    .where("vol_email", id)
+    .first() //returns an object representing one record
+    .then((volunteer) => {
+      //This variable represents one object that has attributes, which are the column names
+      if (!volunteer) {
+        return res.status(404).send("Volunteer not found");
+      }
+      res.render("editVolunteer", { volunteer });
+    })
+    .catch((error) => {
+      console.error("Error fetching Volunteer for editing:", error);
+      res.status(500).send("Internal Server Error");
+    });
+});
+
+// This is the post route to edit a volunteer's data from the admin page
+app.post("/editVolunteer/:vol_email", (req, res) => {
+  const id = req.params.vol_email;
+
+  const vol_email = req.body.vol_email;
+  const vol_first_name = req.body.vol_first_name;
+  const vol_last_name = req.body.vol_last_name;
+  const vol_phone = req.body.vol_phone;
+  const origin = req.body.origin;
+  const zip = req.body.zip;
+  const sewing_level = req.body.sewing_level;
+  const num_hours = req.body.num_hours;
+  // Update the Planet in the database
+  knex("volunteers")
+    .where("vol_email", id)
+    .update({
+      vol_email: vol_email,
+      vol_first_name: vol_first_name,
+      vol_last_name: vol_last_name,
+      vol_phone: vol_phone,
+      origin: origin,
+      zip: zip,
+      sewing_level: sewing_level,
+      num_hours: num_hours,
+    })
+    .then(() => {
+      res.redirect("/manageVolunteers"); // Redirect to the list of Volunteers after saving
+    })
+    .catch((error) => {
+      console.error("Error updating Volunteer:", error);
+      res.status(500).send("Internal Server Error");
+    });
+});
+
+// This is the route to delete a volunteer from the volunteers table
+app.post("/deleteVolunteer/:vol_email", (req, res) => {
+  const id = req.params.vol_email;
+  knex("volunteers")
+    .where("vol_email", id)
+    .del() // Deletes the record with the specified ID
+    .then(() => {
+      res.redirect("/manageVolunteers"); // Redirect to the volunteers list after deletion
+    })
+    .catch((error) => {
+      console.error("Error deleting Volunteer:", error);
+      res.status(500).send("Internal Server Error");
+    });
 });
 
 // Submit event form
