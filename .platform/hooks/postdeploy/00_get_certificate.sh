@@ -22,6 +22,16 @@ fi
 # Restart Nginx
 nginx -t && service nginx restart
 
-# Deploy the certificate
+# Install certificate for Elastic Beanstalk
 certbot install --cert-name thisistheapp-env.eba-e4mhqj2t.us-east-1.elasticbeanstalk.com
 
+# Install certificate for custom domain
+if certbot --nginx -d group47intex.is404.net --non-interactive --agree-tos --email bcolton9@byu.edu; then
+    echo "Certificate installed successfully for group47intex.is404.net"
+else
+    echo "Failed to install certificate for group47intex.is404.net. Check logs."
+    exit 1
+fi
+
+# Reload Nginx to apply changes
+nginx -t && service nginx reload
