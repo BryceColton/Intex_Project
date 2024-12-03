@@ -25,4 +25,3 @@ nginx -t && service nginx restart
 # Deploy the certificate
 certbot --nginx -d thisistheapp-env.eba-e4mhqj2t.us-east-1.elasticbeanstalk.com -d group47intex.is404.net
 
-nginx -t && service nginx reload
