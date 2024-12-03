@@ -6,6 +6,44 @@
     <title>Document</title>
   </head>
   <body>
-    Made it to manageEvents
+    <body>
+        <h1 style="text-align: center">Star Wars Planets</h1>
+        <table>
+          <thead>
+            <tr>
+              <th>planet_name</th>
+              <th>actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (events.length > 0) { %> <% events.forEach(row => { %>
+            <!-- dynamically create html table rows for each row in the database -->
+            <!--says that for each record, one at a time, send it to that variable "row"-->
+            <tr>
+              <input type="hidden" value="row.id" />
+              <td><%= row.event_name %></td>
+    
+              <td>
+                <form action="/editEvent/<%= row.id %>" method="GET" style="display: inline">
+                  <!--The action is the route. You have to write this. the stuff after the / is a parameter-->
+                  <button type="submit">Edit</button>
+                </form>
+                <form action="/deleteEvent/<%= row.id %>" method="POST" style="display: inline">
+                  <button
+                    type="submit"
+                    onclick="return confirm('Are you sure you want to delete this record?');"
+                  >
+                    Delete
+                  </button>
+                </form>
+              </td>
+            </tr>
+            <% }) %> <% } else { %>
+            <tr>
+              <td colspan="7">No data available</td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
   </body>
 </html>

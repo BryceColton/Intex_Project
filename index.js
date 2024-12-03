@@ -25,7 +25,7 @@ const knex = require("knex")({
   connection: {
     host: process.env.RDS_HOSTNAME || "localhost",
     user: process.env.RDS_USERNAME || "postgres",
-    password: process.env.RDS_PASSWORD || "MyEducator",
+    password: process.env.RDS_PASSWORD || "$uperDuper6",
     database: process.env.RDS_DATABASE || "ebdb",
     port: process.env.RDS_PORT || 5432,
     ssl: process.env.DB_SSL ? { rejectUnauthorized: false } : false,
@@ -58,12 +58,23 @@ app.get("/admin", (req, res) => {
   res.render("admin");
 });
 
-// This is the get method to render the manageEvents page
+// This is the get method to render the manageEvents page and display data from the events table
 app.get("/manageEvents", (req, res) => {
-  res.render("manageEvents");
+  knex("events")
+    .select()
+    .then((events) => {
+      //.then() says, I just queried all this data, send it to this variable planets.
+      //the array of rows gets stored in this variable called planets.
+      // Render the maintainPlanets template and pass the data
+      res.render("manageEvents", { events }); //render index.ejs and pass it planets.
+    })
+    .catch((error) => {
+      console.error("Error querying database:", error);
+      res.status(500).send("Internal Server Error");
+    });
 });
 
-// This is the get method to render the manageVolunteers page
+// This is the get method to render the manageVolunteers page and display data from the volunteers table
 app.get("/manageVolunteers", (req, res) => {
   res.render("manageVolunteers");
 });
