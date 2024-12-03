@@ -17,17 +17,23 @@
     <nav class="navbar">
       <div class="navbar-logo">Turtle Shelter Project</div>
       <div class="navbar-buttons">
-        <form action="/jensStory" method="GET"><button class="btn" type="submit">Jen's Story</button></form>
-        <form action="/volunteer" method="GET"><button class="btn" type="submit">Volunteer</button></form>
-        <form action="/hostevent" method="GET"><button class="btn" type="submit">Host an Event</button></form>
+        <form action="/jensStory" method="GET">
+          <button class="btn" type="submit">Jen's Story</button>
+        </form>
+        <form action="/volunteer" method="GET">
+          <button class="btn" type="submit">Volunteer</button>
+        </form>
+        <form action="/hostevent" method="GET">
+          <button class="btn" type="submit">Host an Event</button>
+        </form>
         <button class="btn btn-donate">Donate</button>
       </div>
     </nav>
 
-    <main style="display: flex; justify-content: center; align-items: center; height: 100vh;">
-      <section class="form-section" >
+    <main style="display: flex; justify-content: center; align-items: center; height: 100vh">
+      <section class="form-section">
         <h2 class="form-title">Volunteer Sign-Up</h2>
-        <form action="/submitVolunteerForm" method="POST" class="volunteer-form" >
+        <form action="/submitVolunteerForm" method="POST" class="volunteer-form">
           <fieldset>
             <legend>Volunteer Information</legend>
             <div class="form-group">
@@ -42,23 +48,11 @@
             </div>
             <div class="form-group">
               <label for="firstname">First Name</label>
-              <input
-                type="text"
-                id="firstname"
-                name="firstname"
-                placeholder="John"
-                required
-              />
+              <input type="text" id="firstname" name="firstname" placeholder="John" required />
             </div>
             <div class="form-group">
               <label for="lastname">Last Name</label>
-              <input
-                type="text"
-                id="lastname"
-                name="lastname"
-                placeholder="Doe"
-                required
-              />
+              <input type="text" id="lastname" name="lastname" placeholder="Doe" required />
             </div>
             <div class="form-group">
               <label for="phone">Phone</label>
@@ -73,13 +67,7 @@
             </div>
             <div class="form-group">
               <label for="zip">Zip Code</label>
-              <input
-                type="text"
-                id="zip"
-                name="zip"
-                placeholder="12345"
-                required
-              />
+              <input type="text" id="zip" name="zip" placeholder="12345" required />
             </div>
             <div class="form-group">
               <label for="sewing-level">Sewing Level</label>
@@ -126,5 +114,3 @@
     </footer>
   </body>
 </html>
-
-
