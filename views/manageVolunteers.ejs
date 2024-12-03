@@ -46,7 +46,7 @@
           <td><%= row.vol_first_name %></td>
           <td><%= row.vol_last_name %></td>
           <td><%= row.vol_phone %></td>
-          <td><%= row.sewing_level %></td>
+          <td><%= row.sewing_level == 3 ? "Advanced" : row.sewing_level == 2 ? "Intermediate" : "Beginner" %></td>
           <td><%= row.num_hours %></td>
           <td><%= row.origin %></td>
           <td><%= row.zip %></td>
