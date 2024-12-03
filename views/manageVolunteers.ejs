@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <% if (volunteers.length > 0) { %>
+    <ul>
+      <% volunteers.forEach(function(volunteer) { %>
+      <li>
+        <strong><%= volunteer.vol_name %></strong>
+        <p>Email: <%= volunteer. email %></p>
+        <p>Age: <%= volunteer.age %></p>
+        <!-- Add more fields here as necessary, e.g., user.phone or user.address -->
+      </li>
+      <% }); %>
+    </ul>
+    <% } else { %>
+    <p>No users found.</p>
+    <% } %>
+  </body>
+</html>

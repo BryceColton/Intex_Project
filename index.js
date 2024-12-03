@@ -1,10 +1,9 @@
 const express = require("express");
 const app = express();
 const path = require("path");
-const dotenv = require('dotenv');
+const dotenv = require("dotenv");
 
-app.use(express.static(path.join(__dirname, 'public')));
-
+app.use(express.static(path.join(__dirname, "public")));
 
 // Load environment variables from .env file
 dotenv.config();
@@ -28,7 +27,7 @@ const knex = require("knex")({
         user: process.env.RDS_USERNAME ,
         password: process.env.RDS_PASSWORD,
         database: process.env.RDS_DATABASE,
-        port: process.env.RDS_PORT || 5432,
+        port: process.env.RDS_PORT,
         ssl: process.env.DB_SSL ? { rejectUnauthorized: false } : false
     }
 });
@@ -39,22 +38,40 @@ app.get("/", (req, res) => {
   res.render("index");
 });
 
+// This is the get method for the volunteer page
 app.get("/volunteer", (req, res) => {
   res.render("volunteer");
 });
 
+// This is the get method for the host event request page
 app.get("/hostEvent", (req, res) => {
   res.render("hostEvent");
 });
 
+// This is the get method to render the jensStory page
 app.get("/jensStory", (req, res) => {
   res.render("jensStory");
 });
 
+// This is the get method to render the admin page
+app.get("/admin", (req, res) => {
+  res.render("admin");
+});
+
+// This is the get method to render the manageEvents page
+app.get("/manageEvents", (req, res) => {
+  res.render("manageEvents");
+});
+
+// This is the get method to render the manageVolunteers page
+app.get("/manageVolunteers", (req, res) => {
+  res.render("manageVolunteers");
+});
+
 // This is to add a volunteer to the database
-app.post('/submitVolunteerForm', (req, res) => {
+app.post("/submitVolunteerForm", (req, res) => {
   // Extract form values from req.body
-  const vol_email = req.body.vol_email; 
+  const vol_email = req.body.vol_email;
   const vol_first_name = req.body.vol_first_name;
   const vol_last_name = req.body.vol_last_name;  
   const vol_phone = req.body.vol_phone; 
