@@ -4,105 +4,104 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Host an Event</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="/img/logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
+
     <nav class="navbar">
         <div class="navbar-logo">Host Your Event</div>
         <div class="navbar-buttons">
-            <a href="/" class="btn">Home</a>
-            <a href="/events" class="btn">Events</a>
+            <form action="/" method="GET"><button class="btn" type="submit">Home</button></form>
+            <form action="/events" method="GET"><button class="btn" type="submit">Events</button></form>
+            <form action="/hostevent" method="GET"><button class="btn btn-donate">Host an Event</button></form>
         </div>
     </nav>
-
+<br><br>
     <main style="display: flex; justify-content: center; align-items: center; height: 100vh;">
-        <section class="project-details">
-            <h1 class="project-details-title">Event Registration Form</h1>
-            <div class="project-details-content">
-                <form action="/submit-event" method="POST">
+        <section class="form-section">
+            <h2 class="form-title">Event Registration Form</h2>
+            <form action="/submit-event" method="POST" class="event-form">
+                <fieldset>
+                    <legend>Event Details</legend>
                     <div class="form-group">
                         <label for="event_name">Event Name</label>
-                        <input type="text" id="event_name" name="event_name" required>
+                        <input type="text" id="event_name" name="event_name" placeholder="Your Event Name" required>
                     </div>
-                    
                     <div class="form-group">
                         <label for="organization">Organization</label>
-                        <input type="text" id="organization" name="organization">
+                        <input type="text" id="organization" name="organization" placeholder="Organization Name">
                     </div>
-                    
                     <div class="form-group">
                         <label for="organizer_first_name">First Name</label>
-                        <input type="text" id="organizer_first_name" name="organizer_first_name" required>
+                        <input type="text" id="organizer_first_name" name="organizer_first_name" placeholder="First Name" required>
                     </div>
-                    
                     <div class="form-group">
                         <label for="organizer_last_name">Last Name</label>
-                        <input type="text" id="organizer_last_name" name="organizer_last_name" required>
+                        <input type="text" id="organizer_last_name" name="organizer_last_name" placeholder="Last Name" required>
                     </div>
-                    
                     <div class="form-group">
                         <label for="org_phone">Phone Number</label>
-                        <input type="tel" id="org_phone" name="org_phone">
+                        <input type="tel" id="org_phone" name="org_phone" placeholder="123-456-7890">
                     </div>
-                    
                     <div class="form-group">
                         <label for="org_email">Email</label>
-                        <input type="email" id="org_email" name="org_email" required>
+                        <input type="email" id="org_email" name="org_email" placeholder="example@example.com" required>
                     </div>
-                    
+                </fieldset>
+
+                <fieldset>
+                    <legend>Event Information</legend>
                     <div class="form-group">
                         <label for="event_type">Event Type</label>
-                        <select id="event_type" name="event_type">
-                            <option value="">Select Event Type</option>
+                        <select id="event_type" name="event_type" required>
+                            <option value="" disabled selected>Select Event Type</option>
                             <option value="sewing">Sewing</option>
                             <option value="non-sewing">Non-Sewing</option>
                             <option value="both">Both</option>
                         </select>
                     </div>
-                    
                     <div class="form-group">
                         <label for="event_address">Event Address</label>
-                        <input type="text" id="event_address" name="event_address" required>
+                        <input type="text" id="event_address" name="event_address" placeholder="Street Address" required>
                     </div>
-                    
                     <div class="form-group">
                         <label for="city">City</label>
-                        <input type="text" id="city" name="city" required>
+                        <input type="text" id="city" name="city" placeholder="City" required>
                     </div>
-                    
                     <div class="form-group">
                         <label for="state">State</label>
-                        <input type="text" id="state" name="state" required>
+                        <input type="text" id="state" name="state" placeholder="State" required>
                     </div>
-                    
                     <div class="form-group">
                         <label for="zip">ZIP Code</label>
-                        <input type="text" id="zip" name="zip" required>
+                        <input type="text" id="zip" name="zip" placeholder="12345" required>
                     </div>
-                    
+                </fieldset>
+                <fieldset>
+                    <legend>Additional Details</legend>
                     <div class="form-group">
                         <label>
-                            <input type="checkbox" name="public" value="true"> 
-                            Public Event
+                            <input type="checkbox" name="public" value="true"> Public Event
                         </label>
                     </div>
-                    
                     <div class="form-group">
                         <label>
-                            <input type="checkbox" name="guest_speaker" value="true"> 
-                            Guest Speaker
+                            <input type="checkbox" name="guest_speaker" value="true"> Guest Speaker
                         </label>
                     </div>
-                    
-                    <button type="submit" class="btn btn-donate">Submit Event</button>
-                </form>
-            </div>
+                </fieldset>
+
+                <button type="submit" class="btn btn-donate">Submit
+            </form>
         </section>
     </main>
-
+<br> <br>
     <footer class="footer">
-        <div>&copy; 2024 Event Hosting Platform</div>
+        <div class="footer-info">&copy; 2024 Event Hosting Platform</div>
     </footer>
 </body>
 </html>
