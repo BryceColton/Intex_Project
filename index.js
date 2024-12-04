@@ -256,6 +256,11 @@ app.post("/submitEventForm", (req, res) => {
     zip,
     is_public,
     has_guest_speaker,
+    numexpected,
+    venuedescription,
+    duration,
+    eventdatetime1,
+    eventdatetime2,
   } = req.body;
 
   knex("events")
@@ -273,10 +278,16 @@ app.post("/submitEventForm", (req, res) => {
       zip,
       public: is_public === "on", // Convert checkbox to boolean
       guest_speaker: has_guest_speaker === "on", // Convert checkbox to boolean
+      numexpected: parseInt(numexpected, 10), // Ensure it's stored as an integer
+      venuedescription,
+      duration: parseFloat(duration), // Ensure it's stored as a float
+      eventdatetime1: new Date(eventdatetime1), // Ensure it's stored as a valid Date
+      eventdatetime2: new Date(eventdatetime2), // Ensure it's stored as a valid Date
     })
+
     .returning("eventid")
     .then(([eventid]) => {
-      res.redirect(`/eventstep2?id=${eventid}`);
+      res.redirect('/');
     })
     .catch((err) => {
       console.error("Database insert error:", err);
