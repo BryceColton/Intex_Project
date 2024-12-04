@@ -23,7 +23,7 @@
           <button class="btn btn-donate">Donate</button>
         </div>
       </nav>
-<br><br>
+<br><br><br><br><br><br><br><br>
     <main style="display: flex; justify-content: center; align-items: center; height: 100vh;">
         <section class="form-section">
             <h2 class="form-title">Event Registration Form</h2>
@@ -97,12 +97,36 @@
                         </label>
                     </div>
                 </fieldset>
+                <fieldset>
+                    <legend>Event Details</legend>
+                    <div class="form-group">
+                        <label for="eventdatetime1">Date Option 1</label>
+                        <input type="datetime-local" id="eventdatetime1" name="eventdatetime1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventdatetime2">Date Option 2</label>
+                        <input type="datetime-local" id="eventdatetime2" name="eventdatetime2" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="numexpected">Expected Number of People</label>
+                        <input type="number" id="numexpected" name="numexpected" min="1" placeholder="(ie.50)" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="duration">Length of Time</label>
+                        <input type="number" step="0.1" id="duration" name="duration" min="0" placeholder="Hours" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="venuedescription">Venue Description</label>
+                        <br>
+                        <textarea id="venuedescription" name="venuedescription" maxlength="256" rows="6" cols="50" placeholder="Describe details of the venue (e.g., size, sewing machines available, operators present)" required></textarea>
+                    </div>
+                </fieldset>
 
-                <button type="submit" class="btn btn-donate">Next</button>
+                <button type="submit" class="btn btn-donate">Submit</button>
             </form>
         </section>
     </main>
-<br> <br>
+<br> <br><br> <br><br> <br><br> <br>
     <footer class="footer">
         <div class="footer-info">&copy; 2024 Event Hosting Platform</div>
     </footer>
