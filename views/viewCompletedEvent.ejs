@@ -29,7 +29,7 @@
                 <form action="/viewCompletedEvent/<%= event.eventid %>" method="POST">
                     <h2 class="form-title">Event Details</h2>
                     <fieldset>
-                        <legend>Event Details</legend>
+                        <legend>Requester Details</legend>
                         <div class="form-group">
                             <label for="event_name">Event Name: <b><%=event.event_name %></b></label>
                         </div>
@@ -51,47 +51,33 @@
                     </fieldset>
     
                     <fieldset>
-                        <legend>Event Information</legend>
+                        <legend>Event Details</legend>
+                        <div class="form-group">
+                            <label for="date">Date: <b><%=event.date %></b></label>
+                        </div>
+                        <div class="form-group">
+                            <label for="event_address">Event Address: <b><%=event.event_address %>, <%=event.city %>, <%=event.state %>, <%=event.zip %></b></label>
+                        </div>
                         <div class="form-group">
                             <label for="event_type">Event Type: <b><%=event.event_type %></b></label>
                         </div>
-                        <div class="form-group">
-                            <label for="event_address">Event Address: <b><%=event.event_address %></b></label>
-                        </div>
-                        <div class="form-group">
-                            <label for="city">City: <b><%=event.city %></b></label>
-                        </div>
-                        <div class="form-group">
-                            <label for="state">State: <b><%=event.state %></b></label>
-                        </div>
-                        <div class="form-group">
-                            <label for="zip">ZIP: <b><%=event.zip %></b></label>
-                        </div>
-                    </fieldset>
-                    <fieldset>
-                        <legend>Additional Details</legend>
                         <div class="form-group">
                             <label>Public: <b><%=event.public == 'true' ? 'Yes' : 'No'%></b></label>
                         </div>
                         <div class="form-group">
                             <label>Guest Speaker: <b><%=event.guest_speaker == 'true' ? 'Yes' : 'No' %></b></label>
                         </div>
-                    </fieldset>
-                    <fieldset>
-                        <legend>Event Details</legend>
-                        <div class="form-group">
-                            <label for="date">Date: <b><%=event.date %></b></label>
-                        </div>
                         <div class="form-group">
                             <label for="numexpected">Expected Number of People: <b><%=event.numexpected %></b></label>
                         </div>
                         <div class="form-group">
-                            <label for="duration">Duration: <b><%=event.duration %></b></label>
+                            <label for="duration">Duration: <b><%=event.duration %> hours</b></label>
                         </div>
                         <div class="form-group">
                             <label for="venuedescription">Venue Description: <b><%=event.venuedescription %></b></label>
                         </div>
                     </fieldset>
+                
                     <fieldset>
                         <legend>Event Numbers</legend>
                         <!-- Approve/Decline (Radio Buttons) -->
