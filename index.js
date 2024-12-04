@@ -396,6 +396,21 @@ app.get("/editVolunteer/:vol_email", (req, res) => {
     });
 });
 
+app.get("/adminCompletedEvents", (req, res) => {
+    knex("completed_events")
+    .select()
+    .then((completed_events) => {
+      //.then() says, I just queried all this data, send it to this variable planets.
+      //the array of rows gets stored in this variable called planets.
+      // Render the maintainPlanets template and pass the data
+      res.render("completedEvents", { completed_events }); //render index.ejs and pass it planets.
+    })
+    .catch((error) => {
+      console.error("Error querying database:", error);
+      res.status(500).send("Internal Server Error");
+    });
+})
+
 
 app.post("/viewCompletedEvent/:eventid", isAuthenticated, (req, res) => {
     let eventid = req.params.eventid;
