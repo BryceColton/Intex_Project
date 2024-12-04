@@ -329,6 +329,114 @@ app.post("/deleteVolunteer/:vol_email", (req, res) => {
     });
 });
 
+// This is the get method to render the manageUsers page and display data from the admin table
+app.get("/manageUsers", isAuthenticated, (req, res) => {
+  knex("admin")
+    .select()
+    .then((users) => {
+      //.then() says, I just queried all this data, send it to this variable planets.
+      //the array of rows gets stored in this variable called planets.
+      // Render the maintainPlanets template and pass the data
+      res.render("manageUsers", { users }); //render index.ejs and pass it planets.
+    })
+    .catch((error) => {
+      console.error("Error querying database:", error);
+      res.status(500).send("Internal Server Error");
+    });
+});
+
+
+// This is the get route to edit an admin from the admin page
+app.get("/editUser/:admin_user_name", (req, res) => {
+  //This is the route for editVolunteer. The /: means there is a parameter passed in called vol_email.
+  const id = req.params.admin_user_name;
+  // Query the Volunteer by email first
+  knex("admin")
+    .where("admin_user_name", id)
+    .first() //returns an object representing one record
+    .then((admin) => {
+      //This variable represents one object that has attributes, which are the column names
+      if (!admin) {
+        return res.status(404).send("Admin not found");
+      }
+      res.render("editUser", { admin });
+    })
+    .catch((error) => {
+      console.error("Error fetching Volunteer for editing:", error);
+      res.status(500).send("Internal Server Error");
+    });
+});
+
+app.get("/adminAddUser", isAuthenticated, (req, res) => {
+  res.render("adminAddUser");
+});
+
+
+// This is the post route to add an admin from the admin page
+app.post("/adminAddUser", isAuthenticated, (req, res) => {
+  // Extract form values from req.body
+  const admin_user_name = req.body.admin_user_name;
+  const admin_password = req.body.admin_password;
+  const admin_first_name = req.body.admin_first_name;
+  const admin_last_name = req.body.admin_last_name;
+
+  // Insert the database
+  knex("admin")
+    .insert({
+      admin_user_name: admin_user_name,
+      admin_password: admin_password,
+      admin_first_name: admin_first_name,
+      admin_last_name: admin_last_name,
+    })
+    .then(() => {
+      res.redirect("/manageUsers"); // Redirect to admin manage volunteers after submit
+    })
+    .catch((error) => {
+      console.error("Error adding User:", error);
+      res.status(500).send("Internal Server Error");
+    });
+});
+
+// This is the post route to edit a volunteer's data from the admin page
+app.post("/editUser/:admin_user_name", (req, res) => {
+  const id = req.params.admin_user_name;
+
+  const admin_user_name = req.body.admin_user_name;
+  const admin_password = req.body.admin_password;
+  const admin_first_name = req.body.admin_first_name;
+  const admin_last_name = req.body.admin_last_name;
+  // Update the Planet in the database
+  knex("admin")
+    .where("admin_user_name", id)
+    .update({
+      admin_user_name: admin_user_name,
+      admin_password: admin_password,
+      admin_first_name: admin_first_name,
+      admin_last_name: admin_last_name,
+    })
+    .then(() => {
+      res.redirect("/manageUsers"); // Redirect to the list of Volunteers after saving
+    })
+    .catch((error) => {
+      console.error("Error updating Volunteer:", error);
+      res.status(500).send("Internal Server Error");
+    });
+});
+
+// This is the route to delete an admin from the volunteers table
+app.post("/deleteUser/:admin_user_name", (req, res) => {
+  const id = req.params.admin_user_name;
+  knex("admin")
+    .where("admin_user_name", id)
+    .del() // Deletes the record with the specified ID
+    .then(() => {
+      res.redirect("/manageUsers"); // Redirect to the volunteers list after deletion
+    })
+    .catch((error) => {
+      console.error("Error deleting Volunteer:", error);
+      res.status(500).send("Internal Server Error");
+    });
+});
 // PUBLIC FACING ROUTES ****************************************************************************************************
 
 // Submit event form
