@@ -69,17 +69,19 @@ app.get("/manageEvents", (req, res) => {
   // Query the events
   knex("events")
     .select()
-    .then((upcoming_events) => {
+    .where("status", "pending")
+    .then((pending_events) => {
       //This variable represents one object that has attributes, which are the column names
-      if (!upcoming_events) {
-        return res.status(404).send("Upcoming events not found");
+      if (!pending_events) {
+        return res.status(404).send("No pending events found");
       }
       //get data from finalized events table to send with the upcoming events
-      knex("finalized_events")
+      knex("events")
         .select()
+        .where("status", "approved")
         .then((finalized_events) => {
           //render both the upcoming_events (events table) and finalized_events
-          res.render("manageEvents", { upcoming_events, finalized_events });
+          res.render("manageEvents", { pending_events, finalized_events });
         })
         .catch((error) => {
           console.error("Error fetching finalized event details:", error);
@@ -94,7 +96,6 @@ app.get("/manageEvents", (req, res) => {
 
 // This route is tied to the view button on pending event requests.
 app.get("/viewEvent/:eventid", (req, res) => {
-  console.log(req.query);
   let eventid = req.params.eventid;
   knex("events")
     .where("eventid", eventid)
@@ -287,7 +288,7 @@ app.post("/submitEventForm", (req, res) => {
 
     .returning("eventid")
     .then(([eventid]) => {
-      res.redirect('/');
+      res.redirect("/");
     })
     .catch((err) => {
       console.error("Database insert error:", err);
