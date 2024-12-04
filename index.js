@@ -251,6 +251,7 @@ app.get("/adminAddEvent", isAuthenticated, (req, res) => {
 
 // This route is the post route for the admin to add an event
 app.post("/adminAddEvent", isAuthenticated, (req, res) => {
+    
   console.log(req.body);
   const {
     event_name,
@@ -292,13 +293,20 @@ app.post("/adminAddEvent", isAuthenticated, (req, res) => {
       venuedescription: venuedescription,
       duration: parseFloat(duration), // Ensure it's stored as a float
       eventdatetime1: new Date(eventdatetime1), // Ensure it's stored as a valid Date
-      eventdatetime2: new Date(eventdatetime2), // Ensure it's stored as a valid Date
+      eventdatetime2: null, // Ensure it's stored as a valid Date
       status: "approved",
     })
     .returning("eventid")
-    .then(([eventid]) => {
-      res.redirect("/manageEvents");
-    })
+    .then(([event]) => {  // Destructure the event object properly
+      const { eventid } = event;  // Get the eventid from the returned object
+      return knex("finalized_events").insert({
+        eventid: eventid,
+        date: new Date(eventdatetime1),  // Ensure the date is in a valid format
+      });
+      })
+      .then(() => {
+        res.redirect("/manageEvents");
+      })
     .catch((err) => {
       console.error("Database insert error:", err);
       res.status(500).json({ message: "Error saving the event", error: err });
@@ -370,7 +378,7 @@ app.get("/viewCompletedEvent/:eventid", isAuthenticated, (req, res) => {
       }
 
       if (event && event.date) {
-        event.date = new Date(event.date).toString(); // Convert to ISO format (UTC)
+        event.date = new Date(event.date).toString(); 
       }
 
 
