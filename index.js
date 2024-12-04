@@ -284,7 +284,6 @@ app.post("/adminAddEvent", isAuthenticated, (req, res) => {
     numexpected,
     duration,
     eventdatetime1,
-    eventdatetime2,
   } = req.body;
 
   knex("events")
@@ -306,7 +305,7 @@ app.post("/adminAddEvent", isAuthenticated, (req, res) => {
       venuedescription: venuedescription,
       duration: parseFloat(duration), // Ensure it's stored as a float
       eventdatetime1: new Date(eventdatetime1), // Ensure it's stored as a valid Date
-      eventdatetime2: new Date(eventdatetime2), // Ensure it's stored as a valid Date
+      eventdatetime2: null, // Ensure it's stored as a valid Date
       status: "approved",
     })
     .returning("eventid")
