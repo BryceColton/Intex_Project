@@ -177,18 +177,15 @@ app.get("/manageEvents", isAuthenticated, (req, res) => {
       //get data from finalized events table to send with the upcoming events
       knex("events")
         .select()
+        .join("finalized_events", "events.eventid", "=", "finalized_events.eventid") // Join the tables
         .where("status", "approved")
-        .then((finalized_events) => {
-          //render both the upcoming_events (events table) and finalized_events
-          res.render("manageEvents", { pending_events, finalized_events });
-        })
-        .catch((error) => {
-          console.error("Error fetching finalized event details:", error);
-          res.status(500).send("Internal Server Error");
+        .orderBy([{ column: "date", order: "asc" }])
+        .then((approved_events) => {
+          res.render("manageEvents", { pending_events, approved_events });
         });
     })
     .catch((error) => {
-      console.error("Error fetching upcoming event details:", error);
+      console.error("Error fetching finalized event details:", error);
       res.status(500).send("Internal Server Error");
     });
 });
@@ -270,7 +267,6 @@ app.get("/adminAddEvent", isAuthenticated, (req, res) => {
 
 // This route is the post route for the admin to add an event
 app.post("/adminAddEvent", isAuthenticated, (req, res) => {
-    
   console.log(req.body);
   const {
     event_name,
@@ -315,16 +311,17 @@ app.post("/adminAddEvent", isAuthenticated, (req, res) => {
       status: "approved",
     })
     .returning("eventid")
-    .then(([event]) => {  // Destructure the event object properly
-      const { eventid } = event;  // Get the eventid from the returned object
+    .then(([event]) => {
+      // Destructure the event object properly
+      const { eventid } = event; // Get the eventid from the returned object
       return knex("finalized_events").insert({
         eventid: eventid,
-        date: new Date(eventdatetime1),  // Ensure the date is in a valid format
+        date: new Date(eventdatetime1), // Ensure the date is in a valid format
       });
-      })
-      .then(() => {
-        res.redirect("/manageEvents");
-      })
+    })
+    .then(() => {
+      res.redirect("/manageEvents");
+    })
     .catch((err) => {
       console.error("Database insert error:", err);
       res.status(500).json({ message: "Error saving the event", error: err });
@@ -397,12 +394,11 @@ app.get("/viewCompletedEvent/:eventid", (req, res) => {
       }
 
       if (event && event.date) {
-        event.date = new Date(event.date).toString(); 
+        event.date = new Date(event.date).toString();
       }
 
-
-      console.log(event)
-      res.render("viewCompletedEvent", { event });  
+      console.log(event);
+      res.render("viewCompletedEvent", { event });
     })
     .catch((error) => {
       console.error("Error fetching event details:", error);
@@ -410,32 +406,31 @@ app.get("/viewCompletedEvent/:eventid", (req, res) => {
     });
 });
 
-
 app.get("/viewFinishedEvent/:eventid", (req, res) => {
-    const eventid = req.params.eventid;
-    knex("events")
-      .join("finalized_events", "events.eventid", "=", "finalized_events.eventid") // Join the tables
-      .where("events.eventid", eventid)
-      .first() //returns an object representing one record
-      .then((event) => {
-        //This variable represents one object t hat has attributes, which are the column names
-        if (!event) {
-          return res.status(404).send("Event not found");
-        }
-  
-        if (event && event.date) {
-          event.date = new Date(event.date).toString(); 
-        }
-  
-  
-        console.log(event)
-        res.render("viewFinishedEvent", { event });  
-      })
-      .catch((error) => {
-        console.error("Error fetching event details:", error);
-        res.status(500).send("Internal Server Error");
-      });
-  });
+  const eventid = req.params.eventid;
+  knex("events")
+    .join("finalized_events", "events.eventid", "=", "finalized_events.eventid")
+    .join("completed_events", "events.eventid", "=", "completed_events.eventid") // Join the tables
+    .where("events.eventid", eventid)
+    .first() //returns an object representing one record
+    .then((event) => {
+      //This variable represents one object t hat has attributes, which are the column names
+      if (!event) {
+        return res.status(404).send("Event not found");
+      }
+
+      if (event && event.date) {
+        event.date = new Date(event.date).toString();
+      }
+
+      console.log(event);
+      res.render("viewFinishedEvent", { event });
+    })
+    .catch((error) => {
+      console.error("Error fetching event details:", error);
+      res.status(500).send("Internal Server Error");
+    });
+});
 // This is the get route to edit a volunteer's data from the admin page
 app.get("/editVolunteer/:vol_email", isAuthenticated, (req, res) => {
   //This is the route for editVolunteer. The /: means there is a parameter passed in called vol_email.
@@ -474,7 +469,8 @@ app.get("/adminCompletedEvents", (req, res) => {
 
 app.post("/viewCompletedEvent/:eventid", isAuthenticated, (req, res) => {
   let eventid = req.params.eventid;
-  const { num_actual, num_pocket, num_collar, num_envelopes, num_vests, num_completed, status} = req.body;
+  const { num_actual, num_pocket, num_collar, num_envelopes, num_vests, num_completed, status } =
+    req.body;
   // Extract form values from req.body
   // Insert the database
   knex("completed_events")
@@ -488,24 +484,24 @@ app.post("/viewCompletedEvent/:eventid", isAuthenticated, (req, res) => {
       num_completed: num_completed,
     })
     .then(() => {
-        knex("events")
-          .where({ eventid: eventid })
-          .update({
-            status: status, 
-          })
-          .then(() => {
-            res.redirect("/manageEvents"); 
-          })
-          .catch((error) => {
-            console.error("Error updating event status:", error);
-            res.status(500).send("Error updating event status");
-          });
-      })
-      .catch((error) => {
-        console.error("Error adding Completing Event:", error);
-        res.status(500).send("Internal Server Error");
-      });
-  });
+      knex("events")
+        .where({ eventid: eventid })
+        .update({
+          status: status,
+        })
+        .then(() => {
+          res.redirect("/manageEvents");
+        })
+        .catch((error) => {
+          console.error("Error updating event status:", error);
+          res.status(500).send("Error updating event status");
+        });
+    })
+    .catch((error) => {
+      console.error("Error adding Completing Event:", error);
+      res.status(500).send("Internal Server Error");
+    });
+});
 
 // This is the post route to edit a volunteer's data from the admin page
 app.post("/editVolunteer/:vol_email", isAuthenticated, (req, res) => {

@@ -48,17 +48,24 @@
 
     button {
       padding: 10px 15px;
-      background-color: #4CAF50;
+      background-color: #424242;
+      border: 2px solid white; /* Add border for .btn-donate too */
       color: white;
-      border: none;
+      border-color:white;
+      border-width: 3px;
       border-radius: 5px;
       font-size: 16px;
       cursor: pointer;
       transition: background-color 0.3s;
-    }
+      gap: 1rem;
+
+    } 
+
 
     button:hover {
-      background-color: #45a049;
+      background-color: white;
+      color:#424242;
+      border-color: #424242;
     }
 
     .message {
@@ -68,7 +75,7 @@
     }
 
     .message.success {
-      color: #4CAF50;
+      color: #424242;
     }
 
     .message.error {
