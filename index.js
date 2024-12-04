@@ -3,6 +3,8 @@ const app = express();
 const path = require("path");
 const dotenv = require("dotenv");
 
+const session = require("express-session");
+
 app.use(express.static(path.join(__dirname, "public")));
 
 // Load environment variables from .env file
@@ -19,6 +21,13 @@ app.set("views", path.join(__dirname, "views"));
 // Middleware to parse URL-encoded bodies
 app.use(express.urlencoded({ extended: true }));
 
+app.use(
+  session({
+    secret: "yourSecretKey",
+    resave: false,
+    saveUninitialized: true,
+  })
+);
 // Initialize knex with database connection settings
 const knex = require("knex")({
   client: "pg",
@@ -57,16 +66,97 @@ app.get("/jensStory", (req, res) => {
   res.render("jensStory");
 });
 
+function isAuthenticated(req, res, next) {
+  if (req.session && req.session.isLoggedIn) {
+    return next(); // User is authenticated, proceed to the next middleware
+  }
+  res.redirect("/login"); // Redirect to login page if not authenticated
+}
+
+app.get("/login", (req, res) => {
+  res.render("login", { error: null }); // Ensure `error` is defined
+});
+
+app.get("/create-admin", (req, res) => {
+  res.render("createAdmin", { message: null }); // Pass an empty message initially
+});
+
+app.post("/create-admin", (req, res) => {
+  const { admin_username, admin_password, admin_first_name, admin_last_name } = req.body;
+
+  // Simple validation to check if all fields are provided
+  if (!admin_username || !admin_password || !admin_first_name || !admin_last_name) {
+    return res.status(400).json({ message: "All fields are required." });
+  }
+
+  // Check if the username already exists
+  knex("admin")
+    .where({ admin_user_name: admin_username })
+    .first()
+    .then((existingAdmin) => {
+      if (existingAdmin) {
+        return res.status(400).json({ message: "Username already exists." });
+      }
+
+      // Insert new admin into the database
+      return knex("admin").insert({
+        admin_user_name: admin_username,
+        admin_password: admin_password, // Make sure you're storing the password safely
+        admin_first_name: admin_first_name,
+        admin_last_name: admin_last_name,
+      });
+    })
+    .then(() => {
+      res.redirect("/login");
+    })
+    .catch((error) => {
+      console.error("Error creating admin:", error);
+      res.status(500).json({ message: "Internal server error" });
+    });
+});
+
+app.post("/login", (req, res) => {
+  const { username, password } = req.body;
+
+  // Simple validation to check if both fields are provided
+  if (!username || !password) {
+    return res.render("login", { error: "Both username and password are required." });
+  }
+
+  // Check if the user exists in the admin table
+  knex("admin")
+    .where({ admin_user_name: username })
+    .first()
+    .then((admin) => {
+      if (!admin) {
+        return res.render("login", { error: "Invalid username or password." });
+      }
+
+      // Check if the provided password matches the stored password
+      if (admin.admin_password !== password) {
+        return res.render("login", { error: "Invalid username or password." });
+      }
+
+      // If login is successful, set session variables (you can use express-session for this)
+      req.session.isLoggedIn = true;
+      req.session.adminUsername = username;
+
+      // Redirect to a protected page or dashboard
+      res.redirect("/admin"); // You can change this to whatever route is appropriate
+    })
+    .catch((error) => {
+      console.error("Error during login:", error);
+      res.render("login", { error: "Internal server error." });
+    });
+});
+
 // This is the get method to render the admin page
-app.get("/admin", (req, res) => {
+app.get("/admin", isAuthenticated, (req, res) => {
   res.render("admin");
 });
 
-// ADMIN MANAGE EVENTS ROUTES ***************************************************************************************************************
-
-// This is the get method to render the manageEvents page and display data from the events, completed_events, and finalized_events tables
-app.get("/manageEvents", (req, res) => {
-  // Query the events
+// This is the get method to render the manageEvents page and display data from the events table
+app.get("/manageEvents", isAuthenticated, (req, res) => {
   knex("events")
     .select()
     .where("status", "pending")
@@ -118,7 +208,7 @@ app.get("/viewEvent/:eventid", (req, res) => {
 // ADMIN MANAGE VOLUNTEERS ROUTES ***********************************************************************************************************
 
 // This is the get method to render the manageVolunteers page and display data from the volunteers table
-app.get("/manageVolunteers", (req, res) => {
+app.get("/manageVolunteers", isAuthenticated, (req, res) => {
   knex("volunteers")
     .select()
     .then((volunteers) => {
@@ -134,11 +224,11 @@ app.get("/manageVolunteers", (req, res) => {
 });
 
 // This is the get route to add a volunteer from the admin page
-app.get("/adminAddVolunteer", (req, res) => {
+app.get("/adminAddVolunteer", isAuthenticated, (req, res) => {
   res.render("adminAddVolunteer");
 });
 // This is the post route to add a volunteer from the admin page
-app.post("/adminAddVolunteer", (req, res) => {
+app.post("/adminAddVolunteer", isAuthenticated, (req, res) => {
   // Extract form values from req.body
   const vol_email = req.body.vol_email;
   const vol_first_name = req.body.vol_first_name;
