@@ -205,7 +205,6 @@ app.get("/viewEvent/:eventid", (req, res) => {
 
 // This route updates a specific event's status in the database to determine if it is an approved or declined event
 
-// ADMIN MANAGE VOLUNTEERS ROUTES ***********************************************************************************************************
 
 // This is the get method to render the manageVolunteers page and display data from the volunteers table
 app.get("/manageVolunteers", isAuthenticated, (req, res) => {
@@ -259,6 +258,23 @@ app.post("/adminAddVolunteer", isAuthenticated, (req, res) => {
     });
 });
 
+app.get("/viewCompletedEvent/:eventid", (req, res) => {
+    let eventid = req.params.eventid;
+    knex("events")
+      .where("eventid", eventid)
+      .first() //returns an object representing one record
+      .then((event) => {
+        //This variable represents one object that has attributes, which are the column names
+        if (!event) {
+          return res.status(404).send("Event not found");
+        }
+        res.render("viewCompletedEvent", { event });
+      })
+      .catch((error) => {
+        console.error("Error fetching event details:", error);
+        res.status(500).send("Internal Server Error");
+      });
+  });
 // This is the get route to edit a volunteer's data from the admin page
 app.get("/editVolunteer/:vol_email", (req, res) => {
   //This is the route for editVolunteer. The /: means there is a parameter passed in called vol_email.
