@@ -296,6 +296,31 @@ app.get("/editVolunteer/:vol_email", (req, res) => {
     });
 });
 
+
+app.post("/viewCompletedEvent/:eventid", isAuthenticated, (req, res) => {
+    let eventid = req.params.eventid;
+    const {num_actual, num_pocket, num_collar, num_envelopes, num_vests, num_completed} = req.body
+    // Extract form values from req.body
+    // Insert the database
+    knex("completed_events")
+      .insert({
+        eventid: eventid,
+        num_actual: num_actual,
+        num_pocket: num_pocket,
+        num_collar: num_collar,
+        num_envelopes: num_envelopes,
+        num_vests: num_vests,
+        num_completed: num_completed,
+      })
+      .then(() => {
+        res.redirect("/manageEvents"); // Redirect to admin manage volunteers after submit
+      })
+      .catch((error) => {
+        console.error("Error adding Completing Event:", error);
+        res.status(500).send("Internal Server Error");
+      });
+  });
+
 // This is the post route to edit a volunteer's data from the admin page
 app.post("/editVolunteer/:vol_email", (req, res) => {
   const id = req.params.vol_email;
