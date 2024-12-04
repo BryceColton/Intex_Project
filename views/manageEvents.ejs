@@ -56,6 +56,22 @@
       td {
         background-color: #f1f1f1;
       }
+
+      /* Target the 6th column (Delete) */
+  th:nth-child(10), td:nth-child(10) {
+    width: 130px; /* Make the 6th column a bit wider */
+    text-align: center; /* Center align the buttons */
+  }
+
+  /* Target the 4th column (Last Name) */
+  th:nth-child(9), td:nth-child(9) {
+    width: 80px; /* Reduce the width of the Last Name column */
+  }
+
+    /* Target the 4th column (Last Name) */
+    th:nth-child(2), td:nth-child(2) {
+    width: 150px; /* Reduce the width of the Last Name column */
+  }
     
       tr:hover td {
         background-color: #424242;
@@ -161,7 +177,7 @@
               <th>City</th>
               <th>State</th>
               <th>Status</th>
-              <th>Actions</th>
+              <th></th>
               <th></th>
             </tr>
           </thead>
@@ -179,14 +195,15 @@
               <td><%= row.city %></td>
               <td><%= row.state %></td>
               <td><%= row.status %></td>
-              <td><%= row.actions %></td>
               <!-- Edit button to go to the editEvent page where the admin will be able to accept/decline event requests -->
               <td>
                 <form action="/viewEvent/<%= row.eventid %>" method="GET" style="display: inline">
                   <!--The action is the route. You have to write this. the stuff after the / is a parameter-->
                   <button class="btn-table" type="submit">View</button>
                 </form>
+              </td>
                 <!-- Delete button so that the admin can handle unwanted event requests -->
+              <td>
                 <form action="/deleteEvent/<%= row.eventid %>" method="POST" style="display: inline">
                   <button
                     class="btn-table btn-delete"
@@ -220,7 +237,6 @@
                 <th>City</th>
                 <th>State</th>
                 <th>Status</th>
-                <th>Actions</th>
                 <th></th>
               </tr>
             </thead>
@@ -238,12 +254,11 @@
                 <td><%= row.city %></td>
                 <td><%= row.state %></td>
                 <td><%= row.status %></td>
-                <td><%= row.actions %></td>
                 <!-- Edit button to go to the editEvent page where the admin will be able to mark the event as completed and input event stats -->
                 <td>
                   <form action="/viewCompletedEvent/<%= row.eventid %>" method="GET" style="display: inline">
                     <!--The action is the route. You have to write this. the stuff after the / is a parameter-->
-                    <button type="submit">View</button>
+                    <button class="btn-table" type="submit">View</button>
                   </form>
                 </td>
               </tr>
