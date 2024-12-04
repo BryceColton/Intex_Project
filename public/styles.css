@@ -241,3 +241,11 @@ main {
 #coloredButton:hover{
   background-color: #b0b0b0;
 }
+
+.inline-image {
+  float: left; /* Or 'right' if you want the image on the right side */
+  margin-right: 15px; /* Add space between the image and the text */
+  margin-bottom: 5px; /* Add space between the bottom of the image and the text */
+  width: 225px; /* Adjust the width of the image as needed */
+  height: auto; /* Maintain aspect ratio of the image */
+}
