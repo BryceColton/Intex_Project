@@ -13,10 +13,9 @@
       rel="stylesheet"
     />
     <style>
-      .btn-table {
+        .btn-table {
         display: inline-block;
-        margin: 20px auto;
-        padding: 10px 20px;
+
         background-color: #424242;
         color: white;
         text-align: center;
@@ -25,12 +24,17 @@
         font-size: 16px;
         cursor: pointer;
         transition: background-color 0.3s;
-      }
+        position: fixed;
+        bottom: 0px; /* Adjust this value as needed */
+        left: 50%;
+        transform: translateX(-50%); /* Centers the button horizontally */
+        }
 
-      .btn-table:hover {
+        .btn-table:hover {
         background-color: white;
         color: #424242;
-      }
+        }
+
 
       button {
         padding: 12px 25px;
