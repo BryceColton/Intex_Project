@@ -179,3 +179,18 @@ main {
   all: unset;
   display: block;
 }
+
+#coloredButton {
+  background-color: #d3d3d3;  /* Light grey background */
+  color: black;               /* Black text */
+  border: none;               /* No border */
+  border-radius: 12px;        /* Rounded corners */
+  padding: 10px 20px;         /* Padding around the text */
+  font-size: 16px;            /* Font size */
+  cursor: pointer;           /* Pointer cursor on hover */
+  transition: background-color 0.3s ease;
+}
+
+#coloredButton:hover{
+  background-color: #b0b0b0;
+}
