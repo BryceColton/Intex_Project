@@ -29,7 +29,7 @@
         <main style="display: flex; justify-content: center; align-items: center;">
             <section class="form-section">
                 <form action="/handlePendingEvent/<%= event.eventid %>" method="POST">        
-                <h2 class="form-title">Event Details</h2>
+                <h2 class="form-title">Event Request Details</h2>
                     <fieldset>
                         <legend>Requester Details</legend>
                         <div class="form-group">
@@ -53,54 +53,33 @@
                     </fieldset>
     
                     <fieldset>
-                        <legend>Event Information</legend>
+                        <legend>Event Details</legend>
+                        <div class="form-group">
+                            <label for="event_address">Event Address: <b><%=event.event_address %>, <%=event.city%>, <%=event.state %>, <%=event.zip %></b></label>
+                        </div>
                         <div class="form-group">
                             <label for="event_type">Event Type: <b><%=event.event_type %></b></label>
                         </div>
-                        <div class="form-group">
-                            <label for="event_address">Event Address: <b><%=event.event_address %></b></label>
-                        </div>
-                        <div class="form-group">
-                            <label for="city">City: <b><%=event.city %></b></label>
-                        </div>
-                        <div class="form-group">
-                            <label for="state">State: <b><%=event.state %></b></label>
-                        </div>
-                        <div class="form-group">
-                            <label for="zip">ZIP: <b><%=event.zip %></b></label>
-                        </div>
-                    </fieldset>
-                    <fieldset>
-                        <legend>Additional Details</legend>
                         <div class="form-group">
                             <label>Public: <b><%=event.public == 'true' ? 'Yes' : 'No'%></b></label>
                         </div>
                         <div class="form-group">
                             <label>Guest Speaker: <b><%=event.guest_speaker == 'true' ? 'Yes' : 'No' %></b></label>
                         </div>
-                    </fieldset>
-                    <fieldset>
-                        <legend>Event Details</legend>
-                        <div class="form-group">
-                            <label for="eventdatetime1">Date Option 1: <b><%=event.eventdatetime1 %></b></label>
-                        </div>
-                        <div class="form-group">
-                            <label for="eventdatetime2">Date Option 2: <b><%=event.eventdatetime2 %></b></label>
-                        </div>
                         <div class="form-group">
                             <label for="numexpected">Expected Number of People: <b><%=event.numexpected %></b></label>
                         </div>
                         <div class="form-group">
-                            <label for="duration">Duration: <b><%=event.duration %></b></label>
+                            <label for="duration">Duration: <b><%=event.duration %> hours</b></label>
                         </div>
                         <div class="form-group">
                             <label for="venuedescription">Venue Description: <b><%=event.venuedescription %></b></label>
                         </div>
-                    </fieldset>        
+                    </fieldset>       
                     <fieldset>
                         <legend>Finalize</legend>
                         <!-- Select a date and approve/decline (Radio Buttons) -->
-                        <label>Select a date:</label>
+                        <label>Select a Date:</label>
                         <div class="form-group">
                             <label>
                             <input type="radio" name="date" value="<%=event.eventdatetime1%>" required><b><%=event.eventdatetime1 %></b>
@@ -122,7 +101,7 @@
                         </div>
                         <br>
                 
-                    <button type="submit" id="coloredButton">Finish</button>
+                    <button type="submit" class="btn btn-donate">Finish</button>
                     </fieldset>
                 </form>
                 </section>
