@@ -2,9 +2,11 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const dotenv = require("dotenv");
-
 const session = require("express-session");
+const dayjs = require("dayjs");
+const utc = require("dayjs/plugin/utc");
 
+dayjs.extend(utc);
 app.use(express.static(path.join(__dirname, "public")));
 
 // Load environment variables from .env file
@@ -206,19 +208,31 @@ app.get("/viewEvent/:eventid", (req, res) => {
 });
 
 // This route is to update the status of an event in the database after an admin approves or denies it.
-app.post("/handlePendingEvent/:eventid", (req, res) => {
+app.post("/handlePendingEvent/:eventid", async (req, res) => {
   const eventid = req.params.eventid;
   const status = req.body.status;
-  knex("events")
-    .update({ status: status })
-    .where("eventid", eventid)
-    .then(() => {
-      res.redirect("/manageEvents"); // Redirect to the list of events after saving
-    })
-    .catch((error) => {
-      console.error("Error updating event:", error);
-      res.status(500).send("Internal Server Error");
+  const final_date = req.body.date; // Date from the form
+
+  try {
+    // Convert the date to UTC for both tables
+    const formattedDate = dayjs(final_date).utc().format("YYYY-MM-DD HH:mm:ss");
+
+    await knex.transaction(async (trx) => {
+      // Update the `events` table
+      await trx("events").update({ status: status }).where("eventid", eventid);
+
+      // Insert into `finalized_events` with UTC date
+      await trx("finalized_events").insert({
+        eventid: eventid,
+        date: formattedDate,
+      });
     });
+
+    res.redirect("/manageEvents");
+  } catch (error) {
+    console.error("Error handling event transaction:", error);
+    res.status(500).send("Internal Server Error: " + error.message);
+  }
 });
 
 // This route makes the admin delete event functionality
@@ -358,7 +372,8 @@ app.post("/adminAddVolunteer", isAuthenticated, (req, res) => {
 });
 
 app.get("/viewCompletedEvent/:eventid", (req, res) => {
-  let eventid = req.params.eventid;
+  const eventid = req.params.eventid;
+  const date = req.body.date;
   knex("events")
     .where("eventid", eventid)
     .first() //returns an object representing one record
@@ -367,7 +382,17 @@ app.get("/viewCompletedEvent/:eventid", (req, res) => {
       if (!event) {
         return res.status(404).send("Event not found");
       }
-      res.render("viewCompletedEvent", { event });
+      knex("finalized_events")
+        .select("eventid", "date")
+        .where("eventid", eventid)
+        .first()
+        .then((finalized_event) => {
+          res.render("viewCompletedEvent", { event, finalized_event });
+        })
+        .catch((error) => {
+          console.error("Error fetching finalized event:", error);
+          res.status(500).send("Internal Server Error");
+        });
     })
     .catch((error) => {
       console.error("Error fetching event details:", error);
