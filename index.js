@@ -2,9 +2,11 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const dotenv = require("dotenv");
-
 const session = require("express-session");
+const dayjs = require("dayjs");
+const utc = require("dayjs/plugin/utc");
 
+dayjs.extend(utc);
 app.use(express.static(path.join(__dirname, "public")));
 
 // Load environment variables from .env file
@@ -206,19 +208,31 @@ app.get("/viewEvent/:eventid", isAuthenticated, (req, res) => {
 });
 
 // This route is to update the status of an event in the database after an admin approves or denies it.
-app.post("/handlePendingEvent/:eventid", isAuthenticated, (req, res) => {
+app.post("/handlePendingEvent/:eventid", async (req, res) => {
   const eventid = req.params.eventid;
   const status = req.body.status;
-  knex("events")
-    .update({ status: status })
-    .where("eventid", eventid)
-    .then(() => {
-      res.redirect("/manageEvents"); // Redirect to the list of events after saving
-    })
-    .catch((error) => {
-      console.error("Error updating event:", error);
-      res.status(500).send("Internal Server Error");
+  const final_date = req.body.date; // Date from the form
+
+  try {
+    // Convert the date to UTC for both tables
+    const formattedDate = dayjs(final_date).utc().format("YYYY-MM-DD HH:mm:ss");
+
+    await knex.transaction(async (trx) => {
+      // Update the `events` table
+      await trx("events").update({ status: status }).where("eventid", eventid);
+
+      // Insert into `finalized_events` with UTC date
+      await trx("finalized_events").insert({
+        eventid: eventid,
+        date: formattedDate,
+      });
     });
+
+    res.redirect("/manageEvents");
+  } catch (error) {
+    console.error("Error handling event transaction:", error);
+    res.status(500).send("Internal Server Error: " + error.message);
+  }
 });
 
 // This route makes the admin delete event functionality
@@ -365,10 +379,11 @@ app.post("/adminAddVolunteer", isAuthenticated, (req, res) => {
     });
 });
 
-app.get("/viewCompletedEvent/:eventid", isAuthenticated, (req, res) => {
-  let eventid = req.params.eventid;
+app.get("/viewCompletedEvent/:eventid", (req, res) => {
+  const eventid = req.params.eventid;
+  const date = req.body.date;
   knex("events")
-  .join("finalized_events", "events.eventid", "=", "finalized_events.eventid") // Join the tables
+    .join("finalized_events", "events.eventid", "=", "finalized_events.eventid") // Join the tables
     .where("events.eventid", eventid)
     .first() //returns an object representing one record
     .then((event) => {
@@ -376,6 +391,7 @@ app.get("/viewCompletedEvent/:eventid", isAuthenticated, (req, res) => {
       if (!event) {
         return res.status(404).send("Event not found");
       }
+<<<<<<< HEAD
 
       if (event && event.date) {
         event.date = new Date(event.date).toString(); 
@@ -384,6 +400,19 @@ app.get("/viewCompletedEvent/:eventid", isAuthenticated, (req, res) => {
 
       console.log(event)
       res.render("viewCompletedEvent", { event });  
+=======
+      knex("finalized_events")
+        .select("eventid", "date")
+        .where("eventid", eventid)
+        .first()
+        .then((finalized_event) => {
+          res.render("viewCompletedEvent", { event, finalized_event });
+        })
+        .catch((error) => {
+          console.error("Error fetching finalized event:", error);
+          res.status(500).send("Internal Server Error");
+        });
+>>>>>>> 3858e3b40201930d3edbaf0434e584f84cb74149
     })
     .catch((error) => {
       console.error("Error fetching event details:", error);
@@ -412,7 +441,7 @@ app.get("/editVolunteer/:vol_email", isAuthenticated, (req, res) => {
 });
 
 app.get("/adminCompletedEvents", (req, res) => {
-    knex("completed_events")
+  knex("completed_events")
     .select()
     .then((completed_events) => {
       //.then() says, I just queried all this data, send it to this variable planets.
@@ -424,32 +453,31 @@ app.get("/adminCompletedEvents", (req, res) => {
       console.error("Error querying database:", error);
       res.status(500).send("Internal Server Error");
     });
-})
- 
+});
 
 app.post("/viewCompletedEvent/:eventid", isAuthenticated, (req, res) => {
-    let eventid = req.params.eventid;
-    const {num_actual, num_pocket, num_collar, num_envelopes, num_vests, num_completed} = req.body
-    // Extract form values from req.body
-    // Insert the database
-    knex("completed_events")
-      .insert({
-        eventid: eventid,
-        num_actual: num_actual,
-        num_pocket: num_pocket,
-        num_collar: num_collar,
-        num_envelopes: num_envelopes,
-        num_vests: num_vests,
-        num_completed: num_completed,
-      })
-      .then(() => {
-        res.redirect("/manageEvents"); // Redirect to admin manage volunteers after submit
-      })
-      .catch((error) => {
-        console.error("Error adding Completing Event:", error);
-        res.status(500).send("Internal Server Error");
-      });
-  });
+  let eventid = req.params.eventid;
+  const { num_actual, num_pocket, num_collar, num_envelopes, num_vests, num_completed } = req.body;
+  // Extract form values from req.body
+  // Insert the database
+  knex("completed_events")
+    .insert({
+      eventid: eventid,
+      num_actual: num_actual,
+      num_pocket: num_pocket,
+      num_collar: num_collar,
+      num_envelopes: num_envelopes,
+      num_vests: num_vests,
+      num_completed: num_completed,
+    })
+    .then(() => {
+      res.redirect("/manageEvents"); // Redirect to admin manage volunteers after submit
+    })
+    .catch((error) => {
+      console.error("Error adding Completing Event:", error);
+      res.status(500).send("Internal Server Error");
+    });
+});
 
 // This is the post route to edit a volunteer's data from the admin page
 app.post("/editVolunteer/:vol_email", isAuthenticated, (req, res) => {
@@ -517,7 +545,7 @@ app.get("/manageUsers", isAuthenticated, (req, res) => {
 });
 
 // This is the get route to edit an admin from the admin page
-app.get("/editUser/:admin_user_name", isAuthenticated,(req, res) => {
+app.get("/editUser/:admin_user_name", isAuthenticated, (req, res) => {
   //This is the route for editVolunteer. The /: means there is a parameter passed in called vol_email.
   const id = req.params.admin_user_name;
   // Query the Volunteer by email first
