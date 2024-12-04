@@ -35,11 +35,12 @@
               <th>Event Type</th>
               <th>City</th>
               <th>State</th>
+              <th>Status</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            <% if (upcoming_events.length > 0) { %> <% upcoming_events.forEach(row => { %>
+            <% if (pending_events.length > 0) { %> <% pending_events.forEach(row => { %>
             <!-- dynamically create html table rows for each row in the database -->
             <!--says that for each record, one at a time, send it to that variable "row"-->
             <tr>
@@ -51,6 +52,7 @@
               <td><%= row.event_type %></td>
               <td><%= row.city %></td>
               <td><%= row.state %></td>
+              <td><%= row.status %></td>
               <td><%= row.actions %></td>
               <!-- Edit button to go to the editEvent page where the admin will be able to accept/decline event requests -->
               <td>
