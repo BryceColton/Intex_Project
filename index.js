@@ -275,27 +275,27 @@ app.post("/adminAddEvent", (req, res) => {
 
   knex("events")
     .insert({
-      event_name,
-      organization,
-      organizer_first_name,
-      organizer_last_name,
-      org_phone,
-      org_email,
-      event_type,
-      event_address,
-      city,
-      state,
-      zip,
+      event_name: event_name,
+      organization: organization,
+      organizer_first_name: organizer_first_name,
+      organizer_last_name: organizer_last_name,
+      org_phone: org_phone,
+      org_email: org_email,
+      event_type: event_type,
+      event_address: event_address,
+      city: city,
+      state: state,
+      zip: zip,
       public: public === "on", // Convert checkbox to boolean
       guest_speaker: guest_speaker === "on", // Convert checkbox to boolean
       numexpected: parseInt(numexpected, 10), // Ensure it's stored as an integer
-      venuedescription,
+      venuedescription: venuedescription,
       duration: parseFloat(duration), // Ensure it's stored as a float
       eventdatetime1: new Date(eventdatetime1), // Ensure it's stored as a valid Date
       eventdatetime2: new Date(eventdatetime2), // Ensure it's stored as a valid Date
       status: "approved",
     })
-
+    .returning("eventid")
     .then(([eventid]) => {
       res.redirect("/manageEvents");
     })
@@ -360,14 +360,22 @@ app.post("/adminAddVolunteer", isAuthenticated, (req, res) => {
 app.get("/viewCompletedEvent/:eventid", (req, res) => {
   let eventid = req.params.eventid;
   knex("events")
-    .where("eventid", eventid)
+  .join("finalized_events", "events.eventid", "=", "finalized_events.eventid") // Join the tables
+    .where("events.eventid", eventid)
     .first() //returns an object representing one record
     .then((event) => {
-      //This variable represents one object that has attributes, which are the column names
+      //This variable represents one object t hat has attributes, which are the column names
       if (!event) {
         return res.status(404).send("Event not found");
       }
-      res.render("viewCompletedEvent", { event });
+
+      if (event && event.date) {
+        event.date = new Date(event.date).toString(); // Convert to ISO format (UTC)
+      }
+
+
+      console.log(event)
+      res.render("viewCompletedEvent", { event });  
     })
     .catch((error) => {
       console.error("Error fetching event details:", error);
@@ -409,7 +417,7 @@ app.get("/adminCompletedEvents", (req, res) => {
       res.status(500).send("Internal Server Error");
     });
 })
-
+ 
 
 app.post("/viewCompletedEvent/:eventid", isAuthenticated, (req, res) => {
     let eventid = req.params.eventid;
