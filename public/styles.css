@@ -34,20 +34,26 @@ body {
   gap: 1rem;
 }
 
-.btn {
-  padding: 0.4rem 0.8rem;
-  border: 2px solid white;
-  background-color: transparent;
-  color: white;
-  text-decoration: none;
+/* General button styles */
+.btn, .btn-donate {
+  padding: 0.4rem 0.8rem; /* Same padding for both */
+  border: 2px solid white; /* Add border for .btn-donate too */
+  font-size: 0.9rem; /* Same font size for both */
   cursor: pointer;
   transition: all 0.3s ease;
-  font-size: 0.9rem;
+  text-decoration: none;
 }
 
+/* Style for .btn */
+.btn {
+  background-color: transparent;
+  color: white;
+}
+
+/* Style for .btn-donate */
 .btn-donate {
-  background-color: #2e8b57;
-  border: none;
+  background-color: #2e8b57; /* Green background */ /* No border for .btn-donate */
+  color: white; /* Text color should match .btn */
 }
 
 .btn:hover {
