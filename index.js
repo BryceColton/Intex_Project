@@ -68,9 +68,9 @@ app.get("/jensStory", (req, res) => {
   res.render("jensStory");
 });
 
-app.get("/publicEvents", (req, res) => {
-  res.render("publicEvents");
-});
+// app.get("/publicEvents", (req, res) => {
+//   res.render("publicEvents");
+// });
 
 function isAuthenticated(req, res, next) {
   if (req.session && req.session.isLoggedIn) {
@@ -469,17 +469,10 @@ app.get("/editVolunteer/:vol_email", isAuthenticated, (req, res) => {
 app.get("/publicEvents", (req, res) => {
   knex("events")
     .join("finalized_events", "events.eventid", "=", "finalized_events.eventid")
-    //.where("events.public", true)
-    .select
-    // "events.event_name",
-    //"finalized_events.date",
-    //"events.event_address",
-    //"events.city",
-    //"events.state",
-    // "events.zip"
-    ()
+    .select()
     .then((events) => {
-      console.log("Fetched Events:", events); // Debug: Verify what data is fetched
+      console.log("Fetched Events:", events);
+
       res.render("publicEvents", { events }); // Pass `events` to EJS template
     })
     .catch((error) => {
@@ -492,9 +485,6 @@ app.get("/adminCompletedEvents", (req, res) => {
   knex("completed_events")
     .select()
     .then((completed_events) => {
-      //.then() says, I just queried all this data, send it to this variable planets.
-      //the array of rows gets stored in this variable called planets.
-      // Render the maintainPlanets template and pass the data
       res.render("completedEvents", { completed_events }); //render index.ejs and pass it planets.
     })
     .catch((error) => {
