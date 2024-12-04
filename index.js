@@ -35,6 +35,8 @@ const knex = require("knex")({
 });
 // This is all of the information needed to access postgres
 
+//PUBLIC FACING ROUTES ****************************************************************************************************************
+
 // This is the get method for the root file
 app.get("/", (req, res) => {
   res.render("index");
@@ -60,25 +62,59 @@ app.get("/admin", (req, res) => {
   res.render("admin");
 });
 
-// This is the get method to render the manageEvents page and display data from the events table
+// ADMIN MANAGE EVENTS ROUTES ***************************************************************************************************************
+
+// This is the get method to render the manageEvents page and display data from the events, completed_events, and finalized_events tables
 app.get("/manageEvents", (req, res) => {
+  // Query the events
   knex("events")
     .select()
-    .then((events) => {
-      //.then() says, I just queried all this data, send it to this variable planets.
-      //the array of rows gets stored in this variable called planets.
-      // Render the maintainPlanets template and pass the data
-      res.render("manageEvents", { events }); //render index.ejs and pass it planets.
+    .then((upcoming_events) => {
+      //This variable represents one object that has attributes, which are the column names
+      if (!upcoming_events) {
+        return res.status(404).send("Upcoming events not found");
+      }
+      //get data from finalized events table to send with the upcoming events
+      knex("finalized_events")
+        .select()
+        .then((finalized_events) => {
+          //render both the upcoming_events (events table) and finalized_events
+          res.render("manageEvents", { upcoming_events, finalized_events });
+        })
+        .catch((error) => {
+          console.error("Error fetching finalized event details:", error);
+          res.status(500).send("Internal Server Error");
+        });
     })
     .catch((error) => {
-      console.error("Error querying database:", error);
+      console.error("Error fetching upcoming event details:", error);
       res.status(500).send("Internal Server Error");
     });
 });
 
-//This is the post route to delete an event
+// This route is tied to the view button on pending event requests.
+app.get("/viewEvent/:eventid", (req, res) => {
+  console.log(req.query);
+  let eventid = req.params.eventid;
+  knex("events")
+    .where("eventid", eventid)
+    .first() //returns an object representing one record
+    .then((event) => {
+      //This variable represents one object that has attributes, which are the column names
+      if (!event) {
+        return res.status(404).send("Event not found");
+      }
+      res.render("viewEvent", { event });
+    })
+    .catch((error) => {
+      console.error("Error fetching event details:", error);
+      res.status(500).send("Internal Server Error");
+    });
+});
 
-//This is the post route to post an edited event to the database
+// This route updates a specific event's status in the database to determine if it is an approved or declined event
+
+// ADMIN MANAGE VOLUNTEERS ROUTES ***********************************************************************************************************
 
 // This is the get method to render the manageVolunteers page and display data from the volunteers table
 app.get("/manageVolunteers", (req, res) => {
@@ -202,6 +238,8 @@ app.post("/deleteVolunteer/:vol_email", (req, res) => {
     });
 });
 
+// PUBLIC FACING ROUTES ****************************************************************************************************
+
 // Submit event form
 app.post("/submitEventForm", (req, res) => {
   const {
@@ -245,7 +283,6 @@ app.post("/submitEventForm", (req, res) => {
       res.status(500).json({ message: "Error saving the event", error: err });
     });
 });
-
 
 // This is to add a volunteer to the database
 app.post("/submitVolunteerForm", (req, res) => {
