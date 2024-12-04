@@ -85,8 +85,15 @@
         <table>
             <thead>
               <tr>
-                <th>Date</th>
-                <th>Time</th>
+                <th>Event Name</th>
+                <th>Organization</th>
+                <th>Organizer First Name</th>
+                <th>Organizer Last Name</th>
+                <th>Event Type</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Status</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -94,9 +101,15 @@
               <!-- dynamically create html table rows for each row in the database -->
               <!--says that for each record, one at a time, send it to that variable "row"-->
               <tr>
-                <input type="hidden" value="row.id" />
-                <td><%= row.date %></td>
-                <td><%= row.time %></td>
+                <input type="hidden" value="row.eventid" />
+                <td><%= row.event_name %></td>
+                <td><%= row.organization %></td>
+                <td><%= row.organizer_first_name %></td>
+                <td><%= row.organizer_last_name %></td>
+                <td><%= row.event_type %></td>
+                <td><%= row.city %></td>
+                <td><%= row.state %></td>
+                <td><%= row.status %></td>
                 <td><%= row.actions %></td>
                 <!-- Edit button to go to the editEvent page where the admin will be able to mark the event as completed and input event stats -->
                 <td>

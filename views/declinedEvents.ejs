@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin -- Declined Events</title>
+    <link rel="icon" type="image/png" href="/img/logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="/styles.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-logo">Turtle Shelter Project</div>
+        <div class="navbar-buttons">
+            <!-- These will be navbar buttons to take the admin to pages that will manage the volunteers and events -->
+            <form action="/admin" method="GET"><button class="btn" type="submit">Admin Home</button></form>
+            <form action="/manageEvents" method="GET"><button class="btn" type="submit">Manage Events</button></form>
+        </nav>
+
+        <h1 style="text-align: center">Declined Event Requests</h1>
+
+        <!-- Pending events table -->
+        <table>
+          <thead>
+            <tr>
+              <th>Event Name</th>
+              <th>Organization</th>
+              <th>Organizer First Name</th>
+              <th>Organizer Last Name</th>
+              <th>Event Type</th>
+              <th>City</th>
+              <th>State</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (declined_events.length > 0) { %> <% declined_events.forEach(row => { %>
+            <!-- dynamically create html table rows for each row in the database -->
+            <!--says that for each record, one at a time, send it to that variable "row"-->
+            <tr>
+              <input type="hidden" value="row.eventid" />
+              <td><%= row.event_name %></td>
+              <td><%= row.organization %></td>
+              <td><%= row.organizer_first_name %></td>
+              <td><%= row.organizer_last_name %></td>
+              <td><%= row.event_type %></td>
+              <td><%= row.city %></td>
+              <td><%= row.state %></td>
+              <td><%= row.status %></td>
+              <!-- Edit button to go to the editEvent page where the admin will be able to accept/decline event requests -->
+            </tr>
+            <% }) %> <% } else { %>
+            <tr>
+              <td colspan="7">No data available</td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+
+        <br><br>
+        
+            </tbody>
+          </table>
+    
+</body>
+</html>
