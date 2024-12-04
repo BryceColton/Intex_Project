@@ -29,7 +29,7 @@
     <main style="display: flex; justify-content: center; align-items: center; height: 100vh">
       <section class="form-section">
         <h2 class="form-title">Event Creation Form</h2>
-        <form action="/submitEventForm" method="POST" class="event-form">
+        <form action="/adminAddEvent" method="POST" class="event-form">
           <fieldset>
             <legend>Event Details</legend>
             <div class="form-group">
@@ -231,7 +231,7 @@
               ></textarea>
 
               <!-- Automatically approve admin event requests -->
-              <!-- <input type="text" name="status" value="approved" hidden /> -->
+              <input type="text" name="status" value="approved" hidden />
             </div>
           </fieldset>
 

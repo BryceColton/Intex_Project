@@ -17,20 +17,17 @@
     <nav class="navbar">
       <div class="navbar-logo">Turtle Shelter Project</div>
       <div class="navbar-buttons">
-        <form action="/jensStory" method="GET">
-          <button class="btn" type="submit">Jen's Story</button>
-        </form>
-        <form action="/volunteer" method="GET">
-          <button class="btn" type="submit">Volunteer</button>
-        </form>
-        <form action="/hostevent" method="GET">
-          <button class="btn" type="submit">Host an Event</button>
-        </form>
-        <button class="btn btn-donate">Donate</button>
+        <form action="/" method="GET"><button class="btn" type="submit">Home</button></form>
+        <form action="/jensStory" method="GET"><button class="btn" type="submit">Jen's Story</button></form>
+        <form action="/volunteer" method="GET"><button class="btn" type="submit">Volunteer</button></form>
+        <form action="/hostevent" method="GET"><button class="btn" type="submit">Host an Event</button></form>
+        <a href="https://turtleshelterproject.org/checkout/donate?donatePageId=5b6a44c588251b72932df5a0">
+          <button class="btn btn-donate">Donate</button>
+        </a> 
       </div>
     </nav>
 
-    <main style="display: flex; justify-content: center; align-items: center; height: 100vh">
+    <main>
       <section class="form-section">
         <h2 class="form-title">Volunteer Sign-Up</h2>
         <form action="/submitVolunteerForm" method="POST" class="volunteer-form">
@@ -115,7 +112,7 @@
             </div>
           </fieldset>
 
-          <button type="submit" class="btn">Submit</button>
+          <button type="submit" class="btn" id="coloredButton">Submit</button>
         </form>
       </section>
     </main>
