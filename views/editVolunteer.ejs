@@ -92,11 +92,11 @@
               <div class="form-group">
                 <label for="sewing_level">Sewing Level</label>
                 <select id="sewing_level" name="sewing_level" required>
-                  <option value="" disabled selected><%= volunteer.sewing_level == 3 ? "Advanced" : volunteer.sewing_level == 2 ? "Intermediate" : "Beginner"%></option>
-                  <option value="1">Beginner</option>
-                  <option value="2">Intermediate</option>
-                  <option value="3">Advanced</option>
-                </select>
+                  <option value="" disabled selected>Select your sewing level</option>
+                  <option value="1" <%= volunteer.sewing_level == 1 ? "selected" : "" %>>Beginner</option>
+                  <option value="2" <%= volunteer.sewing_level == 2 ? "selected" : "" %>>Intermediate</option>
+                  <option value="3" <%= volunteer.sewing_level == 3 ? "selected" : "" %>>Advanced</option>
+                </select>                
               </div>
 
               <!-- Volunteer Hours willing to work -->
@@ -117,13 +117,13 @@
               <div class="form-group">
                 <label for="origin">How Did You Hear About Us?</label>
                 <select id="origin" name="origin" required>
-                  <option value="" disabled selected><%= volunteer.origin %></option>
-                  <option value="Friend Referral">Friend Referral</option>
-                  <option value="Social Media">Social Media</option>
-                  <option value="Community Event">Community Event</option>
-                  <option value="Company Website">Company Website</option>
-                  <option value="Other">Other</option>
-                </select>
+                  <option value="" disabled selected>Select your origin</option>
+                  <option value="Friend Referral" <%= volunteer.origin == 'Friend Referral' ? 'selected' : '' %>>Friend Referral</option>
+                  <option value="Social Media" <%= volunteer.origin == 'Social Media' ? 'selected' : '' %>>Social Media</option>
+                  <option value="Community Event" <%= volunteer.origin == 'Community Event' ? 'selected' : '' %>>Community Event</option>
+                  <option value="Company Website" <%= volunteer.origin == 'Company Website' ? 'selected' : '' %>>Company Website</option>
+                  <option value="Other" <%= volunteer.origin == 'Other' ? 'selected' : '' %>>Other</option>
+                </select>                
               </div>
             </fieldset>
   
