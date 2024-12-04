@@ -386,7 +386,6 @@ app.post("/submitEventForm", (req, res) => {
     });
 });
 
-// This is to add a volunteer to the database
 app.post("/submitVolunteerForm", (req, res) => {
   // Extract form values from req.body
   const vol_email = req.body.vol_email;
@@ -397,23 +396,38 @@ app.post("/submitVolunteerForm", (req, res) => {
   const num_hours = parseFloat(req.body.num_hours, 10);
   const origin = req.body.origin;
   const zip = req.body.zip;
-  // Insert the database
+
+  // Check if email already exists
   knex("volunteers")
-    .insert({
-      vol_email: vol_email, // Ensure description is uppercase
-      vol_first_name: vol_first_name,
-      vol_last_name: vol_last_name,
-      vol_phone: vol_phone,
-      sewing_level: sewing_level,
-      num_hours: num_hours,
-      origin: origin,
-      zip: zip,
-    })
-    .then(() => {
-      res.redirect("/"); // Redirect to the home page after adding
+    .where({ vol_email: vol_email })
+    .first()  // Returns the first match or null if no match
+    .then((existingVolunteer) => {
+      if (existingVolunteer) {
+        return res.status(400).json({ message: "Email already exists." });
+      }
+
+      // If the email doesn't exist, proceed to insert the new volunteer
+      return knex("volunteers")
+        .insert({
+          vol_email: vol_email, // Ensure description is uppercase
+          vol_first_name: vol_first_name,
+          vol_last_name: vol_last_name,
+          vol_phone: vol_phone,
+          sewing_level: sewing_level,
+          num_hours: num_hours,
+          origin: origin,
+          zip: zip,
+        })
+        .then(() => {
+          res.redirect("/"); // Redirect to the home page after adding
+        })
+        .catch((error) => {
+          console.error("Error adding Volunteer:", error);
+          res.status(500).send("Internal Server Error");
+        });
     })
     .catch((error) => {
-      console.error("Error adding Volunteer:", error);
+      console.error("Error checking email:", error);
       res.status(500).send("Internal Server Error");
     });
 });
