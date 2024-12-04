@@ -452,6 +452,28 @@ app.get("/editVolunteer/:vol_email", isAuthenticated, (req, res) => {
     });
 });
 
+app.get("/publicEvents", (req, res) => {
+  knex("events")
+    .join("finalized_events", "events.eventid", "=", "finalized_events.eventid")
+    //.where("events.public", true)
+    .select(
+     // "events.event_name", 
+      //"finalized_events.date", 
+      //"events.event_address", 
+      //"events.city", 
+      //"events.state", 
+     // "events.zip"
+    )
+    .then((events) => {
+      console.log("Fetched Events:", events); // Debug: Verify what data is fetched
+      res.render("publicEvents", { events }); // Pass `events` to EJS template
+    })
+    .catch((error) => {
+      console.error("Error fetching events:", error);
+      res.status(500).send("Internal Server Error");
+    });
+});
+
 app.get("/adminCompletedEvents", (req, res) => {
   knex("completed_events")
     .select()
