@@ -150,6 +150,8 @@ app.post("/login", (req, res) => {
     });
 });
 
+// ADMIN ROUTES *******************************************************************************************************************************
+
 // This is the get method to render the admin page
 app.get("/admin", isAuthenticated, (req, res) => {
   res.render("admin");
@@ -203,7 +205,36 @@ app.get("/viewEvent/:eventid", (req, res) => {
     });
 });
 
-// This route updates a specific event's status in the database to determine if it is an approved or declined event
+// This route is to update the status of an event in the database after an admin approves or denies it.
+app.post("/handlePendingEvent/:eventid", (req, res) => {
+  const eventid = req.params.eventid;
+  const status = req.body.status;
+  knex("events")
+    .update({ status: status })
+    .where("eventid", eventid)
+    .then(() => {
+      res.redirect("/manageEvents"); // Redirect to the list of events after saving
+    })
+    .catch((error) => {
+      console.error("Error updating event:", error);
+      res.status(500).send("Internal Server Error");
+    });
+});
+
+// This route makes the admin delete event functionality
+app.post("/deleteEvent/:eventid", (req, res) => {
+  const id = req.params.eventid;
+  knex("events")
+    .where("eventid", id)
+    .del() // Deletes the record with the specified ID
+    .then(() => {
+      res.redirect("/manageEvents"); // Redirect to the volunteers list after deletion
+    })
+    .catch((error) => {
+      console.error("Error deleting Event:", error);
+      res.status(500).send("Internal Server Error");
+    });
+});
 
 // ADMIN MANAGE VOLUNTEERS ROUTES ***********************************************************************************************************
 
