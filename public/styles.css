@@ -274,3 +274,9 @@ main {
   width: 225px; /* Adjust the width of the image as needed */
   height: auto; /* Maintain aspect ratio of the image */
 }
+
+.jenstory {
+  font-family: 'Montserrat', sans-serif;
+  margin-bottom: 10px;
+
+}
