@@ -25,8 +25,8 @@
         <!-- Event Info Here -->
         <main style="display: flex; justify-content: center; align-items: center;">
             <section class="form-section">
-                <form action="handlePendingEvent/:<%= event.eventid %>" method="POST">        
-                <h2 class="form-title">Event Details</h2>
+                <form action="/viewCompletedEvent/<%= event.eventid %>" method="POST">
+                    <h2 class="form-title">Event Details</h2>
                     <fieldset>
                         <legend>Event Details</legend>
                         <div class="form-group">
@@ -95,17 +95,17 @@
                         <legend>Event Numbers</legend>
                         <!-- Approve/Decline (Radio Buttons) -->
                         <div class="form-group">
-                                <label for="numexpected">Number of Actual People:</label>
+                                <label for="num_actual">Number of Actual People:</label>
                                 <input
                                   type="number"
-                                  id="num_pocket"
-                                  name="num_pocket"
+                                  id="num_actual"
+                                  name="num_actual"
                                   min="1"
                                   placeholder="(ie.50)"
                                   required
                                 />
                                     <br>
-                                    <label for="numexpected">Number of Pockets:</label>
+                                    <label for="num_pockets">Number of Pockets:</label>
                                     <input
                                       type="number"
                                       id="num_pocket"
@@ -148,7 +148,7 @@
                                     />
                             <label>
                                 <br>
-                                <label for="numexpected">Number of Completed Products:</label>
+                                <label for="num_completed">Number of Completed Products:</label>
                                 <input
                                   type="number"
                                   id="num_completed"
@@ -166,7 +166,7 @@
                         <!-- Approve/Decline (Radio Buttons) -->
                         <div class="form-group">
                             <label>
-                            <input type="radio" name="status" value="A" <%= event.status === 'Completed' ? 'checked' : ''
+                            <input required type="radio" name="status" value="A" <%= event.status === 'Completed' ? 'checked' : ''
                             %>> Completed
                             </label>
                             <br>

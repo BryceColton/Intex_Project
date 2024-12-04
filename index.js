@@ -189,7 +189,7 @@ app.get("/manageEvents", isAuthenticated, (req, res) => {
 });
 
 // This route is tied to the view button on pending event requests.
-app.get("/viewEvent/:eventid", (req, res) => {
+app.get("/viewEvent/:eventid", isAuthenticated, (req, res) => {
   let eventid = req.params.eventid;
   knex("events")
     .where("eventid", eventid)
@@ -236,7 +236,7 @@ app.post("/handlePendingEvent/:eventid", async (req, res) => {
 });
 
 // This route makes the admin delete event functionality
-app.post("/deleteEvent/:eventid", (req, res) => {
+app.post("/deleteEvent/:eventid", isAuthenticated, (req, res) => {
   const id = req.params.eventid;
   knex("events")
     .where("eventid", id)
@@ -251,7 +251,7 @@ app.post("/deleteEvent/:eventid", (req, res) => {
 });
 
 // This route is for the admin to view declined events
-app.get("/adminDeclinedEvents", (req, res) => {
+app.get("/adminDeclinedEvents", isAuthenticated, (req, res) => {
   knex("events")
     .select()
     .where("status", "declined")
@@ -259,12 +259,12 @@ app.get("/adminDeclinedEvents", (req, res) => {
 });
 
 // This route is the get route for the admin to create their own events to show in the upcoming events table
-app.get("/adminAddEvent", (req, res) => {
+app.get("/adminAddEvent", isAuthenticated, (req, res) => {
   res.render("adminAddEvent");
 });
 
 // This route is the post route for the admin to add an event
-app.post("/adminAddEvent", (req, res) => {
+app.post("/adminAddEvent", isAuthenticated, (req, res) => {
   console.log(req.body);
   const {
     event_name,
@@ -289,27 +289,27 @@ app.post("/adminAddEvent", (req, res) => {
 
   knex("events")
     .insert({
-      event_name,
-      organization,
-      organizer_first_name,
-      organizer_last_name,
-      org_phone,
-      org_email,
-      event_type,
-      event_address,
-      city,
-      state,
-      zip,
+      event_name: event_name,
+      organization: organization,
+      organizer_first_name: organizer_first_name,
+      organizer_last_name: organizer_last_name,
+      org_phone: org_phone,
+      org_email: org_email,
+      event_type: event_type,
+      event_address: event_address,
+      city: city,
+      state: state,
+      zip: zip,
       public: public === "on", // Convert checkbox to boolean
       guest_speaker: guest_speaker === "on", // Convert checkbox to boolean
       numexpected: parseInt(numexpected, 10), // Ensure it's stored as an integer
-      venuedescription,
+      venuedescription: venuedescription,
       duration: parseFloat(duration), // Ensure it's stored as a float
       eventdatetime1: new Date(eventdatetime1), // Ensure it's stored as a valid Date
       eventdatetime2: new Date(eventdatetime2), // Ensure it's stored as a valid Date
       status: "approved",
     })
-
+    .returning("eventid")
     .then(([eventid]) => {
       res.redirect("/manageEvents");
     })
@@ -375,10 +375,11 @@ app.get("/viewCompletedEvent/:eventid", (req, res) => {
   const eventid = req.params.eventid;
   const date = req.body.date;
   knex("events")
-    .where("eventid", eventid)
+    .join("finalized_events", "events.eventid", "=", "finalized_events.eventid") // Join the tables
+    .where("events.eventid", eventid)
     .first() //returns an object representing one record
     .then((event) => {
-      //This variable represents one object that has attributes, which are the column names
+      //This variable represents one object t hat has attributes, which are the column names
       if (!event) {
         return res.status(404).send("Event not found");
       }
@@ -400,7 +401,7 @@ app.get("/viewCompletedEvent/:eventid", (req, res) => {
     });
 });
 // This is the get route to edit a volunteer's data from the admin page
-app.get("/editVolunteer/:vol_email", (req, res) => {
+app.get("/editVolunteer/:vol_email", isAuthenticated, (req, res) => {
   //This is the route for editVolunteer. The /: means there is a parameter passed in called vol_email.
   const id = req.params.vol_email;
   // Query the Volunteer by email first
@@ -420,8 +421,47 @@ app.get("/editVolunteer/:vol_email", (req, res) => {
     });
 });
 
+app.get("/adminCompletedEvents", (req, res) => {
+  knex("completed_events")
+    .select()
+    .then((completed_events) => {
+      //.then() says, I just queried all this data, send it to this variable planets.
+      //the array of rows gets stored in this variable called planets.
+      // Render the maintainPlanets template and pass the data
+      res.render("completedEvents", { completed_events }); //render index.ejs and pass it planets.
+    })
+    .catch((error) => {
+      console.error("Error querying database:", error);
+      res.status(500).send("Internal Server Error");
+    });
+});
+
+app.post("/viewCompletedEvent/:eventid", isAuthenticated, (req, res) => {
+  let eventid = req.params.eventid;
+  const { num_actual, num_pocket, num_collar, num_envelopes, num_vests, num_completed } = req.body;
+  // Extract form values from req.body
+  // Insert the database
+  knex("completed_events")
+    .insert({
+      eventid: eventid,
+      num_actual: num_actual,
+      num_pocket: num_pocket,
+      num_collar: num_collar,
+      num_envelopes: num_envelopes,
+      num_vests: num_vests,
+      num_completed: num_completed,
+    })
+    .then(() => {
+      res.redirect("/manageEvents"); // Redirect to admin manage volunteers after submit
+    })
+    .catch((error) => {
+      console.error("Error adding Completing Event:", error);
+      res.status(500).send("Internal Server Error");
+    });
+});
+
 // This is the post route to edit a volunteer's data from the admin page
-app.post("/editVolunteer/:vol_email", (req, res) => {
+app.post("/editVolunteer/:vol_email", isAuthenticated, (req, res) => {
   const id = req.params.vol_email;
 
   const vol_email = req.body.vol_email;
@@ -455,7 +495,7 @@ app.post("/editVolunteer/:vol_email", (req, res) => {
 });
 
 // This is the route to delete a volunteer from the volunteers table
-app.post("/deleteVolunteer/:vol_email", (req, res) => {
+app.post("/deleteVolunteer/:vol_email", isAuthenticated, (req, res) => {
   const id = req.params.vol_email;
   knex("volunteers")
     .where("vol_email", id)
@@ -486,7 +526,7 @@ app.get("/manageUsers", isAuthenticated, (req, res) => {
 });
 
 // This is the get route to edit an admin from the admin page
-app.get("/editUser/:admin_user_name", (req, res) => {
+app.get("/editUser/:admin_user_name", isAuthenticated, (req, res) => {
   //This is the route for editVolunteer. The /: means there is a parameter passed in called vol_email.
   const id = req.params.admin_user_name;
   // Query the Volunteer by email first
@@ -536,7 +576,7 @@ app.post("/adminAddUser", isAuthenticated, (req, res) => {
 });
 
 // This is the post route to edit a volunteer's data from the admin page
-app.post("/editUser/:admin_user_name", (req, res) => {
+app.post("/editUser/:admin_user_name", isAuthenticated, (req, res) => {
   const id = req.params.admin_user_name;
 
   const admin_user_name = req.body.admin_user_name;
@@ -562,7 +602,7 @@ app.post("/editUser/:admin_user_name", (req, res) => {
 });
 
 // This is the route to delete an admin from the volunteers table
-app.post("/deleteUser/:admin_user_name", (req, res) => {
+app.post("/deleteUser/:admin_user_name", isAuthenticated, (req, res) => {
   const id = req.params.admin_user_name;
   knex("admin")
     .where("admin_user_name", id)
