@@ -68,9 +68,9 @@ app.get("/jensStory", (req, res) => {
   res.render("jensStory");
 });
 
-//app.get("/publicEvents", (req, res) => {
- // res.render("publicEvents");
-//});
+// app.get("/publicEvents", (req, res) => {
+//   res.render("publicEvents");
+// });
 
 function isAuthenticated(req, res, next) {
   if (req.session && req.session.isLoggedIn) {
@@ -162,7 +162,6 @@ app.post("/login", (req, res) => {
 app.get("/admin", isAuthenticated, (req, res) => {
   res.render("admin");
 });
-
 
 // This is the get method to render the manageEvents page and display data from the events table
 app.get("/manageEvents", isAuthenticated, (req, res) => {
@@ -258,6 +257,21 @@ app.get("/adminDeclinedEvents", isAuthenticated, (req, res) => {
     .select()
     .where("status", "declined")
     .then((declined_events) => res.render("declinedEvents", { declined_events }));
+});
+
+// This route deletes a declined event and redirects to the declined events page.
+app.post("/deleteDeclinedEvent/:eventid", isAuthenticated, (req, res) => {
+  const id = req.params.eventid;
+  knex("events")
+    .where("eventid", id)
+    .del() // Deletes the record with the specified ID
+    .then(() => {
+      res.redirect("/adminDeclinedEvents"); // Redirect to the declined events list after deletion
+    })
+    .catch((error) => {
+      console.error("Error deleting Event:", error);
+      res.status(500).send("Internal Server Error");
+    });
 });
 
 // This route is the get route for the admin to create their own events to show in the upcoming events table
@@ -452,14 +466,25 @@ app.get("/editVolunteer/:vol_email", isAuthenticated, (req, res) => {
     });
 });
 
+app.get("/publicEvents", (req, res) => {
+  knex("events")
+    .join("finalized_events", "events.eventid", "=", "finalized_events.eventid")
+    .select()
+    .then((events) => {
+      console.log("Fetched Events:", events);
+
+      res.render("publicEvents", { events }); // Pass `events` to EJS template
+    })
+    .catch((error) => {
+      console.error("Error fetching events:", error);
+      res.status(500).send("Internal Server Error");
+    });
+});
 
 app.get("/adminCompletedEvents", (req, res) => {
   knex("completed_events")
     .select()
     .then((completed_events) => {
-      //.then() says, I just queried all this data, send it to this variable planets.
-      //the array of rows gets stored in this variable called planets.
-      // Render the maintainPlanets template and pass the data
       res.render("completedEvents", { completed_events }); //render index.ejs and pass it planets.
     })
     .catch((error) => {
