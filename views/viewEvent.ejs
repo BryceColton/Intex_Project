@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Event Details</title>
+    <link rel="icon" type="image/png" href="/img/logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="/styles.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <nav class="navbar">
+        <div class="navbar-logo">Turtle Shelter Project</div>
+        <div class="navbar-buttons">
+            <!-- These will be navbar buttons to take the admin to pages that will manage the volunteers and events -->
+            <form action="/admin" method="GET"><button class="btn" type="submit">Admin Home</button></form>
+            <form action="/manageEvents" method="GET"><button class="btn" type="submit">Manage Events</button></form>
+        </nav>
+
+        <!-- Event Info Here -->
+        <main style="display: flex; justify-content: center; align-items: center;">
+            <section class="form-section">
+                <form action="handlePendingEvent/:<%= event.eventid %>" method="POST">        
+                <h2 class="form-title">Event Details</h2>
+                    <fieldset>
+                        <legend>Event Details</legend>
+                        <div class="form-group">
+                            <label for="event_name">Event Name: <b><%=event.event_name %></b></label>
+                        </div>
+                        <div class="form-group">
+                            <label for="organization">Organization: <b><%=event.organization %></b></label>
+                        </div>
+                        <div class="form-group">
+                            <label for="organizer_first_name">Organizer First Name: <b><%=event.organizer_first_name %></b></label>
+                        </div>
+                        <div class="form-group">
+                            <label for="organizer_last_name">Organizer Last Name: <b><%=event.organizer_last_name %></b></label>
+                        </div>
+                        <div class="form-group">
+                            <label for="org_phone">Phone Number: <b><%=event.org_phone %></b></label>
+                        </div>
+                        <div class="form-group">
+                            <label for="org_email">Email: <b><%=event.org_email %></b></label>
+                        </div>
+                    </fieldset>
+    
+                    <fieldset>
+                        <legend>Event Information</legend>
+                        <div class="form-group">
+                            <label for="event_type">Event Type: <b><%=event.event_type %></b></label>
+                        </div>
+                        <div class="form-group">
+                            <label for="event_address">Event Address: <b><%=event.event_address %></b></label>
+                        </div>
+                        <div class="form-group">
+                            <label for="city">City: <b><%=event.city %></b></label>
+                        </div>
+                        <div class="form-group">
+                            <label for="state">State: <b><%=event.state %></b></label>
+                        </div>
+                        <div class="form-group">
+                            <label for="zip">ZIP: <b><%=event.zip %></b></label>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Additional Details</legend>
+                        <div class="form-group">
+                            <label>Public: <b><%=event.public == 'true' ? 'Yes' : 'No'%></b></label>
+                        </div>
+                        <div class="form-group">
+                            <label>Guest Speaker: <b><%=event.guest_speaker == 'true' ? 'Yes' : 'No' %></b></label>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Event Details</legend>
+                        <div class="form-group">
+                            <label for="eventdatetime1">Date Option 1: <b><%=event.eventdatetime1 %></b></label>
+                        </div>
+                        <div class="form-group">
+                            <label for="eventdatetime2">Date Option 2: <b><%=event.eventdatetime2 %></b></label>
+                        </div>
+                        <div class="form-group">
+                            <label for="numexpected">Expected Number of People: <b><%=event.numexpected %></b></label>
+                        </div>
+                        <div class="form-group">
+                            <label for="duration">Duration: <b><%=event.duration %></b></label>
+                        </div>
+                        <div class="form-group">
+                            <label for="venuedescription">Venue Description: <b><%=event.venuedescription %></b></label>
+                        </div>
+                    </fieldset>        
+                    <fieldset>
+                        <legend>Approve or Decline?</legend>
+                        <!-- Approve/Decline (Radio Buttons) -->
+                        <div class="form-group">
+                            <label>
+                            <input type="radio" name="status" value="A" <%= event.status === 'Approved' ? 'checked' : ''
+                            %>> Approve
+                            </label>
+                            <br>
+                            <label>
+                            <input type="radio" name="status" value="D" <%= event.status === 'B' ? 'checked' : ''
+                            %>> Decline
+                            </label>
+                        </div>
+                        <br>
+                
+                    <button type="submit" class="btn btn-donate">Finish</button>
+                    </fieldset>
+                </form>
+                </section>
+                </main>
+
+    
+  </body>
+</html>

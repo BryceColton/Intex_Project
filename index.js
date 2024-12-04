@@ -5,7 +5,6 @@ const dotenv = require("dotenv");
 
 const session = require("express-session");
 
-
 app.use(express.static(path.join(__dirname, "public")));
 
 // Load environment variables from .env file
@@ -23,12 +22,12 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
 
 app.use(
-    session({
-      secret: "yourSecretKey",
-      resave: false,
-      saveUninitialized: true,
-    })
-  );
+  session({
+    secret: "yourSecretKey",
+    resave: false,
+    saveUninitialized: true,
+  })
+);
 // Initialize knex with database connection settings
 const knex = require("knex")({
   client: "pg",
@@ -44,6 +43,8 @@ const knex = require("knex")({
   },
 });
 // This is all of the information needed to access postgres
+
+//PUBLIC FACING ROUTES ****************************************************************************************************************
 
 // This is the get method for the root file
 app.get("/", (req, res) => {
@@ -66,89 +67,88 @@ app.get("/jensStory", (req, res) => {
 });
 
 function isAuthenticated(req, res, next) {
-    if (req.session && req.session.isLoggedIn) {
-      return next(); // User is authenticated, proceed to the next middleware
-    }
-    res.redirect("/login"); // Redirect to login page if not authenticated
+  if (req.session && req.session.isLoggedIn) {
+    return next(); // User is authenticated, proceed to the next middleware
   }
-  
+  res.redirect("/login"); // Redirect to login page if not authenticated
+}
 
-  app.get("/login", (req, res) => {
-    res.render("login", { error: null }); // Ensure `error` is defined
-  });
-  
+app.get("/login", (req, res) => {
+  res.render("login", { error: null }); // Ensure `error` is defined
+});
 
-  app.get("/create-admin", (req, res) => {
-    res.render("createAdmin", { message: null }); // Pass an empty message initially
-  });
-  
+app.get("/create-admin", (req, res) => {
+  res.render("createAdmin", { message: null }); // Pass an empty message initially
+});
 
-  app.post("/create-admin", (req, res) => {
-    const { admin_username, admin_password, admin_first_name, admin_last_name } = req.body;
-  
-    // Simple validation to check if all fields are provided
-    if (!admin_username || !admin_password || !admin_first_name || !admin_last_name) {
-      return res.status(400).json({ message: "All fields are required." });
-    }
-  
-    // Check if the username already exists
-    knex("admin").where({ admin_user_name: admin_username }).first()
-      .then(existingAdmin => {
-        if (existingAdmin) {
-          return res.status(400).json({ message: "Username already exists." });
-        }
-  
-        // Insert new admin into the database
-        return knex("admin").insert({
-          admin_user_name: admin_username,
-          admin_password: admin_password, // Make sure you're storing the password safely
-          admin_first_name: admin_first_name,
-          admin_last_name: admin_last_name
-        });
-      })
-      .then(() => {
-        res.redirect("/login");
-      })
-      .catch(error => {
-        console.error("Error creating admin:", error);
-        res.status(500).json({ message: "Internal server error" });
+app.post("/create-admin", (req, res) => {
+  const { admin_username, admin_password, admin_first_name, admin_last_name } = req.body;
+
+  // Simple validation to check if all fields are provided
+  if (!admin_username || !admin_password || !admin_first_name || !admin_last_name) {
+    return res.status(400).json({ message: "All fields are required." });
+  }
+
+  // Check if the username already exists
+  knex("admin")
+    .where({ admin_user_name: admin_username })
+    .first()
+    .then((existingAdmin) => {
+      if (existingAdmin) {
+        return res.status(400).json({ message: "Username already exists." });
+      }
+
+      // Insert new admin into the database
+      return knex("admin").insert({
+        admin_user_name: admin_username,
+        admin_password: admin_password, // Make sure you're storing the password safely
+        admin_first_name: admin_first_name,
+        admin_last_name: admin_last_name,
       });
-  });
+    })
+    .then(() => {
+      res.redirect("/login");
+    })
+    .catch((error) => {
+      console.error("Error creating admin:", error);
+      res.status(500).json({ message: "Internal server error" });
+    });
+});
 
-  app.post("/login", (req, res) => {
-    const { username, password } = req.body;
-  
-    // Simple validation to check if both fields are provided
-    if (!username || !password) {
-      return res.render("login", { error: "Both username and password are required." });
-    }
-  
-    // Check if the user exists in the admin table
-    knex("admin").where({ admin_user_name: username }).first()
-      .then(admin => {
-        if (!admin) {
-          return res.render("login", { error: "Invalid username or password." });
-        }
-  
-        // Check if the provided password matches the stored password
-        if (admin.admin_password !== password) {
-          return res.render("login", { error: "Invalid username or password." });
-        }
-  
-        // If login is successful, set session variables (you can use express-session for this)
-        req.session.isLoggedIn = true;
-        req.session.adminUsername = username;
-  
-        // Redirect to a protected page or dashboard
-        res.redirect("/admin"); // You can change this to whatever route is appropriate
-      })
-      .catch(error => {
-        console.error("Error during login:", error);
-        res.render("login", { error: "Internal server error." });
-      });
-  });
-  
-  
+app.post("/login", (req, res) => {
+  const { username, password } = req.body;
+
+  // Simple validation to check if both fields are provided
+  if (!username || !password) {
+    return res.render("login", { error: "Both username and password are required." });
+  }
+
+  // Check if the user exists in the admin table
+  knex("admin")
+    .where({ admin_user_name: username })
+    .first()
+    .then((admin) => {
+      if (!admin) {
+        return res.render("login", { error: "Invalid username or password." });
+      }
+
+      // Check if the provided password matches the stored password
+      if (admin.admin_password !== password) {
+        return res.render("login", { error: "Invalid username or password." });
+      }
+
+      // If login is successful, set session variables (you can use express-session for this)
+      req.session.isLoggedIn = true;
+      req.session.adminUsername = username;
+
+      // Redirect to a protected page or dashboard
+      res.redirect("/admin"); // You can change this to whatever route is appropriate
+    })
+    .catch((error) => {
+      console.error("Error during login:", error);
+      res.render("login", { error: "Internal server error." });
+    });
+});
 
 // This is the get method to render the admin page
 app.get("/admin", isAuthenticated, (req, res) => {
@@ -159,24 +159,56 @@ app.get("/admin", isAuthenticated, (req, res) => {
 app.get("/manageEvents", isAuthenticated, (req, res) => {
   knex("events")
     .select()
-    .then((events) => {
-      //.then() says, I just queried all this data, send it to this variable planets.
-      //the array of rows gets stored in this variable called planets.
-      // Render the maintainPlanets template and pass the data
-      res.render("manageEvents", { events }); //render index.ejs and pass it planets.
+    .where("status", "pending")
+    .then((pending_events) => {
+      //This variable represents one object that has attributes, which are the column names
+      if (!pending_events) {
+        return res.status(404).send("No pending events found");
+      }
+      //get data from finalized events table to send with the upcoming events
+      knex("events")
+        .select()
+        .where("status", "approved")
+        .then((finalized_events) => {
+          //render both the upcoming_events (events table) and finalized_events
+          res.render("manageEvents", { pending_events, finalized_events });
+        })
+        .catch((error) => {
+          console.error("Error fetching finalized event details:", error);
+          res.status(500).send("Internal Server Error");
+        });
     })
     .catch((error) => {
-      console.error("Error querying database:", error);
+      console.error("Error fetching upcoming event details:", error);
       res.status(500).send("Internal Server Error");
     });
 });
 
-//This is the post route to delete an event
+// This route is tied to the view button on pending event requests.
+app.get("/viewEvent/:eventid", (req, res) => {
+  let eventid = req.params.eventid;
+  knex("events")
+    .where("eventid", eventid)
+    .first() //returns an object representing one record
+    .then((event) => {
+      //This variable represents one object that has attributes, which are the column names
+      if (!event) {
+        return res.status(404).send("Event not found");
+      }
+      res.render("viewEvent", { event });
+    })
+    .catch((error) => {
+      console.error("Error fetching event details:", error);
+      res.status(500).send("Internal Server Error");
+    });
+});
 
-//This is the post route to post an edited event to the database
+// This route updates a specific event's status in the database to determine if it is an approved or declined event
+
+// ADMIN MANAGE VOLUNTEERS ROUTES ***********************************************************************************************************
 
 // This is the get method to render the manageVolunteers page and display data from the volunteers table
-app.get("/manageVolunteers",  isAuthenticated, (req, res) => {
+app.get("/manageVolunteers", isAuthenticated, (req, res) => {
   knex("volunteers")
     .select()
     .then((volunteers) => {
@@ -297,6 +329,8 @@ app.post("/deleteVolunteer/:vol_email", (req, res) => {
     });
 });
 
+// PUBLIC FACING ROUTES ****************************************************************************************************
+
 // Submit event form
 app.post("/submitEventForm", (req, res) => {
   const {
@@ -344,14 +378,13 @@ app.post("/submitEventForm", (req, res) => {
 
     .returning("eventid")
     .then(([eventid]) => {
-      res.redirect('/');
+      res.redirect("/");
     })
     .catch((err) => {
       console.error("Database insert error:", err);
       res.status(500).json({ message: "Error saving the event", error: err });
     });
 });
-
 
 // This is to add a volunteer to the database
 app.post("/submitVolunteerForm", (req, res) => {

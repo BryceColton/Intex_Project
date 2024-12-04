@@ -21,27 +21,46 @@
             <form action="/admin" method="GET"><button class="btn" type="submit">Admin Home</button></form>
             <form action="/manageVolunteers" method="GET"><button class="btn" type="submit">Manage Volunteers</button></form>
         </nav>
-        <h1 style="text-align: center">Events</h1>
+
+        <h1 style="text-align: center">Pending Event Requests</h1>
+
+        <!-- Pending events table -->
         <table>
           <thead>
             <tr>
+              <th>Event Name</th>
               <th>Organization</th>
-              <th>actions</th>
+              <th>Organizer First Name</th>
+              <th>Organizer Last Name</th>
+              <th>Event Type</th>
+              <th>City</th>
+              <th>State</th>
+              <th>Status</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            <% if (events.length > 0) { %> <% events.forEach(row => { %>
+            <% if (pending_events.length > 0) { %> <% pending_events.forEach(row => { %>
             <!-- dynamically create html table rows for each row in the database -->
             <!--says that for each record, one at a time, send it to that variable "row"-->
             <tr>
-              <input type="hidden" value="row.id" />
+              <input type="hidden" value="row.eventid" />
               <td><%= row.event_name %></td>
-    
+              <td><%= row.organization %></td>
+              <td><%= row.organizer_first_name %></td>
+              <td><%= row.organizer_last_name %></td>
+              <td><%= row.event_type %></td>
+              <td><%= row.city %></td>
+              <td><%= row.state %></td>
+              <td><%= row.status %></td>
+              <td><%= row.actions %></td>
+              <!-- Edit button to go to the editEvent page where the admin will be able to accept/decline event requests -->
               <td>
-                <form action="/editEvent/<%= row.id %>" method="GET" style="display: inline">
+                <form action="/viewEvent/<%= row.eventid %>" method="GET" style="display: inline">
                   <!--The action is the route. You have to write this. the stuff after the / is a parameter-->
-                  <button type="submit">Edit</button>
+                  <button type="submit">View</button>
                 </form>
+                <!-- Delete button so that the admin can handle unwanted event requests -->
                 <form action="/deleteEvent/<%= row.id %>" method="POST" style="display: inline">
                   <button
                     type="submit"
@@ -59,4 +78,55 @@
             <% } %>
           </tbody>
         </table>
+
+        <br><br>
+        <h1 style="text-align: center">Upcoming Events</h1>
+        <!-- Upcoming Events table -->
+        <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (finalized_events.length > 0) { %> <% finalized_events.forEach(row => { %>
+              <!-- dynamically create html table rows for each row in the database -->
+              <!--says that for each record, one at a time, send it to that variable "row"-->
+              <tr>
+                <input type="hidden" value="row.id" />
+                <td><%= row.date %></td>
+                <td><%= row.time %></td>
+                <td><%= row.actions %></td>
+                <!-- Edit button to go to the editEvent page where the admin will be able to mark the event as completed and input event stats -->
+                <td>
+                  <form action="/viewEvent/<%= row.id %>" method="GET" style="display: inline">
+                    <!--The action is the route. You have to write this. the stuff after the / is a parameter-->
+                    <button type="submit">View</button>
+                  </form>
+                </td>
+              </tr>
+              <% }) %> <% } else { %>
+              <tr>
+                <td colspan="7">No data available</td>
+              </tr>
+              <% } %>
+            </tbody>
+          </table>
+
+
+    <!-- Button to add a new event. -->
+    <form action="/adminAddEvent" method="GET">
+        <button type="submit">Add New Event</button>
+    </form>
+
+    <!-- Button to view completed events. -->
+    <form action="/adminCompletedEvents" method="GET">
+        <button type="submit">View Completed Events</button>
+    </form>
+
+    <!-- Button to view declined events. -->
+    <form action="/adminDeclinedEvents" method="GET">
+        <button type="submit">View Declined Events</button>
+    </form>
 </html>
