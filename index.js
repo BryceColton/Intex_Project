@@ -305,7 +305,6 @@ app.post("/adminAddEvent", (req, res) => {
     });
 });
 
-
 // This is the get method to render the manageVolunteers page and display data from the volunteers table
 app.get("/manageVolunteers", isAuthenticated, (req, res) => {
   knex("volunteers")
@@ -359,22 +358,22 @@ app.post("/adminAddVolunteer", isAuthenticated, (req, res) => {
 });
 
 app.get("/viewCompletedEvent/:eventid", (req, res) => {
-    let eventid = req.params.eventid;
-    knex("events")
-      .where("eventid", eventid)
-      .first() //returns an object representing one record
-      .then((event) => {
-        //This variable represents one object that has attributes, which are the column names
-        if (!event) {
-          return res.status(404).send("Event not found");
-        }
-        res.render("viewCompletedEvent", { event });
-      })
-      .catch((error) => {
-        console.error("Error fetching event details:", error);
-        res.status(500).send("Internal Server Error");
-      });
-  });
+  let eventid = req.params.eventid;
+  knex("events")
+    .where("eventid", eventid)
+    .first() //returns an object representing one record
+    .then((event) => {
+      //This variable represents one object that has attributes, which are the column names
+      if (!event) {
+        return res.status(404).send("Event not found");
+      }
+      res.render("viewCompletedEvent", { event });
+    })
+    .catch((error) => {
+      console.error("Error fetching event details:", error);
+      res.status(500).send("Internal Server Error");
+    });
+});
 // This is the get route to edit a volunteer's data from the admin page
 app.get("/editVolunteer/:vol_email", (req, res) => {
   //This is the route for editVolunteer. The /: means there is a parameter passed in called vol_email.
@@ -461,7 +460,6 @@ app.get("/manageUsers", isAuthenticated, (req, res) => {
     });
 });
 
-
 // This is the get route to edit an admin from the admin page
 app.get("/editUser/:admin_user_name", (req, res) => {
   //This is the route for editVolunteer. The /: means there is a parameter passed in called vol_email.
@@ -486,7 +484,6 @@ app.get("/editUser/:admin_user_name", (req, res) => {
 app.get("/adminAddUser", isAuthenticated, (req, res) => {
   res.render("adminAddUser");
 });
-
 
 // This is the post route to add an admin from the admin page
 app.post("/adminAddUser", isAuthenticated, (req, res) => {
