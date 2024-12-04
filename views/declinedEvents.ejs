@@ -149,23 +149,19 @@
     </style>
   </head>
     <body>
-    <nav class="navbar">
+      <nav class="navbar">
         <div class="navbar-logo">Turtle Shelter Project</div>
         <div class="navbar-buttons">
-            <!-- These will be navbar buttons to take the admin to pages that will manage the volunteers and events -->
-            <form action="/admin" method="GET"><button class="btn" type="submit">Admin Home</button></form>
-            <form action="/manageUsers" method="GET"><button class="btn" type="submit">Manage Admin Users</button></form>
-            <form action="/manageVolunteers" method="GET"><button class="btn" type="submit">Manage Volunteers</button></form>
+          <!-- These will be navbar buttons to take the admin to pages that will manage the volunteers and events -->
+          <form action="/admin" method="GET"><button class="btn" type="submit">Admin Home</button></form>
+          <form action="/manageUsers" method="GET"><button class="btn" type="submit">Manage Admin Users</button></form>
+          <form action="/manageVolunteers" method="GET"><button class="btn" type="submit">Manage Volunteers</button></form>
+          <form action="/manageEvents" method="GET"><button class="btn" type="submit">Manage Events</button></form>
         </nav>
 
         <h1 style="text-align: center">Declined Events</h1>
 
-        <br>
-        <form action="/adminAddEvent" method="GET">
-          <button class="btn-table" type="submit">Add New Event</button>
-      </form>
-
-        <!-- Pending events table -->
+        <!-- Declined events table -->
         <table>
           <thead>
             <tr>
@@ -178,8 +174,6 @@
               <th>State</th>
               <th>Status</th>
               <th>View / Delete</th>
-
-
             </tr>
           </thead>
           <tbody>
@@ -198,12 +192,12 @@
               <td><%= row.status %></td>
               <!-- Edit button to go to the editEvent page where the admin will be able to accept/decline event requests -->
               <td>
-                <form action="/viewEvent/<%= row.eventid %>" method="GET" style="display: inline">
+                <form action="/viewDeclinedEvent/<%= row.eventid %>" method="GET" style="display: inline">
                   <!--The action is the route. You have to write this. the stuff after the / is a parameter-->
                   <button class="btn-table" type="submit">View</button>
                 </form>
                 <!-- Delete button so that the admin can handle unwanted event requests -->
-                <form action="/deleteEvent/<%= row.eventid %>" method="POST" style="display: inline">
+                <form action="/deleteDeclinedEvent/<%= row.eventid %>" method="POST" style="display: inline">
                   <button
                     class="btn-table btn-delete"
                     type="submit"
@@ -221,22 +215,5 @@
             <% } %>
           </tbody>
         </table>
-
-        <br><br>
-
-
-
-        <div class="bottom-buttons">
-          <!-- Button to add a new event -->
-
-      
-          <!-- Button to view completed events -->
-          <form action="/adminCompletedEvents" method="GET">
-              <button class="btn-table" type="submit">View Completed Events</button>
-          </form>
-      
-          <!-- Button to view declined events -->
-          <form action="/adminDeclinedEvents" method="GET">
-              <button class="btn-table" type="submit">View Declined Events</button>
-          </form>
-      </div>
+  </body>
+</html>

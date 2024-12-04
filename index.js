@@ -163,7 +163,6 @@ app.get("/admin", isAuthenticated, (req, res) => {
   res.render("admin");
 });
 
-
 // This is the get method to render the manageEvents page and display data from the events table
 app.get("/manageEvents", isAuthenticated, (req, res) => {
   knex("events")
@@ -258,6 +257,21 @@ app.get("/adminDeclinedEvents", isAuthenticated, (req, res) => {
     .select()
     .where("status", "declined")
     .then((declined_events) => res.render("declinedEvents", { declined_events }));
+});
+
+// This route deletes a declined event and redirects to the declined events page.
+app.post("/deleteDeclinedEvent/:eventid", isAuthenticated, (req, res) => {
+  const id = req.params.eventid;
+  knex("events")
+    .where("eventid", id)
+    .del() // Deletes the record with the specified ID
+    .then(() => {
+      res.redirect("/adminDeclinedEvents"); // Redirect to the declined events list after deletion
+    })
+    .catch((error) => {
+      console.error("Error deleting Event:", error);
+      res.status(500).send("Internal Server Error");
+    });
 });
 
 // This route is the get route for the admin to create their own events to show in the upcoming events table
@@ -456,14 +470,14 @@ app.get("/publicEvents", (req, res) => {
   knex("events")
     .join("finalized_events", "events.eventid", "=", "finalized_events.eventid")
     //.where("events.public", true)
-    .select(
-     // "events.event_name", 
-      //"finalized_events.date", 
-      //"events.event_address", 
-      //"events.city", 
-      //"events.state", 
-     // "events.zip"
-    )
+    .select
+    // "events.event_name",
+    //"finalized_events.date",
+    //"events.event_address",
+    //"events.city",
+    //"events.state",
+    // "events.zip"
+    ()
     .then((events) => {
       console.log("Fetched Events:", events); // Debug: Verify what data is fetched
       res.render("publicEvents", { events }); // Pass `events` to EJS template
