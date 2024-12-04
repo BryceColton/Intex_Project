@@ -31,7 +31,7 @@
                 <form action="/handlePendingEvent/<%= event.eventid %>" method="POST">        
                 <h2 class="form-title">Event Details</h2>
                     <fieldset>
-                        <legend>Event Details</legend>
+                        <legend>Requester Details</legend>
                         <div class="form-group">
                             <label for="event_name">Event Name: <b><%=event.event_name %></b></label>
                         </div>
@@ -98,15 +98,26 @@
                         </div>
                     </fieldset>        
                     <fieldset>
-                        <legend>Approve or Decline?</legend>
-                        <!-- Approve/Decline (Radio Buttons) -->
+                        <legend>Finalize</legend>
+                        <!-- Select a date and approve/decline (Radio Buttons) -->
+                        <label>Select a date:</label>
                         <div class="form-group">
                             <label>
-                            <input type="radio" name="status" value="approved"> Approve
+                            <input type="radio" name="date" value="<%=event.eventdatetime1%>" required><b><%=event.eventdatetime1 %></b>
                             </label>
                             <br>
                             <label>
-                            <input type="radio" name="status" value="declined"> Decline
+                            <input type="radio" name="date" value="<%=event.eventdatetime2%>" required><b><%=event.eventdatetime2 %></b>
+                            </label>
+                        </div>
+                        <br>
+                        <div class="form-group">
+                            <label>
+                            <input type="radio" name="status" value="approved" required> Approve
+                            </label>
+                            <br>
+                            <label>
+                            <input type="radio" name="status" value="declined" required> Decline
                             </label>
                         </div>
                         <br>
