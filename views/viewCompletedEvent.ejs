@@ -19,14 +19,13 @@
         <div class="navbar-buttons">
             <!-- These will be navbar buttons to take the admin to pages that will manage the volunteers and events -->
             <form action="/admin" method="GET"><button class="btn" type="submit">Admin Home</button></form>
-            <form action="/manageUsers" method="GET"><button class="btn" type="submit">Manage Admin Users</button></form>
             <form action="/manageEvents" method="GET"><button class="btn" type="submit">Manage Events</button></form>
         </nav>
-        <br>
+
         <!-- Event Info Here -->
         <main style="display: flex; justify-content: center; align-items: center;">
             <section class="form-section">
-                <form action="/handlePendingEvent/<%= event.eventid %>" method="POST">        
+                <form action="handlePendingEvent/:<%= event.eventid %>" method="POST">        
                 <h2 class="form-title">Event Details</h2>
                     <fieldset>
                         <legend>Event Details</legend>
@@ -94,18 +93,86 @@
                         <div class="form-group">
                             <label for="venuedescription">Venue Description: <b><%=event.venuedescription %></b></label>
                         </div>
-                    </fieldset>        
+                    </fieldset>
                     <fieldset>
-                        <legend>Approve or Decline?</legend>
+                        <legend>Event Numbers</legend>
+                        <!-- Approve/Decline (Radio Buttons) -->
+                        <div class="form-group">
+                                <label for="numexpected">Number of Actual People:</label>
+                                <input
+                                  type="number"
+                                  id="num_pocket"
+                                  name="num_pocket"
+                                  min="1"
+                                  placeholder="(ie.50)"
+                                  required
+                                />
+                                    <br>
+                                    <label for="numexpected">Number of Pockets:</label>
+                                    <input
+                                      type="number"
+                                      id="num_pocket"
+                                      name="num_pocket"
+                                      min="1"
+                                      placeholder="(ie.50)"
+                                      required
+                                    />
+                                <br>
+                                <label>
+                                    <label for="num_collar">Number of Collar:</label>
+                                    <input
+                                      type="number"
+                                      id="num_collar"
+                                      name="num_collar"
+                                      min="1"
+                                      placeholder="(ie.50)"
+                                      required
+                                    />
+                                <br>
+                                <label>
+                                    <label for="num_envelopes">Number of Envelopes:</label>
+                                    <input
+                                      type="number"
+                                      id="num_envelopes"
+                                      name="num_envelopes"
+                                      min="1"
+                                      placeholder="(ie.50)"
+                                      required
+                                    />
+                                <br>
+                                    <label for="numexpected">Number of Vests:</label>
+                                    <input
+                                      type="number"
+                                      id="num_vests"
+                                      name="num_vests"
+                                      min="1"
+                                      placeholder="(ie.50)"
+                                      required
+                                    />
+                            <label>
+                                <br>
+                                <label for="numexpected">Number of Completed Products:</label>
+                                <input
+                                  type="number"
+                                  id="num_completed"
+                                  name="num_completed"
+                                  min="1"
+                                  placeholder="(ie.50)"
+                                  required
+                                />
+                            <br>
+                        </div>
+                        <br>
+                    </fieldset>     
+                    <fieldset>
+                        <legend>Completed?</legend>
                         <!-- Approve/Decline (Radio Buttons) -->
                         <div class="form-group">
                             <label>
-                            <input type="radio" name="status" value="approved"> Approve
+                            <input type="radio" name="status" value="A" <%= event.status === 'Completed' ? 'checked' : ''
+                            %>> Completed
                             </label>
                             <br>
-                            <label>
-                            <input type="radio" name="status" value="declined"> Decline
-                            </label>
                         </div>
                         <br>
                 
