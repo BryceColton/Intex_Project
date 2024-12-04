@@ -36,12 +36,14 @@ body {
 
 /* General button styles */
 .btn, .btn-donate {
-  padding: 0.4rem 0.8rem; /* Same padding for both */
+  /*padding: 0.4rem 0.8rem; /* Same padding for both */
   border: 2px solid white; /* Add border for .btn-donate too */
   font-size: 0.9rem; /* Same font size for both */
   cursor: pointer;
   transition: all 0.3s ease;
   text-decoration: none;
+  border-radius: 11px;
+  padding: 10px 20px;
 }
 
 /* Style for .btn */
