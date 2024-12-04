@@ -391,7 +391,6 @@ app.get("/viewCompletedEvent/:eventid", (req, res) => {
       if (!event) {
         return res.status(404).send("Event not found");
       }
-<<<<<<< HEAD
 
       if (event && event.date) {
         event.date = new Date(event.date).toString(); 
@@ -400,19 +399,6 @@ app.get("/viewCompletedEvent/:eventid", (req, res) => {
 
       console.log(event)
       res.render("viewCompletedEvent", { event });  
-=======
-      knex("finalized_events")
-        .select("eventid", "date")
-        .where("eventid", eventid)
-        .first()
-        .then((finalized_event) => {
-          res.render("viewCompletedEvent", { event, finalized_event });
-        })
-        .catch((error) => {
-          console.error("Error fetching finalized event:", error);
-          res.status(500).send("Internal Server Error");
-        });
->>>>>>> 3858e3b40201930d3edbaf0434e584f84cb74149
     })
     .catch((error) => {
       console.error("Error fetching event details:", error);
