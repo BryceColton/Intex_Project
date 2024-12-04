@@ -79,7 +79,7 @@
                     <fieldset>
                         <legend>Event Details</legend>
                         <div class="form-group">
-                            <label for="date">Date: <b><%=event.date %></b></label>
+                            <label for="date">Date: <b><%=finalized_event.date %></b></label>
                         </div>
                         <div class="form-group">
                             <label for="numexpected">Expected Number of People: <b><%=event.numexpected %></b></label>
@@ -166,8 +166,8 @@
                         <!-- Approve/Decline (Radio Buttons) -->
                         <div class="form-group">
                             <label>
-                            <input required type="radio" name="status" value="completed">
-                             Completed
+                            <input required type="radio" name="status" value="A" <%= event.status === 'Completed' ? 'checked' : ''
+                            %>> Completed
                             </label>
                             <br>
                         </div>

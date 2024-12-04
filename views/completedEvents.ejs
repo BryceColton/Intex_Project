@@ -197,7 +197,7 @@
               <td><%= row.num_completed %></td>
               <!-- Edit button to go to the editEvent page where the admin will be able to accept/decline event requests -->
               <td>
-                <form action="/viewEvent/<%= row.eventid %>" method="GET" style="display: inline">
+                <form action="/viewFinishedEvent/<%= row.eventid %>" method="GET" style="display: inline">
                   <!--The action is the route. You have to write this. the stuff after the / is a parameter-->
                   <button class="btn-table" type="submit">View</button>
                 </form>
