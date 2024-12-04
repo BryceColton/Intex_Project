@@ -68,6 +68,10 @@ app.get("/jensStory", (req, res) => {
   res.render("jensStory");
 });
 
+app.get("/publicEvents", (req, res) => {
+  res.render("publicEvents");
+});
+
 function isAuthenticated(req, res, next) {
   if (req.session && req.session.isLoggedIn) {
     return next(); // User is authenticated, proceed to the next middleware
@@ -158,6 +162,7 @@ app.post("/login", (req, res) => {
 app.get("/admin", isAuthenticated, (req, res) => {
   res.render("admin");
 });
+
 
 // This is the get method to render the manageEvents page and display data from the events table
 app.get("/manageEvents", isAuthenticated, (req, res) => {
