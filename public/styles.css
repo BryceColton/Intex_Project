@@ -37,6 +37,7 @@ body {
 
 /* General button styles */
 .btn, .btn-donate {
+  font-family: 'Montserrat', sans-serif;
   /*padding: 0.4rem 0.8rem; /* Same padding for both */
   border: 2px solid white; /* Add border for .btn-donate too */
   font-size: 0.9rem; /* Same font size for both */
@@ -45,6 +46,7 @@ body {
   text-decoration: none;
   border-radius: 11px;
   padding: 10px 20px;
+  font-weight: 600;
 }
 
 /* Style for .btn */
@@ -78,6 +80,25 @@ body {
   text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
   overflow: hidden; /* Ensures pseudo-element doesn't spill out */
 }
+
+.image-container {
+  display: flex;
+  gap: 80px; /* Adjust the gap as needed */
+}
+
+.logo-image {
+  max-width: 100%; /* Ensures the image scales well */
+}
+
+.youtube-embed {
+  margin-top: 10px; /* Adds additional spacing */
+  border: 5px solid green; /* Adds a solid black border */
+  border-radius: 10px; /* Optional: adds rounded corners to the border */
+  background: url('/img/turtle_shell.png') repeat;
+  margin-top: 20px; /* Adds additional spacing */
+  display: inline-block
+}
+
 
 .hero::before {
   content: ""; /* Creates the dimming layer */
@@ -141,15 +162,19 @@ body {
 .project-details {
   padding: 4rem 5%;
   background-color: #f0f0f0;
+
 }
 
 .project-details-title {
+  font-family: 'Montserrat', sans-serif;
   font-size: 2rem;
   margin-bottom: 2rem;
   text-align: center;
+  margin-bottom: 10px;
 }
 
 .project-details-content {
+  font-family: 'Montserrat', sans-serif;
   max-width: 800px;
   margin: 0 auto;
   font-size: 1.1rem;
@@ -240,4 +265,18 @@ main {
 
 #coloredButton:hover{
   background-color: #b0b0b0;
+}
+
+.inline-image {
+  float: left; /* Or 'right' if you want the image on the right side */
+  margin-right: 15px; /* Add space between the image and the text */
+  margin-bottom: 5px; /* Add space between the bottom of the image and the text */
+  width: 225px; /* Adjust the width of the image as needed */
+  height: auto; /* Maintain aspect ratio of the image */
+}
+
+.jenstory {
+  font-family: 'Montserrat', sans-serif;
+  margin-bottom: 10px;
+
 }
