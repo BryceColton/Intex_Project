@@ -409,7 +409,8 @@ app.get("/viewCompletedEvent/:eventid", (req, res) => {
 app.get("/viewFinishedEvent/:eventid", (req, res) => {
     const eventid = req.params.eventid;
     knex("events")
-      .join("finalized_events", "events.eventid", "=", "finalized_events.eventid") // Join the tables
+      .join("finalized_events", "events.eventid", "=", "finalized_events.eventid")
+      .join("completed_events", "events.eventid", "=", "completed_events.eventid") // Join the tables
       .where("events.eventid", eventid)
       .first() //returns an object representing one record
       .then((event) => {

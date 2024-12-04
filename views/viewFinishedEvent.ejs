@@ -12,114 +12,193 @@
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
       rel="stylesheet"
     />
+    <style>
+      .btn-table {
+        display: inline-block;
+        margin: 20px auto;
+        padding: 10px 20px;
+        background-color: #424242;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .btn-table:hover {
+        background-color: white;
+        color: #424242;
+      }
+
+      button {
+        padding: 12px 25px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        width: 100%;
+        transition: background-color 0.3s;
+      }
+
+
+      .form-section {
+        margin: 40px auto;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        width: 80%;
+        border-radius: 8px;
+      }
+
+      .form-title {
+        text-align: center;
+        font-size: 24px;
+        color: #333;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+        font-size: 16px;
+        color: #555;
+      }
+
+      .form-group b {
+        color: #333;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+      }
+
+      table, th, td {
+        border: 1px solid #ddd;
+      }
+
+      th, td {
+        padding: 12px;
+        text-align: left;
+        font-size: 16px;
+      }
+
+      th {
+        background-color: #f2f2f2;
+      }
+
+      td {
+        background-color: #fafafa;
+      }
+
+
+    </style>
   </head>
   <body>
     <nav class="navbar">
         <div class="navbar-logo">Turtle Shelter Project</div>
         <div class="navbar-buttons">
-            <!-- These will be navbar buttons to take the admin to pages that will manage the volunteers and events -->
             <form action="/admin" method="GET"><button class="btn" type="submit">Admin Home</button></form>
             <form action="/manageEvents" method="GET"><button class="btn" type="submit">Manage Events</button></form>
-        </nav>
+        </div>
+    </nav>
 
-        <!-- Event Info Here -->
-        <main style="display: flex; justify-content: center; align-items: center;">
-            <section class="form-section">
-                <form action="/viewCompletedEvent/<%= event.eventid %>" method="POST">
-                    <h2 class="form-title">Event Details</h2>
-                    <fieldset>
-                        <legend>Event Details</legend>
-                        <div class="form-group">
-                            <label for="event_name">Event Name: <b><%=event.event_name %></b></label>
-                        </div>
-                        <div class="form-group">
-                            <label for="organization">Organization: <b><%=event.organization %></b></label>
-                        </div>
-                        <div class="form-group">
-                            <label for="organizer_first_name">Organizer First Name: <b><%=event.organizer_first_name %></b></label>
-                        </div>
-                        <div class="form-group">
-                            <label for="organizer_last_name">Organizer Last Name: <b><%=event.organizer_last_name %></b></label>
-                        </div>
-                        <div class="form-group">
-                            <label for="org_phone">Phone Number: <b><%=event.org_phone %></b></label>
-                        </div>
-                        <div class="form-group">
-                            <label for="org_email">Email: <b><%=event.org_email %></b></label>
-                        </div>
-                    </fieldset>
-    
-                    <fieldset>
-                        <legend>Event Information</legend>
-                        <div class="form-group">
-                            <label for="event_type">Event Type: <b><%=event.event_type %></b></label>
-                        </div>
-                        <div class="form-group">
-                            <label for="event_address">Event Address: <b><%=event.event_address %></b></label>
-                        </div>
-                        <div class="form-group">
-                            <label for="city">City: <b><%=event.city %></b></label>
-                        </div>
-                        <div class="form-group">
-                            <label for="state">State: <b><%=event.state %></b></label>
-                        </div>
-                        <div class="form-group">
-                            <label for="zip">ZIP: <b><%=event.zip %></b></label>
-                        </div>
-                    </fieldset>
-                    <fieldset>
-                        <legend>Additional Details</legend>
-                        <div class="form-group">
-                            <label>Public: <b><%=event.public == 'true' ? 'Yes' : 'No'%></b></label>
-                        </div>
-                        <div class="form-group">
-                            <label>Guest Speaker: <b><%=event.guest_speaker == 'true' ? 'Yes' : 'No' %></b></label>
-                        </div>
-                    </fieldset>
-                    <fieldset>
-                        <legend>Event Details</legend>
-                        <div class="form-group">
-                            <label for="date">Date: <b><%=finalized_event.date %></b></label>
-                        </div>
-                        <div class="form-group">
-                            <label for="numexpected">Expected Number of People: <b><%=event.numexpected %></b></label>
-                        </div>
-                        <div class="form-group">
-                            <label for="duration">Duration: <b><%=event.duration %></b></label>
-                        </div>
-                        <div class="form-group">
-                            <label for="venuedescription">Venue Description: <b><%=event.venuedescription %></b></label>
-                        </div>
-                    </fieldset>
-                    <fieldset>
-                        <legend>Event Numbers</legend>
-                        <!-- Approve/Decline (Radio Buttons) -->
-                        <div class="form-group">
-                            <table>
-                                <tbody>
-                                <!-- dynamically create html table rows for each row in the database -->
-                                <!--says that for each record, one at a time, send it to that variable "row"-->
-                                  <!-- <input type="hidden" value="row.eventid" /> -->
-                                  <tr><%= event.eventid %></tr>
-                                  <tr><%= event.num_actual %></tr>
-                                  <tr><%= event.num_pocket %></tr>
-                                  <tr><%= event.num_collar %></tr>
-                                  <tr><%= event.num_envelopes %></tr>
-                                  <tr><%= event.num_vests %></tr>
-                                  <tr><%= event.num_completed %></tr>
-                                </tbody>
-                            </table>
-                            <br>
-                        </div>
-                        <br>
-                    </fieldset>     
-                </form>
-                </section>
-                </main>
+    <!-- Event Info Here -->
+    <main style="display: flex; justify-content: center; align-items: center;">
+        <section class="form-section">
+            <form action="/viewCompletedEvent/<%= event.eventid %>" method="POST">
+                <h2 class="form-title">Event Details</h2>
+                <fieldset>
+                    <legend>Event Details</legend>
+                    <div class="form-group">
+                        <label for="event_name">Event Name: <b><%= event.event_name %></b></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="organization">Organization: <b><%= event.organization %></b></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="organizer_first_name">Organizer First Name: <b><%= event.organizer_first_name %></b></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="organizer_last_name">Organizer Last Name: <b><%= event.organizer_last_name %></b></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="org_phone">Phone Number: <b><%= event.org_phone %></b></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="org_email">Email: <b><%= event.org_email %></b></label>
+                    </div>
+                </fieldset>
 
-                <form action="/adminCompletedEvents" method="GET">
-                    <button class="btn-table" type="submit">View Completed Events</button>
-                </form>
-    
+                <fieldset>
+                    <legend>Event Information</legend>
+                    <div class="form-group">
+                        <label for="event_type">Event Type: <b><%= event.event_type %></b></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="event_address">Event Address: <b><%= event.event_address %></b></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="city">City: <b><%= event.city %></b></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="state">State: <b><%= event.state %></b></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="zip">ZIP: <b><%= event.zip %></b></label>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Additional Details</legend>
+                    <div class="form-group">
+                        <label>Public: <b><%= event.public == 'true' ? 'Yes' : 'No' %></b></label>
+                    </div>
+                    <div class="form-group">
+                        <label>Guest Speaker: <b><%= event.guest_speaker == 'true' ? 'Yes' : 'No' %></b></label>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Event Details</legend>
+                    <div class="form-group">
+                        <label for="date">Date: <b><%= event.date %></b></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="numexpected">Expected Number of People: <b><%= event.numexpected %></b></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="duration">Duration: <b><%= event.duration %></b></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="venuedescription">Venue Description: <b><%= event.venuedescription %></b></label>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Event Numbers</legend>
+                    <div class="form-group">
+                        <table>
+                            <tbody>
+                                <tr><td>Event ID:</td><td><b><%= event.eventid %></b></td></tr>
+                                <tr><td>Total Number of Attendees:</td><td><b><%= event.num_actual %></b></td></tr>
+                                <tr><td>Total Number of Pockets:</td><td><b><%= event.num_pocket %></b></td></tr>
+                                <tr><td>Total Number of Collars:</td><td><b><%= event.num_collar %></b></td></tr>
+                                <tr><td>Total Number of Envelopes:</td><td><b><%= event.num_envelopes %></b></td></tr>
+                                <tr><td>Total Number of Vests:</td><td><b><%= event.num_vests %></b></td></tr>
+                                <tr><td>Total Number of Completed Products:</td><td><b><%= event.num_completed %></b></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </fieldset>
+
+            </form>
+        </section>
+    </main>
+
+    <form action="/adminCompletedEvents" method="GET">
+        <button class="btn-table" type="submit">View Completed Events</button>
+    </form>
   </body>
 </html>
