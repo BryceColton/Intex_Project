@@ -183,8 +183,8 @@
               <th>City</th>
               <th>State</th>
               <th>Status</th>
-              <th></th>
-              <th></th>
+              <th>View</th>
+              <th>Delete</th>
             </tr>
           </thead>
           <tbody>
@@ -235,27 +235,25 @@
         <table>
             <thead>
               <tr>
+                <th>Event Date</th>
                 <th>Event Name</th>
                 <th>Organization</th>
-                <th>Organizer First Name</th>
-                <th>Organizer Last Name</th>
                 <th>Event Type</th>
                 <th>City</th>
                 <th>State</th>
                 <th>Status</th>
-                <th></th>
+                <th>View</th>
               </tr>
             </thead>
             <tbody>
-              <% if (finalized_events.length > 0) { %> <% finalized_events.forEach(row => { %>
+              <% if (approved_events.length > 0) { %> <% approved_events.forEach(row => { %>
               <!-- dynamically create html table rows for each row in the database -->
               <!--says that for each record, one at a time, send it to that variable "row"-->
               <tr>
                 <input type="hidden" value="row.eventid" />
+                <td><%= row.date %></td>
                 <td><%= row.event_name %></td>
                 <td><%= row.organization %></td>
-                <td><%= row.organizer_first_name %></td>
-                <td><%= row.organizer_last_name %></td>
                 <td><%= row.event_type %></td>
                 <td><%= row.city %></td>
                 <td><%= row.state %></td>
