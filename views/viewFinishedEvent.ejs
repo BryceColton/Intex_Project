@@ -95,90 +95,31 @@
                         <legend>Event Numbers</legend>
                         <!-- Approve/Decline (Radio Buttons) -->
                         <div class="form-group">
-                                <label for="num_actual">Number of Actual People:</label>
-                                <input
-                                  type="number"
-                                  id="num_actual"
-                                  name="num_actual"
-                                  min="1"
-                                  placeholder="(ie.50)"
-                                  required
-                                />
-                                    <br>
-                                    <label for="num_pockets">Number of Pockets:</label>
-                                    <input
-                                      type="number"
-                                      id="num_pocket"
-                                      name="num_pocket"
-                                      min="1"
-                                      placeholder="(ie.50)"
-                                      required
-                                    />
-                                <br>
-                                <label>
-                                    <label for="num_collar">Number of Collar:</label>
-                                    <input
-                                      type="number"
-                                      id="num_collar"
-                                      name="num_collar"
-                                      min="1"
-                                      placeholder="(ie.50)"
-                                      required
-                                    />
-                                <br>
-                                <label>
-                                    <label for="num_envelopes">Number of Envelopes:</label>
-                                    <input
-                                      type="number"
-                                      id="num_envelopes"
-                                      name="num_envelopes"
-                                      min="1"
-                                      placeholder="(ie.50)"
-                                      required
-                                    />
-                                <br>
-                                    <label for="numexpected">Number of Vests:</label>
-                                    <input
-                                      type="number"
-                                      id="num_vests"
-                                      name="num_vests"
-                                      min="1"
-                                      placeholder="(ie.50)"
-                                      required
-                                    />
-                            <label>
-                                <br>
-                                <label for="num_completed">Number of Completed Products:</label>
-                                <input
-                                  type="number"
-                                  id="num_completed"
-                                  name="num_completed"
-                                  min="1"
-                                  placeholder="(ie.50)"
-                                  required
-                                />
+                            <table>
+                                <tbody>
+                                <!-- dynamically create html table rows for each row in the database -->
+                                <!--says that for each record, one at a time, send it to that variable "row"-->
+                                  <!-- <input type="hidden" value="row.eventid" /> -->
+                                  <tr><%= event.eventid %></tr>
+                                  <tr><%= event.num_actual %></tr>
+                                  <tr><%= event.num_pocket %></tr>
+                                  <tr><%= event.num_collar %></tr>
+                                  <tr><%= event.num_envelopes %></tr>
+                                  <tr><%= event.num_vests %></tr>
+                                  <tr><%= event.num_completed %></tr>
+                                </tbody>
+                            </table>
                             <br>
                         </div>
                         <br>
                     </fieldset>     
-                    <fieldset>
-                        <legend>Completed?</legend>
-                        <!-- Approve/Decline (Radio Buttons) -->
-                        <div class="form-group">
-                            <label>
-                            <input required type="radio" name="status" value="A" <%= event.status === 'Completed' ? 'checked' : ''
-                            %>> Completed
-                            </label>
-                            <br>
-                        </div>
-                        <br>
-                
-                    <button type="submit" class="btn btn-donate">Finish</button>
-                    </fieldset>
                 </form>
                 </section>
                 </main>
 
+                <form action="/adminCompletedEvents" method="GET">
+                    <button class="btn-table" type="submit">View Completed Events</button>
+                </form>
     
   </body>
 </html>

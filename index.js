@@ -424,7 +424,7 @@ app.get("/viewFinishedEvent/:eventid", (req, res) => {
   
   
         console.log(event)
-        res.render("viewCompletedEvent", { event });  
+        res.render("viewFinishedEvent", { event });  
       })
       .catch((error) => {
         console.error("Error fetching event details:", error);
