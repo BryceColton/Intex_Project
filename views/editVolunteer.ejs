@@ -35,7 +35,7 @@
               <div class="form-group">
 
                 <!-- Volunteer Email -->
-                <label for="vol_email">Email</label>
+                <label for="vol_email">Email:</label>
                 <input
                   type="email"
                   id="vol_email"
@@ -47,7 +47,7 @@
 
               <!-- Volunteer First Name -->
               <div class="form-group">
-                <label for="vol_first_name">First Name</label>
+                <label for="vol_first_name">First Name:</label>
                 <input
                   type="text"
                   id="vol_first_name"
@@ -59,7 +59,7 @@
 
               <!-- Volunteer Last Name -->
               <div class="form-group">
-                <label for="vol_last_name">Last Name</label>
+                <label for="vol_last_name">Last Name:</label>
                 <input
                   type="text"
                   id="vol_last_name"
@@ -71,7 +71,7 @@
 
               <!-- Volunteer Phone Number -->
               <div class="form-group">
-                <label for="vol_phone">Phone</label>
+                <label for="vol_phone">Phone:</label>
                 <input
                   type="tel"
                   id="vol_phone"
@@ -84,14 +84,14 @@
 
               <!-- Volunteer Zipcode -->
               <div class="form-group">
-                <label for="zip">Zip Code</label>
+                <label for="zip">Zip Code:</label>
                 <input type="text" id="zip" name="zip" value="<%= volunteer.zip %>"
                 required />
               </div>
 
               <!-- Volunteer Sewing Level -->
               <div class="form-group">
-                <label for="sewing_level">Sewing Level</label>
+                <label for="sewing_level">Sewing Level:</label>
                 <select id="sewing_level" name="sewing_level" required>
                   <option value="" disabled selected>Select your sewing level</option>
                   <option value="1" <%= volunteer.sewing_level == 1 ? "selected" : "" %>>Beginner</option>
@@ -128,18 +128,10 @@
               </div>
             </fieldset>
   
-            <button type="submit" class="btn" id="coloredButton">Submit</button>
+            <button type="submit" class="btn-donate">Submit</button>
           </form>
         </section>
       </main>
-  
-      <footer class="footer">
-        <div class="footer-info">Turtle Shelter Project, PO Box 382, Kaysville, UT 84037</div>
-        <div class="footer-info">801-872-3190</div>
-        <div class="footer-info">turtleshelterproject@gmail.com</div>
-      </footer>
-
-
     </form>
   </body>
 </html>

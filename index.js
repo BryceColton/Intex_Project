@@ -68,6 +68,10 @@ app.get("/jensStory", (req, res) => {
   res.render("jensStory");
 });
 
+app.get("/publicEvents", (req, res) => {
+  res.render("publicEvents");
+});
+
 function isAuthenticated(req, res, next) {
   if (req.session && req.session.isLoggedIn) {
     return next(); // User is authenticated, proceed to the next middleware
@@ -158,6 +162,7 @@ app.post("/login", (req, res) => {
 app.get("/admin", isAuthenticated, (req, res) => {
   res.render("admin");
 });
+
 
 // This is the get method to render the manageEvents page and display data from the events table
 app.get("/manageEvents", isAuthenticated, (req, res) => {
@@ -443,6 +448,28 @@ app.get("/editVolunteer/:vol_email", isAuthenticated, (req, res) => {
     })
     .catch((error) => {
       console.error("Error fetching Volunteer for editing:", error);
+      res.status(500).send("Internal Server Error");
+    });
+});
+
+app.get("/publicEvents", (req, res) => {
+  knex("events")
+    .join("finalized_events", "events.eventid", "=", "finalized_events.eventid")
+    //.where("events.public", true)
+    .select(
+     // "events.event_name", 
+      //"finalized_events.date", 
+      //"events.event_address", 
+      //"events.city", 
+      //"events.state", 
+     // "events.zip"
+    )
+    .then((events) => {
+      console.log("Fetched Events:", events); // Debug: Verify what data is fetched
+      res.render("publicEvents", { events }); // Pass `events` to EJS template
+    })
+    .catch((error) => {
+      console.error("Error fetching events:", error);
       res.status(500).send("Internal Server Error");
     });
 });
