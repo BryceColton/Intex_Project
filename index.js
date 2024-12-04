@@ -150,6 +150,8 @@ app.post("/login", (req, res) => {
     });
 });
 
+// ADMIN ROUTES *******************************************************************************************************************************
+
 // This is the get method to render the admin page
 app.get("/admin", isAuthenticated, (req, res) => {
   res.render("admin");
@@ -203,7 +205,105 @@ app.get("/viewEvent/:eventid", (req, res) => {
     });
 });
 
-// This route updates a specific event's status in the database to determine if it is an approved or declined event
+// This route is to update the status of an event in the database after an admin approves or denies it.
+app.post("/handlePendingEvent/:eventid", (req, res) => {
+  const eventid = req.params.eventid;
+  const status = req.body.status;
+  knex("events")
+    .update({ status: status })
+    .where("eventid", eventid)
+    .then(() => {
+      res.redirect("/manageEvents"); // Redirect to the list of events after saving
+    })
+    .catch((error) => {
+      console.error("Error updating event:", error);
+      res.status(500).send("Internal Server Error");
+    });
+});
+
+// This route makes the admin delete event functionality
+app.post("/deleteEvent/:eventid", (req, res) => {
+  const id = req.params.eventid;
+  knex("events")
+    .where("eventid", id)
+    .del() // Deletes the record with the specified ID
+    .then(() => {
+      res.redirect("/manageEvents"); // Redirect to the volunteers list after deletion
+    })
+    .catch((error) => {
+      console.error("Error deleting Event:", error);
+      res.status(500).send("Internal Server Error");
+    });
+});
+
+// This route is for the admin to view declined events
+app.get("/adminDeclinedEvents", (req, res) => {
+  knex("events")
+    .select()
+    .where("status", "declined")
+    .then((declined_events) => res.render("declinedEvents", { declined_events }));
+});
+
+// This route is the get route for the admin to create their own events to show in the upcoming events table
+app.get("/adminAddEvent", (req, res) => {
+  res.render("adminAddEvent");
+});
+
+// This route is the post route for the admin to add an event
+app.post("/adminAddEvent", (req, res) => {
+  console.log(req.body);
+  const {
+    event_name,
+    organization,
+    organizer_first_name,
+    organizer_last_name,
+    org_phone,
+    org_email,
+    event_type,
+    event_address,
+    city,
+    state,
+    zip,
+    public,
+    guest_speaker,
+    venuedescription,
+    numexpected,
+    duration,
+    eventdatetime1,
+    eventdatetime2,
+  } = req.body;
+
+  knex("events")
+    .insert({
+      event_name,
+      organization,
+      organizer_first_name,
+      organizer_last_name,
+      org_phone,
+      org_email,
+      event_type,
+      event_address,
+      city,
+      state,
+      zip,
+      public: public === "on", // Convert checkbox to boolean
+      guest_speaker: guest_speaker === "on", // Convert checkbox to boolean
+      numexpected: parseInt(numexpected, 10), // Ensure it's stored as an integer
+      venuedescription,
+      duration: parseFloat(duration), // Ensure it's stored as a float
+      eventdatetime1: new Date(eventdatetime1), // Ensure it's stored as a valid Date
+      eventdatetime2: new Date(eventdatetime2), // Ensure it's stored as a valid Date
+      status: "approved",
+    })
+
+    .then(([eventid]) => {
+      res.redirect("/manageEvents");
+    })
+    .catch((err) => {
+      console.error("Database insert error:", err);
+      res.status(500).json({ message: "Error saving the event", error: err });
+    });
+});
 
 
 // This is the get method to render the manageVolunteers page and display data from the volunteers table
@@ -549,7 +649,7 @@ app.post("/submitVolunteerForm", (req, res) => {
   // Check if email already exists
   knex("volunteers")
     .where({ vol_email: vol_email })
-    .first()  // Returns the first match or null if no match
+    .first() // Returns the first match or null if no match
     .then((existingVolunteer) => {
       if (existingVolunteer) {
         return res.status(400).json({ message: "Email already exists." });

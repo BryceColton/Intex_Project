@@ -22,11 +22,11 @@
             <form action="/manageUsers" method="GET"><button class="btn" type="submit">Manage Admin Users</button></form>
             <form action="/manageEvents" method="GET"><button class="btn" type="submit">Manage Events</button></form>
         </nav>
-
+        <br>
         <!-- Event Info Here -->
         <main style="display: flex; justify-content: center; align-items: center;">
             <section class="form-section">
-                <form action="handlePendingEvent/:<%= event.eventid %>" method="POST">        
+                <form action="/handlePendingEvent/<%= event.eventid %>" method="POST">        
                 <h2 class="form-title">Event Details</h2>
                     <fieldset>
                         <legend>Event Details</legend>
@@ -100,13 +100,11 @@
                         <!-- Approve/Decline (Radio Buttons) -->
                         <div class="form-group">
                             <label>
-                            <input type="radio" name="status" value="A" <%= event.status === 'Approved' ? 'checked' : ''
-                            %>> Approve
+                            <input type="radio" name="status" value="approved"> Approve
                             </label>
                             <br>
                             <label>
-                            <input type="radio" name="status" value="D" <%= event.status === 'B' ? 'checked' : ''
-                            %>> Decline
+                            <input type="radio" name="status" value="declined"> Decline
                             </label>
                         </div>
                         <br>
