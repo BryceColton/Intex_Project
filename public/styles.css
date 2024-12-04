@@ -163,3 +163,19 @@ legend {
   font-size: 20px;
   font-weight: bold;
 }
+
+main {
+  display: flex; 
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+  align-items: center; 
+  overflow-y: auto; 
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+
+#no-style {
+  all: unset;
+  display: block;
+}
