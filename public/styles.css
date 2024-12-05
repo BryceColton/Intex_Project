@@ -28,6 +28,7 @@ body {
   align-items: center;
   font-size: 1.5rem;
   font-weight: bold;
+  cursor: pointer;
 }
 
 .navbar-buttons {
@@ -204,6 +205,15 @@ body {
   margin-bottom: 2rem;
   text-align: center;
   margin-bottom: 10px;
+}
+
+.logo-circle {
+  width: 50px; /* Adjust size as needed */
+  height: 50px; /* Ensure it's a square for a perfect circle */
+  border-radius: 50%; /* Makes the image circular */
+  margin-right: 10px; /* Space between logo and text */
+  vertical-align: middle; /* Aligns the logo with the text */
+  border: 2px solid white
 }
 
 .project-details-content {
