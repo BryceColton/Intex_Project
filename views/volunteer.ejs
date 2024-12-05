@@ -110,6 +110,21 @@
                 <option value="Other">Other</option>
               </select>
             </div>
+                        <div class="form-group">
+              <label>
+                <input type="checkbox" id="teamMemberCheckbox" />
+                Become a team member?
+              </label>
+            </div>
+            <div id="passwordDropdown" class="form-group">
+              <label for="password">Create a Password:</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Enter a secure password"
+              />
+            </div>
           </fieldset>
 
           <button type="submit" class="btn-donate">Submit</button>
@@ -130,5 +145,17 @@
         </a>
       </div>
     </footer>
+        <script>
+      const checkbox = document.getElementById('teamMemberCheckbox');
+      const passwordDropdown = document.getElementById('passwordDropdown');
+
+      checkbox.addEventListener('change', () => {
+        if (checkbox.checked) {
+          passwordDropdown.style.display = 'block';
+        } else {
+          passwordDropdown.style.display = 'none';
+        }
+      });
+    </script>
   </body>
 </html>
