@@ -78,6 +78,17 @@
     th:nth-child(2), td:nth-child(2) {
     width: 150px; /* Reduce the width of the Last Name column */
   }
+
+
+  table:nth-of-type(2) th:nth-child(1), td:nth-child(1) {
+        width: 300px; /* Make the 8th column (Status) narrower */
+        text-align: center; /* Center align the text */
+      }
+  th:nth-child(4), td:nth-child(4) {
+    width: 140px; /* Make the 6th column a bit wider */
+    text-align: center; /* Center align the buttons */
+  }
+  
     
       tr:hover td {
         background-color: #424242;
@@ -278,18 +289,20 @@
             </tbody>
           </table>
 
-    <form action="/adminAddEvent" method="GET" style="display: inline-block; margin-right: 10px;">
-      <button type="submit" class="btn-table">Add New Event</button>
-    </form>
-    
-    <!-- Button to view completed events. -->
-    <form action="/adminCompletedEvents" method="GET" style="display: inline-block; margin-right: 10px;">
-      <button type="submit" class="btn-table">View Completed Events</button>
-    </form>
-    
-    <!-- Button to view declined events. -->
-    <form action="/adminDeclinedEvents" method="GET" style="display: inline-block;">
-      <button type="submit" class="btn-table">View Declined Events</button>
-    </form>
-    
+
+<!-- Button to add a new event. -->
+<form action="/adminAddEvent" method="GET" style="display: inline-block; margin-right: 10px;">
+  <button type="submit" class="btn-table">Add New Event</button>
+</form>
+
+<!-- Button to view completed events. -->
+<form action="/adminCompletedEvents" method="GET" style="display: inline-block; margin-right: 10px;">
+  <button type="submit" class="btn-table">View Completed Events</button>
+</form>
+
+<!-- Button to view declined events. -->
+<form action="/adminDeclinedEvents" method="GET" style="display: inline-block;">
+  <button type="submit" class="btn-table">View Declined Events</button>
+</form>
+
 </html>
