@@ -189,14 +189,14 @@
               <td><%= row.num_envelopes %></td>
               <td><%= row.num_vests %></td>
               <td><%= row.num_completed %></td>
-              <!-- Edit button to go to the editEvent page where the admin will be able to accept/decline event requests -->
+              <!-- View button to see more details about the completed event -->
               <td>
                 <form action="/viewFinishedEvent/<%= row.eventid %>" method="GET" style="display: inline">
                   <!--The action is the route. You have to write this. the stuff after the / is a parameter-->
                   <button class="btn-table" type="submit">View</button>
                 </form>
                 <!-- Delete button so that the admin can handle unwanted event requests -->
-                <form action="/deleteEvent/<%= row.eventid %>" method="POST" style="display: inline">
+                <form action="/deleteFinishedEvent/<%= row.eventid %>" method="POST" style="display: inline">
                   <button
                     class="btn-table btn-delete"
                     type="submit"

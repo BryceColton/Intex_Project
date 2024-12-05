@@ -443,6 +443,21 @@ app.get("/viewCompletedEvent/:eventid", (req, res) => {
     });
 });
 
+//This route is to post a delete completed event request
+app.post("/deleteFinishedEvent/:eventid", isAuthenticated, (req, res) => {
+  const id = req.params.eventid;
+  knex("events")
+    .where("eventid", id)
+    .del() // Deletes the record with the specified ID
+    .then(() => {
+      res.redirect("/adminCompletedEvents"); // Redirect to the declined events list after deletion
+    })
+    .catch((error) => {
+      console.error("Error deleting Event:", error);
+      res.status(500).send("Internal Server Error");
+    });
+});
+
 app.get("/viewFinishedEvent/:eventid", (req, res) => {
   const eventid = req.params.eventid;
   knex("events")
@@ -468,6 +483,7 @@ app.get("/viewFinishedEvent/:eventid", (req, res) => {
       res.status(500).send("Internal Server Error");
     });
 });
+
 // This is the get route to edit a volunteer's data from the admin page
 app.get("/editVolunteer/:vol_email", isAuthenticated, (req, res) => {
   //This is the route for editVolunteer. The /: means there is a parameter passed in called vol_email.
