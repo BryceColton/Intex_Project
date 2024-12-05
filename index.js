@@ -56,9 +56,6 @@ app.get("/volunteer", (req, res) => {
   res.render("volunteer");
 });
 
-app.get("/teamMemberRsvp", isAuthenticatedTeamMember, (req, res) => {
-  res.render("teamMemberRsvp");
-});
 // This is the get method for the host event request page
 app.get("/hostEvent", (req, res) => {
   res.render("hostEvent");
@@ -76,12 +73,6 @@ function isAuthenticatedTeamMember(req, res, next) {
   res.redirect("/teamMemberLogin"); // Redirect to login page if not authenticated
 }
 
-function isAuthenticatedTeamMember(req, res, next) {
-  if (req.session && req.session.isLoggedInTeamMember) {
-    return next(); // User is authenticated, proceed to the next middleware
-  }
-  res.redirect("/teamMemberLogin"); // Redirect to login page if not authenticated
-}
 
 function isAuthenticated(req, res, next) {
   if (req.session && req.session.isLoggedIn) {
@@ -965,19 +956,16 @@ app.get("/teamMemberRsvp", isAuthenticatedTeamMember, (req, res) => {
     ) // Group by all non-aggregated columns
     .orderBy([{ column: "finalized_events.date", order: "asc" }]) // Ensure column is correct
     .then((approved_events) => {
+      console.log("Approved Events:", approved_events);
       // Render the view with approved events
       res.render("teamMemberRsvp", { approved_events });
     })
     .catch((error) => {
       // Handle any errors
-      console.error("Error fetching event details:", error);
+      console.error("Error fetching event details:", error.message, error.stack);
       res.status(500).send("Internal Server Error");
     });
 });
-
-app.post("/teamMemberRsvp", (req, res) => {
-  
-})
 
 app.post("/teamMemberRsvp", (req, res) => {
   
