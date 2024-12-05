@@ -207,16 +207,36 @@ app.get("/manageEvents", isAuthenticated, (req, res) => {
     .select()
     .where("status", "pending")
     .then((pending_events) => {
-      //This variable represents one object that has attributes, which are the column names
       if (!pending_events) {
         return res.status(404).send("No pending events found");
       }
-      //get data from finalized events table to send with the upcoming events
+      // Get data from finalized_events table and calculate team_members_registered
       knex("events")
-        .select()
+        .select(
+          "events.eventid",
+          "finalized_events.date",
+          "events.event_name",
+          "events.organization",
+          "events.event_type",
+          "events.city",
+          "events.state",
+          "finalized_events.team_members_needed",
+          knex.raw("COUNT(tm_event.team_email) AS team_members_registered") // Count team emails
+        )
         .join("finalized_events", "events.eventid", "=", "finalized_events.eventid") // Join the tables
+        .leftJoin("tm_event", "events.eventid", "=", "tm_event.eventid") // Left join to count team emails
         .where("status", "approved")
-        .orderBy([{ column: "date", order: "asc" }])
+        .groupBy(
+          "events.eventid",
+          "finalized_events.date",
+          "events.event_name",
+          "events.organization",
+          "events.event_type",
+          "events.city",
+          "events.state",
+          "finalized_events.team_members_needed"
+        ) // Group by all non-aggregated columns
+        .orderBy([{ column: "finalized_events.date", order: "asc" }])
         .then((approved_events) => {
           res.render("manageEvents", { pending_events, approved_events });
         });
@@ -226,6 +246,7 @@ app.get("/manageEvents", isAuthenticated, (req, res) => {
       res.status(500).send("Internal Server Error");
     });
 });
+
 
 // This route is tied to the view button on pending event requests.
 app.get("/viewEvent/:eventid", isAuthenticated, (req, res) => {
