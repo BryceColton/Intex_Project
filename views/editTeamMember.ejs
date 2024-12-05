@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin -- Turtle Shelter Project</title>
+    <link rel="icon" type="image/png" href="/img/logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="/styles.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+  </head>
+
+  <nav class="navbar">
+    <div class="navbar-logo">
+      <form action="/" method="GET">
+        <button type="submit" style="border: none; background: none; padding: 0;">
+          <img class="logo-circle" src="/img/logo-remove-background.com.png" alt="Logo Image" />
+        </button>
+          </form>
+          Turtle Shelter Project
+      </div>    
+  <div class="navbar-buttons">
+      <!-- These will be navbar buttons to take the admin to pages that will manage the volunteers and events -->
+      <form action="/admin" method="GET"><button class="btn" type="submit">Admin Home</button></form>
+      <form action="/manageUsers" method="GET"><button class="btn" type="submit">Manage Admin Users</button></form>
+      <form action="/manageVolunteers" method="GET"><button class="btn" type="submit">Manage Volunteers</button></form>
+      <form action="/manageEvents" method="GET"><button class="btn" type="submit">Manage Events</button></form>
+    </nav>
+
+  <body>
+    <main style="display: flex; justify-content: center; align-items: center; height: 100vh">
+        <section class="form-section">
+          <h2 class="form-title">Edit Volunteer</h2>
+          <form action="/editTeamMember/<%= volunteer.vol_email %>" method="POST" class="volunteer-form">
+            <fieldset>
+              <legend>Volunteer Information</legend>
+              <div class="form-group">
+
+                <!-- Volunteer Email -->
+                <label for="vol_email">Email:</label>
+                <input
+                  type="email"
+                  id="vol_email"
+                  name="vol_email"
+                  value="<%= volunteer.vol_email %>"
+                  required
+                />
+              </div>
+
+              <!-- Volunteer First Name -->
+              <div class="form-group">
+                <label for="vol_first_name">First Name:</label>
+                <input
+                  type="text"
+                  id="vol_first_name"
+                  name="vol_first_name"
+                  value="<%= volunteer.vol_first_name %>"
+                  required
+                />
+              </div>
+
+              <!-- Volunteer Last Name -->
+              <div class="form-group">
+                <label for="vol_last_name">Last Name:</label>
+                <input
+                  type="text"
+                  id="vol_last_name"
+                  name="vol_last_name"
+                  value="<%= volunteer.vol_last_name %>"
+                  required
+                />
+              </div>
+
+              <!-- Volunteer Phone Number -->
+              <div class="form-group">
+                <label for="vol_phone">Phone:</label>
+                <input
+                  type="tel"
+                  id="vol_phone"
+                  name="vol_phone"
+                  title="Please enter a phone number in the format 123-456-7890"
+                  value="<%= volunteer.vol_phone %>"
+                  required
+                />
+              </div>
+
+              <!-- Volunteer Zipcode -->
+              <div class="form-group">
+                <label for="zip">Zip Code:</label>
+                <input type="text" id="zip" name="zip" value="<%= volunteer.zip %>"
+                required />
+              </div>
+
+              <!-- Volunteer Sewing Level -->
+              <div class="form-group">
+                <label for="sewing_level">Sewing Level:</label>
+                <select id="sewing_level" name="sewing_level" required>
+                  <option value="" disabled selected>Select your sewing level</option>
+                  <option value="1" <%= volunteer.sewing_level == 1 ? "selected" : "" %>>Beginner</option>
+                  <option value="2" <%= volunteer.sewing_level == 2 ? "selected" : "" %>>Intermediate</option>
+                  <option value="3" <%= volunteer.sewing_level == 3 ? "selected" : "" %>>Advanced</option>
+                </select>                
+              </div>
+
+              <!-- Volunteer Hours willing to work -->
+              <div class="form-group">
+                <label for="hours">Number of Hours Willing to Volunteer Per Month</label>
+                <input
+                  type="number"
+                  id="hours"
+                  name="num_hours"
+                  min="1"
+                  step=".1"
+                  value="<%= volunteer.num_hours%>"
+                  required
+                />
+              </div>
+
+              <!-- Volunteer Origin Story -->
+              <div class="form-group">
+                <label for="origin">How Did You Hear About Us?</label>
+                <select id="origin" name="origin" required>
+                  <option value="" disabled selected>Select your origin</option>
+                  <option value="Friend Referral" <%= volunteer.origin == 'Friend Referral' ? 'selected' : '' %>>Friend Referral</option>
+                  <option value="Social Media" <%= volunteer.origin == 'Social Media' ? 'selected' : '' %>>Social Media</option>
+                  <option value="Community Event" <%= volunteer.origin == 'Community Event' ? 'selected' : '' %>>Community Event</option>
+                  <option value="Company Website" <%= volunteer.origin == 'Company Website' ? 'selected' : '' %>>Company Website</option>
+                  <option value="Other" <%= volunteer.origin == 'Other' ? 'selected' : '' %>>Other</option>
+                </select>                
+              </div>
+
+              <div class="form-group">
+                <label>
+                <input type="radio" name="status" value="approved" required> Approve
+                </label>
+                <br>
+                <label>
+                <input type="radio" name="status" value="declined" required> Decline
+                </label>
+            </div>
+            </fieldset>
+  
+            <button type="submit" class="btn-donate">Submit</button>
+          </form>
+        </section>
+      </main>
+    </form>
+  </body>
+</html>
