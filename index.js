@@ -466,6 +466,21 @@ app.get("/editVolunteer/:vol_email", isAuthenticated, (req, res) => {
     });
 });
 
+app.get("/liveCounter", (req, res) => {
+  knex("completed_events")
+    .sum("num_completed as totalCompleted")  // Sum the num_completed column
+    .first()  // We only want one row with the sum
+    .then((result) => {
+      // Check if the sum is returned correctly
+      console.log(result);  // Log the result to verify
+      res.json(result);  // Send the sum as a JSON response
+    })
+    .catch((error) => {
+      console.error("Error fetching live counter:", error);
+      res.status(500).send("Internal Server Error");
+    });
+});
+
 app.get("/publicEvents", (req, res) => {
   knex("events")
     .join("finalized_events", "events.eventid", "=", "finalized_events.eventid")
