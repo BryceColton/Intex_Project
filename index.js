@@ -251,7 +251,7 @@ app.post("/handlePendingEvent/:eventid", async (req, res) => {
   const eventid = req.params.eventid;
   const status = req.body.status;
   const final_date = req.body.date; // Date from the form
-  const volunteers_needed = req.body.volunteers_needed;
+  const team_members_needed = req.body.team_members_needed;
 
   try {
     // Convert the date to UTC for both tables
@@ -265,7 +265,7 @@ app.post("/handlePendingEvent/:eventid", async (req, res) => {
       await trx("finalized_events").insert({
         eventid: eventid,
         date: formattedDate,
-        volunteers_needed: volunteers_needed,
+        team_members_needed: team_members_needed,
       });
     });
 
@@ -359,7 +359,7 @@ app.post("/adminAddEvent", isAuthenticated, (req, res) => {
     numexpected,
     duration,
     eventdatetime1,
-    volunteers_needed,
+    team_members_needed,
   } = req.body;
 
   knex("events")
@@ -391,7 +391,7 @@ app.post("/adminAddEvent", isAuthenticated, (req, res) => {
       return knex("finalized_events").insert({
         eventid: eventid,
         date: new Date(eventdatetime1), // Ensure the date is in a valid format
-        volunteers_needed: volunteers_needed,
+        team_members_needed: team_members_needed,
       });
     })
     .then(() => {
@@ -870,9 +870,7 @@ app.post("/volunteerFormSubmission", (req, res) => {
     .first()
     .then((existingVolunteer) => {
       if (existingVolunteer) {
-        return res
-          .status(400)
-          .json({ message: "Email already exists in volunteers." });
+        return res.status(400).json({ message: "Email already exists in volunteers." });
       }
       // Insert into volunteers table
       return knex("volunteers").insert({
@@ -894,9 +892,7 @@ app.post("/volunteerFormSubmission", (req, res) => {
           .first()
           .then((existingTeamMember) => {
             if (existingTeamMember) {
-              return Promise.reject(
-                new Error("Email already exists in team members.")
-              );
+              return Promise.reject(new Error("Email already exists in team members."));
             }
             // Insert into team_member table
             return knex("team_member").insert({
