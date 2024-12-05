@@ -263,6 +263,61 @@
           <% } %>
         </tbody>
       </table>
+      <br>
+      <h1 style="text-align: center">Team Members</h1>
+    <!-- Table for volunteers who are in team -->
+    <table>
+      <thead>
+        <tr>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Status</th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (volunteersInTeam.length > 0) { %> <% volunteersInTeam.forEach(volunteer => { %>
+        <tr>
+          <td><%= volunteer.vol_first_name %></td>
+          <td><%= volunteer.vol_last_name %></td>
+          <td><%= volunteer.vol_email %></td>
+          <td><%= volunteer.vol_phone %></td>
+          <td><%= volunteer.status %></td>
+          <td>
+            <form
+              action="/<%= volunteer.vol_email %>"
+              method="GET"
+              style="display: inline"
+            >
+              <button type="submit" class="btn-table">Edit</button>
+            </form>
+          </td>
+          <td>
+            <form
+              action="/<%= volunteer.vol_email %>"
+              method="POST"
+              style="display: inline"
+            >
+              <button
+                type="submit"
+                class="btn-table btn-delete"
+                onclick="return confirm('Are you sure you want to delete this record?');"
+              >
+                Delete
+              </button>
+            </form>
+          </td>
+        </tr>
+        <% }) %> <% } else { %>
+        <tr>
+          <td colspan="5">No data available</td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
     </div>
   </body>
 </html>

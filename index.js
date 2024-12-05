@@ -427,19 +427,14 @@ app.post("/adminAddEvent", isAuthenticated, (req, res) => {
 app.get("/manageVolunteers", isAuthenticated, (req, res) => {
   // Query for volunteers whose vol_email is NOT in team_member
   knex("volunteers")
-    .select()
-    .whereNotIn(
-      "volunteers.vol_email",  // Column from the volunteers table
-      knex("team_member").select("team_email")  // Subquery selecting team_email from team_member table
-    )
+    .select("volunteers.*")  // Select all columns from volunteers table
+    .leftJoin("team_member", "volunteers.vol_email", "team_member.team_email")  // Left join with team_member on vol_email and team_email
+    .whereNull("team_member.team_email")  // Only select volunteers whose email is NOT in team_member
     .then((volunteers) => {
       // Query for volunteers whose vol_email is in team_member
       knex("volunteers")
-        .select()
-        .whereIn(
-          "volunteers.vol_email",  // Column from the volunteers table
-          knex("team_member").select("team_email")  // Subquery selecting team_email from team_member table
-        )
+        .select("volunteers.*", "team_member.team_email", "team_member.status")  // Select all columns from volunteers and team_member status
+        .join("team_member", "volunteers.vol_email", "team_member.team_email")  // Inner join with team_member on vol_email and team_email
         .then((volunteersInTeam) => {
           // Render the manageVolunteers template and pass both sets of data
           res.render("manageVolunteers", { volunteers, volunteersInTeam });
@@ -450,6 +445,7 @@ app.get("/manageVolunteers", isAuthenticated, (req, res) => {
       res.status(500).send("Internal Server Error");
     });
 });
+
 
 
 
