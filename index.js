@@ -68,6 +68,15 @@ app.get("/jensStory", (req, res) => {
 });
 
 
+function isAuthenticatedTeamMember(req, res, next) {
+  if (req.session && req.session.isLoggedInTeamMember) {
+    return next(); // User is authenticated, proceed to the next middleware
+  }
+  res.redirect("/teamMemberLogin"); // Redirect to login page if not authenticated
+}
+
+
+
 function isAuthenticated(req, res, next) {
   if (req.session && req.session.isLoggedIn) {
     return next(); // User is authenticated, proceed to the next middleware
@@ -77,6 +86,10 @@ function isAuthenticated(req, res, next) {
 
 app.get("/login", (req, res) => {
   res.render("login", { error: null }); // Ensure `error` is defined
+});
+
+app.get("/teamMemberLogin", (req, res) => {
+  res.render("teamMemberLogin", { error: null }); // Ensure `error` is defined
 });
 
 app.get("/create-admin", (req, res) => {
@@ -117,6 +130,39 @@ app.post("/create-admin", (req, res) => {
     });
 });
 
+app.post("/teamMemberLogin", (req, res) => {
+  const { username, password } = req.body;
+
+  // Simple validation to check if both fields are provided
+  if (!username || !password) {
+    return res.render("teamMemberLogin", { error: "Both username and password are required." });
+  }
+
+  // Check if the user exists in the admin table
+  knex("team_member")
+    .where({ team_email : username })
+    .first()
+    .then((team_member) => {
+      if (!team_member) {
+        return res.render("teamMemberLogin", { error: "Invalid username or password." });
+      }
+
+      // Check if the provided password matches the stored password
+      if (team_member.password !== password) {
+        return res.render("teamMemberLogin", { error: "Invalid username or password." });
+      }
+
+      req.session.isLoggedIn = true;
+      req.session.adminUsername = username;
+
+      res.redirect("/"); // You can change this to whatever route is appropriate
+    })
+    .catch((error) => {
+      console.error("Error during login:", error);
+      res.render("login", { error: "Internal server error." });
+    });
+});
+
 app.post("/login", (req, res) => {
   const { username, password } = req.body;
 
@@ -139,11 +185,9 @@ app.post("/login", (req, res) => {
         return res.render("login", { error: "Invalid username or password." });
       }
 
-      // If login is successful, set session variables (you can use express-session for this)
       req.session.isLoggedIn = true;
       req.session.adminUsername = username;
 
-      // Redirect to a protected page or dashboard
       res.redirect("/admin"); // You can change this to whatever route is appropriate
     })
     .catch((error) => {
