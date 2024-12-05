@@ -162,7 +162,7 @@ app.post("/teamMemberLogin", (req, res) => {
     })
     .catch((error) => {
       console.error("Error during login:", error);
-      res.render("login", { error: "Internal server error." });
+      res.render("teamMemberLogin", { error: "Sorry inconvenience were having (DB) Connection issues." });
     });
 });
 
