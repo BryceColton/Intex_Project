@@ -79,10 +79,16 @@
     width: 150px; /* Reduce the width of the Last Name column */
   }
 
-  th:nth-child(1), td:nth-child(1) {
-    width: 300px; /* Make the 6th column a bit wider */
+
+  table:nth-of-type(2) th:nth-child(1), td:nth-child(1) {
+        width: 300px; /* Make the 8th column (Status) narrower */
+        text-align: center; /* Center align the text */
+      }
+  th:nth-child(4), td:nth-child(4) {
+    width: 140px; /* Make the 6th column a bit wider */
     text-align: center; /* Center align the buttons */
   }
+  
     
       tr:hover td {
         background-color: #424242;
