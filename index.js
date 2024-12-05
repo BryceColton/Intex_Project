@@ -493,6 +493,7 @@ app.get("/publicEvents", (req, res) => {
   knex("events")
     .join("finalized_events", "events.eventid", "=", "finalized_events.eventid")
     .select()
+    .where("events.public", true)
     .then((events) => {
       console.log("Fetched Events:", events);
 

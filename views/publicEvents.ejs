@@ -1,40 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Public Events</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>Public Events</title>
+    <style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Montserrat', sans-serif;
+        background-color: #f4f4f4; /* Light background color */
+    }
+
+    h1.publicH1 {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 2rem;
+        color: #333;
+    }
+
+    .table-container {
+        width: 90%; /* Table takes up 90% of the page width */
+        margin: 0 auto; /* Center the table horizontally */
+        padding: 20px; /* Add some padding around the table */
+        background-color: white; /* Background color for the table container */
+        border-radius: 8px; /* Rounded corners for the table container */
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow around the table */
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    table, th, td {
+        border: 1px solid #ddd;
+    }
+
+    th, td {
+        padding: 12px 15px; /* Add more padding to table cells */
+        text-align: left;
+    }
+
+    th {
+        background-color: #2e8b57;
+        color: white;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    .pubbtn {
+        display: inline-block;
+        margin: 20px auto;
+        padding: 10px 20px;
+        background-color: #2e8b57;
+        color: white;
+        text-decoration: none;
+        font-size: 16px;
+        border-radius: 5px;
+        text-align: center;
+    }
+
+    .btn:hover {
+        background-color: white;
+    }
+
+    /* Adjust layout for smaller screens */
+    @media (max-width: 768px) {
+        .table-container {
+            width: 95%;
+        }
+
+        th, td {
+            padding: 10px;
+        }
+    }
+</style>
 </head>
 <body>
-  <h1>Public Events</h1>
+    <nav class="navbar">
+        <div class="navbar-logo">Turtle Shelter Project</div>
+        <div class="navbar-buttons">
+          <form action="/" method="GET"><button class="btn" type="submit">Home</button></form>
+          <form action="/jensStory" method="GET"><button class="btn" type="submit">Jen's Story</button></form>
+          <form action="/volunteer" method="GET"><button class="btn" type="submit">Volunteer</button></form>
+          <form action=/hostEvent method="GET"><button class="btn" type="submit">Host an Event</button></form>
+          <a href="https://turtleshelterproject.org/checkout/donate?donatePageId=5b6a44c588251b72932df5a0">
+            <button class="btn btn-donate">Donate</button>
+          </a>      
+        </div>
+      </nav>
 
-  <% if (events && events.length > 0) { %> <!-- Check if events is defined and has elements -->
-    <table border="1">
-      <thead>
-        <tr>
-          <th>Event Name</th>
-          <th>Date</th>
-          <th>Address</th>
-          <th>City</th>
-          <th>State</th>
-          <th>Zip</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% events.forEach(event => { %>
-          <tr>
-            <td><%= event.event_name %></td>
-            <td><%= new Date(event.date).toLocaleDateString() %></td>
-            <td><%= event.event_address %></td>
-            <td><%= event.city %></td>
-            <td><%= event.state %></td>
-            <td><%= event.zip %></td>
-          </tr>
-        <% }) %>
-      </tbody>
-    </table>
-  <% } else { %>
-    <p>No events available.</p>
-  <% } %>
+    <h1 class="publicH1">Public Events</h1>
+
+    <div class="table-container">
+        <% if (events && events.length > 0) { %>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Event Name</th>
+                        <th>Event Address</th>
+                        <th>City</th>
+                        <th>State</th>
+                        <th>ZIP</th>
+                        <th>Date & Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% events.forEach((event) => { %>
+                        <tr>
+                            <td><%= event.event_name %></td>
+                            <td><%= event.event_address %></td>
+                            <td><%= event.city %></td>
+                            <td><%= event.state %></td>
+                            <td><%= event.zip %></td>
+                            <td><%= new Date(event.date).toLocaleString() %></td> <!-- Format the date & time -->
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        <% } else { %>
+            <p>No public events found.</p>
+        <% } %>
+        <a href="/" class="pubbtn">Return to Home</a>
+    </div>
+
+
 </body>
 </html>
