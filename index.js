@@ -76,13 +76,6 @@ function isAuthenticatedTeamMember(req, res, next) {
   res.redirect("/teamMemberLogin"); // Redirect to login page if not authenticated
 }
 
-function isAuthenticatedTeamMember(req, res, next) {
-  if (req.session && req.session.isLoggedInTeamMember) {
-    return next(); // User is authenticated, proceed to the next middleware
-  }
-  res.redirect("/teamMemberLogin"); // Redirect to login page if not authenticated
-}
-
 function isAuthenticated(req, res, next) {
   if (req.session && req.session.isLoggedIn) {
     return next(); // User is authenticated, proceed to the next middleware
@@ -165,7 +158,9 @@ app.post("/teamMemberLogin", (req, res) => {
     })
     .catch((error) => {
       console.error("Error during login:", error);
-      res.render("teamMemberLogin", { error: "Sorry inconvenience were having (DB) Connection issues." });
+      res.render("teamMemberLogin", {
+        error: "Sorry inconvenience were having (DB) Connection issues.",
+      });
     });
 });
 
@@ -883,49 +878,38 @@ app.post("/submitVolunteerForm", (req, res) => {
       }
 
       // Insert into volunteers table
-      return knex("volunteers")
-        .insert({
-          vol_email: vol_email,
-          vol_first_name: vol_first_name,
-          vol_last_name: vol_last_name,
-          vol_phone: vol_phone,
-          sewing_level: sewing_level,
-          num_hours: num_hours,
-          origin: origin,
-          zip: zip,
-        })
-        .then(() => {
-          if (password) {
-            // Check if email exists in the team_member table
-            return knex("team_member")
-              .where({ team_email: vol_email }) // Correct column name
-              .first()
-              .then((existingTeamMember) => {
-                if (existingTeamMember) {
-                  return res.status(400).json({
-                    message: "Email already exists in team members.",
-                  });
-                }
+      return knex("volunteers").insert({
+        vol_email,
+        vol_first_name,
+        vol_last_name,
+        vol_phone,
+        sewing_level,
+        num_hours,
+        origin,
+        zip,
+      });
+    })
+    .then(() => {
+      if (password) {
+        // Check if email exists in the team_member table
+        return knex("team_member")
+          .where({ team_email: vol_email })
+          .first()
+          .then((existingTeamMember) => {
+            if (existingTeamMember) {
+              return Promise.reject(new Error("Email already exists in team members."));
+            }
 
-                // Insert into team_member table
-                return knex("team_member")
-                  .insert({
-                    team_email: vol_email, // Correct column name
-                    password: password, // Store the password securely (hashed)
-                  })
-                  .then(() => {
-                    res.redirect("/");
-                  });
-              });
-          } else {
-            res.redirect("/");
-          }
-          res.redirect("/volunteerFormSubmission"); // Redirect to thank you page
-        })
-        .catch((error) => {
-          console.error("Error adding Volunteer:", error);
-          res.status(500).send("Internal Server Error");
-        });
+            // Insert into team_member table
+            return knex("team_member").insert({
+              team_email: vol_email,
+              password, // Note: Hash this password in production!
+            });
+          });
+      }
+    })
+    .then(() => {
+      res.redirect("/volunteerFormSubmission"); // Redirect to thank you page
     })
     .catch((error) => {
       console.error("Error handling volunteer submission:", error);
@@ -937,51 +921,20 @@ app.post("/submitVolunteerForm", (req, res) => {
 
 //TEAM MEMBER ROUTES ****************************************************************************************************************
 app.get("/teamMemberRsvp", isAuthenticatedTeamMember, (req, res) => {
-  // Fetch approved events with counts of team members registered
+  // Get data from finalized events table to send with the upcoming events
   knex("events")
-    .select(
-      "events.eventid",
-      "finalized_events.date",
-      "events.event_name",
-      "events.organization",
-      "events.event_type",
-      "events.city",
-      "events.state",
-      "finalized_events.volunteers_needed",
-      knex.raw("COUNT(tm_event.team_email) AS team_members_registered") // Count of team_email
-    )
-    .join("finalized_events", "events.eventid", "=", "finalized_events.eventid")
-    .leftJoin("tm_event", "events.eventid", "=", "tm_event.eventid") // Join tm_event to count team_email
+    .select()
+    .join("finalized_events", "events.eventid", "=", "finalized_events.eventid") // Join the tables
     .where("status", "approved")
-    .groupBy(
-      "events.eventid",
-      "finalized_events.date",
-      "events.event_name",
-      "events.organization",
-      "events.event_type",
-      "events.city",
-      "events.state",
-      "finalized_events.volunteers_needed"
-    ) // Group by all non-aggregated columns
-    .orderBy([{ column: "finalized_events.date", order: "asc" }]) // Ensure column is correct
+    .orderBy([{ column: "date", order: "asc" }])
     .then((approved_events) => {
-      // Render the view with approved events
       res.render("teamMemberRsvp", { approved_events });
     })
     .catch((error) => {
-      // Handle any errors
-      console.error("Error fetching event details:", error);
+      console.error("Error fetching finalized event details:", error);
       res.status(500).send("Internal Server Error");
     });
 });
-
-app.post("/teamMemberRsvp", (req, res) => {
-  
-})
-
-app.post("/teamMemberRsvp", (req, res) => {
-  
-})
 
 // display the thank you page for a volunteer submission
 app.get("/volunteerFormSubmission", (req, res) => {
@@ -995,5 +948,3 @@ app.get("/eventFormSubmission", (req, res) => {
 
 // This starts the server to start listening to requests
 app.listen(port, () => console.log(`Listening on port ${port}`));
-
-
