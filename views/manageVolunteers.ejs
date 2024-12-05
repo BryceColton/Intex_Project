@@ -288,7 +288,7 @@
           <td><%= volunteer.status %></td>
           <td>
             <form
-              action="/<%= volunteer.vol_email %>"
+              action="editTeamMember/<%= volunteer.vol_email %>"
               method="GET"
               style="display: inline"
             >
@@ -297,7 +297,7 @@
           </td>
           <td>
             <form
-              action="/<%= volunteer.vol_email %>"
+              action="deleteTeamMember/<%= volunteer.vol_email %>"
               method="POST"
               style="display: inline"
             >
