@@ -848,7 +848,7 @@ app.post("/submitEventForm", (req, res) => {
 
     .returning("eventid")
     .then(([eventid]) => {
-      res.redirect("/");
+      res.redirect("/eventFormSubmission");
     })
     .catch((err) => {
       console.error("Database insert error:", err);
@@ -915,6 +915,11 @@ app.post("/submitVolunteerForm", (req, res) => {
           } else {
             res.redirect("/");
           }
+          res.redirect("/volunteerFormSubmission"); // Redirect to thank you page
+        })
+        .catch((error) => {
+          console.error("Error adding Volunteer:", error);
+          res.status(500).send("Internal Server Error");
         });
     })
     .catch((error) => {
@@ -938,6 +943,16 @@ app.get("/teamMemberRsvp", isAuthenticatedTeamMember ,(req, res) => {
       console.error("Error fetching finalized event details:", error);
       res.status(500).send("Internal Server Error");
     });
+});
+
+// display the thank you page for a volunteer submission
+app.get("/volunteerFormSubmission", (req, res) => {
+  res.render("volunteerFormSubmission");
+});
+
+//display the thank you page for an event submission
+app.get("/eventFormSubmission", (req, res) => {
+  res.render("eventFormSubmission");
 });
 
 // This starts the server to start listening to requests
