@@ -923,10 +923,6 @@ app.post("/submitVolunteerForm", (req, res) => {
     });
 });
 
-
-// This starts the server to start listening to requests
-app.listen(port, () => console.log(`Listening on port ${port}`));
-
 //TEAM MEMBER ROUTES ****************************************************************************************************************
 app.get("/teamMemberRsvp", isAuthenticatedTeamMember ,(req, res) => {
   // Get data from finalized events table to send with the upcoming events
@@ -943,3 +939,8 @@ app.get("/teamMemberRsvp", isAuthenticatedTeamMember ,(req, res) => {
       res.status(500).send("Internal Server Error");
     });
 });
+
+// This starts the server to start listening to requests
+app.listen(port, () => console.log(`Listening on port ${port}`));
+
+
