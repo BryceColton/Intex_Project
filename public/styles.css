@@ -81,6 +81,21 @@ body {
   margin-top: 20px;
 }
 
+.btn-login {
+  background-color: #2e8b57;
+  display: flex;
+  justify-content: flex-end; /* Move to the right */
+  margin: 20px; /* Optional margin for spacing */
+  border: none;
+}
+
+.login-button-container {
+  display: flex;
+  justify-content: flex-end; /* Aligns the content to the right */
+/* Optional spacing below the button */
+width: 50%;
+}
+
 /* Hero Section */
 .hero {
   display: flex;

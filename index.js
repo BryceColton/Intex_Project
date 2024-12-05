@@ -56,9 +56,13 @@ app.get("/volunteer", (req, res) => {
   res.render("volunteer");
 });
 
+<<<<<<< HEAD
 app.get("/teamMemberRsvp", isAuthenticatedTeamMember, (req, res) => {
   res.render("teamMemberRsvp");
 });
+=======
+
+>>>>>>> f7eaaa2374a6f6915cb1862ef7b88fbbd2a9105a
 // This is the get method for the host event request page
 app.get("/hostEvent", (req, res) => {
   res.render("hostEvent");
@@ -165,7 +169,7 @@ app.post("/teamMemberLogin", (req, res) => {
     })
     .catch((error) => {
       console.error("Error during login:", error);
-      res.render("login", { error: "Internal server error." });
+      res.render("teamMemberLogin", { error: "Sorry inconvenience were having (DB) Connection issues." });
     });
 });
 
@@ -883,6 +887,7 @@ app.post("/submitVolunteerForm", (req, res) => {
       }
 
       // Insert into volunteers table
+<<<<<<< HEAD
       return knex("volunteers").insert({
         vol_email,
         vol_first_name,
@@ -915,6 +920,51 @@ app.post("/submitVolunteerForm", (req, res) => {
     })
     .then(() => {
       res.redirect("/volunteerFormSubmission"); // Redirect to thank you page
+=======
+      return knex("volunteers")
+        .insert({
+          vol_email: vol_email,
+          vol_first_name: vol_first_name,
+          vol_last_name: vol_last_name,
+          vol_phone: vol_phone,
+          sewing_level: sewing_level,
+          num_hours: num_hours,
+          origin: origin,
+          zip: zip,
+        })
+        .then(() => {
+          if (password) {
+            // Check if email exists in the team_member table
+            return knex("team_member")
+              .where({ team_email: vol_email }) // Correct column name
+              .first()
+              .then((existingTeamMember) => {
+                if (existingTeamMember) {
+                  return res.status(400).json({
+                    message: "Email already exists in team members.",
+                  });
+                }
+
+                // Insert into team_member table
+                return knex("team_member")
+                  .insert({
+                    team_email: vol_email, // Correct column name
+                    password: password, // Store the password securely (hashed)
+                  })
+                  .then(() => {
+                    res.redirect("/");
+                  });
+              });
+          } else {
+            res.redirect("/");
+          }
+          res.redirect("/volunteerFormSubmission"); // Redirect to thank you page
+        })
+        .catch((error) => {
+          console.error("Error adding Volunteer:", error);
+          res.status(500).send("Internal Server Error");
+        });
+>>>>>>> f7eaaa2374a6f6915cb1862ef7b88fbbd2a9105a
     })
     .catch((error) => {
       console.error("Error handling volunteer submission:", error);
@@ -924,6 +974,26 @@ app.post("/submitVolunteerForm", (req, res) => {
     });
 });
 
+<<<<<<< HEAD
+=======
+//TEAM MEMBER ROUTES ****************************************************************************************************************
+app.get("/teamMemberRsvp", isAuthenticatedTeamMember ,(req, res) => {
+  // Get data from finalized events table to send with the upcoming events
+  knex("events")
+    .select()
+    .join("finalized_events", "events.eventid", "=", "finalized_events.eventid") // Join the tables
+    .where("status", "approved")
+    .orderBy([{ column: "date", order: "asc" }])
+    .then((approved_events) => {
+      res.render("teamMemberRsvp", { approved_events });
+    })
+    .catch((error) => {
+      console.error("Error fetching finalized event details:", error);
+      res.status(500).send("Internal Server Error");
+    });
+});
+
+>>>>>>> f7eaaa2374a6f6915cb1862ef7b88fbbd2a9105a
 // display the thank you page for a volunteer submission
 app.get("/volunteerFormSubmission", (req, res) => {
   res.render("volunteerFormSubmission");
@@ -936,3 +1006,5 @@ app.get("/eventFormSubmission", (req, res) => {
 
 // This starts the server to start listening to requests
 app.listen(port, () => console.log(`Listening on port ${port}`));
+
+
