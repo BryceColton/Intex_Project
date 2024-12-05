@@ -69,10 +69,10 @@
   }
   
     
-      tr:hover td {
+      /* tr:hover td {
         background-color: #424242;
         color: white;
-      }
+      } */
     
       /* Container for table to enable scrolling on smaller screens */
       .table-container {
@@ -84,14 +84,21 @@
     
       /* Buttons inside the table */
       .btn-table {
-        padding: 8px 15px;
+        display: inline-block;
         background-color: #424242;
         color: white;
-        border: none;
-        border-radius: 4px;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 16px;
         cursor: pointer;
-        font-size: 0.9em;
         transition: background-color 0.3s;
+        position: fixed;
+        bottom: 0px; /* Adjust this value as needed */
+        left: 50%;
+        transform: translateX(-50%); /* Centers the button horizontally */
+        width: 100%;
+        height: 5%;
       }
     
       .btn-table:hover {
@@ -278,7 +285,7 @@
     </main>
     <br><br>
     <form action="/adminCompletedEvents" method="GET">
-      <button class="btn-table" type="submit">Back to Completed Events</button>
-    </form>
+        <button class="btn-table" type="submit">Back to Completed Events</button>
+      </form>
   </body>
 </html>

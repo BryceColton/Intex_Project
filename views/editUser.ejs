@@ -16,8 +16,15 @@
   </head>
 
   <nav class="navbar">
-    <div class="navbar-logo">Turtle Shelter Project</div>
-    <div class="navbar-buttons">
+    <div class="navbar-logo">
+      <form action="/" method="GET">
+        <button type="submit" style="border: none; background: none; padding: 0;">
+          <img class="logo-circle" src="/img/logo-remove-background.com.png" alt="Logo Image" />
+        </button>
+        </form>
+        Turtle Shelter Project
+    </div>    
+  <div class="navbar-buttons">
       <!-- These will be navbar buttons to take the admin to pages that will manage the volunteers and events -->
       <form action="/admin" method="GET"><button class="btn" type="submit">Admin Home</button></form>
       <form action="/manageUsers" method="GET"><button class="btn" type="submit">Manage Admin Users</button></form>
