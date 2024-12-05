@@ -57,6 +57,9 @@ app.get("/volunteer", (req, res) => {
   res.render("volunteer");
 });
 
+app.get("/teamMemberRsvp", isAuthenticatedTeamMember ,(req, res) => {
+  res.render("teamMemberRsvp");
+});
 // This is the get method for the host event request page
 app.get("/hostEvent", (req, res) => {
   res.render("hostEvent");
@@ -152,8 +155,8 @@ app.post("/teamMemberLogin", (req, res) => {
         return res.render("teamMemberLogin", { error: "Invalid username or password." });
       }
 
-      req.session.isLoggedIn = true;
-      req.session.adminUsername = username;
+      req.session.isLoggedInTeamMember = true;
+      req.session.team_email = username;
 
       res.redirect("/"); // You can change this to whatever route is appropriate
     })
@@ -173,7 +176,7 @@ app.post("/login", (req, res) => {
 
   // Check if the user exists in the admin table
   knex("admin")
-    .where({ admin_user_name: username })
+    .where({ admin_user_name : username })
     .first()
     .then((admin) => {
       if (!admin) {
