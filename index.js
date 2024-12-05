@@ -158,7 +158,7 @@ app.post("/teamMemberLogin", (req, res) => {
       req.session.isLoggedInTeamMember = true;
       req.session.team_email = username;
 
-      res.redirect("/"); // You can change this to whatever route is appropriate
+      res.redirect("/teamMemberRsvp"); // You can change this to whatever route is appropriate
     })
     .catch((error) => {
       console.error("Error during login:", error);
