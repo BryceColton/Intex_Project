@@ -848,7 +848,7 @@ app.post("/submitEventForm", (req, res) => {
 
     .returning("eventid")
     .then(([eventid]) => {
-      res.redirect("/");
+      res.redirect("/eventFormSubmission");
     })
     .catch((err) => {
       console.error("Database insert error:", err);
@@ -915,6 +915,11 @@ app.post("/submitVolunteerForm", (req, res) => {
           } else {
             res.redirect("/");
           }
+          res.redirect("/volunteerFormSubmission"); // Redirect to thank you page
+        })
+        .catch((error) => {
+          console.error("Error adding Volunteer:", error);
+          res.status(500).send("Internal Server Error");
         });
     })
     .catch((error) => {
@@ -922,10 +927,6 @@ app.post("/submitVolunteerForm", (req, res) => {
       res.status(500).send("Internal Server Error");
     });
 });
-
-
-// This starts the server to start listening to requests
-app.listen(port, () => console.log(`Listening on port ${port}`));
 
 //TEAM MEMBER ROUTES ****************************************************************************************************************
 app.get("/teamMemberRsvp", isAuthenticatedTeamMember ,(req, res) => {
@@ -936,10 +937,25 @@ app.get("/teamMemberRsvp", isAuthenticatedTeamMember ,(req, res) => {
     .where("status", "approved")
     .orderBy([{ column: "date", order: "asc" }])
     .then((approved_events) => {
-      res.render("teamMemberRspv", { approved_events });
+      res.render("teamMemberRsvp", { approved_events });
     })
     .catch((error) => {
       console.error("Error fetching finalized event details:", error);
       res.status(500).send("Internal Server Error");
     });
 });
+
+// display the thank you page for a volunteer submission
+app.get("/volunteerFormSubmission", (req, res) => {
+  res.render("volunteerFormSubmission");
+});
+
+//display the thank you page for an event submission
+app.get("/eventFormSubmission", (req, res) => {
+  res.render("eventFormSubmission");
+});
+
+// This starts the server to start listening to requests
+app.listen(port, () => console.log(`Listening on port ${port}`));
+
+
