@@ -57,9 +57,7 @@ app.get("/volunteer", (req, res) => {
   res.render("volunteer");
 });
 
-app.get("/teamMemberRsvp", isAuthenticatedTeamMember ,(req, res) => {
-  res.render("teamMemberRsvp");
-});
+
 // This is the get method for the host event request page
 app.get("/hostEvent", (req, res) => {
   res.render("hostEvent");
@@ -906,3 +904,20 @@ app.post("/submitVolunteerForm", (req, res) => {
 
 // This starts the server to start listening to requests
 app.listen(port, () => console.log(`Listening on port ${port}`));
+
+//TEAM MEMBER ROUTES ****************************************************************************************************************
+app.get("/teamMemberRsvp", isAuthenticatedTeamMember ,(req, res) => {
+  // Get data from finalized events table to send with the upcoming events
+  knex("events")
+    .select()
+    .join("finalized_events", "events.eventid", "=", "finalized_events.eventid") // Join the tables
+    .where("status", "approved")
+    .orderBy([{ column: "date", order: "asc" }])
+    .then((approved_events) => {
+      res.render("teamMemberRspv", { approved_events });
+    })
+    .catch((error) => {
+      console.error("Error fetching finalized event details:", error);
+      res.status(500).send("Internal Server Error");
+    });
+});
