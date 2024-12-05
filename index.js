@@ -34,13 +34,12 @@ app.use(
 const knex = require("knex")({
   client: "pg",
   connection: {
-    host:
-      process.env.RDS_HOSTNAME,
-      user: process.env.RDS_USERNAME,
-      password: process.env.RDS_PASSWORD,
-      database: process.env.RDS_DB_NAME,
-      port: process.env.RDS_PORT || 5432,
-      ssl: process.env.DB_SSL ? { rejectUnauthorized: false } : false,
+    host: process.env.RDS_HOSTNAME,
+    user: process.env.RDS_USERNAME,
+    password: process.env.RDS_PASSWORD,
+    database: process.env.RDS_DB_NAME,
+    port: process.env.RDS_PORT || 5432,
+    ssl: process.env.DB_SSL ? { rejectUnauthorized: false } : false,
   },
 });
 // This is all of the information needed to access postgres
@@ -57,7 +56,9 @@ app.get("/volunteer", (req, res) => {
   res.render("volunteer");
 });
 
-
+app.get("/teamMemberRsvp", isAuthenticatedTeamMember, (req, res) => {
+  res.render("teamMemberRsvp");
+});
 // This is the get method for the host event request page
 app.get("/hostEvent", (req, res) => {
   res.render("hostEvent");
@@ -68,7 +69,6 @@ app.get("/jensStory", (req, res) => {
   res.render("jensStory");
 });
 
-
 function isAuthenticatedTeamMember(req, res, next) {
   if (req.session && req.session.isLoggedInTeamMember) {
     return next(); // User is authenticated, proceed to the next middleware
@@ -76,7 +76,12 @@ function isAuthenticatedTeamMember(req, res, next) {
   res.redirect("/teamMemberLogin"); // Redirect to login page if not authenticated
 }
 
-
+function isAuthenticatedTeamMember(req, res, next) {
+  if (req.session && req.session.isLoggedInTeamMember) {
+    return next(); // User is authenticated, proceed to the next middleware
+  }
+  res.redirect("/teamMemberLogin"); // Redirect to login page if not authenticated
+}
 
 function isAuthenticated(req, res, next) {
   if (req.session && req.session.isLoggedIn) {
@@ -141,7 +146,7 @@ app.post("/teamMemberLogin", (req, res) => {
 
   // Check if the user exists in the admin table
   knex("team_member")
-    .where({ team_email : username })
+    .where({ team_email: username })
     .first()
     .then((team_member) => {
       if (!team_member) {
@@ -174,7 +179,7 @@ app.post("/login", (req, res) => {
 
   // Check if the user exists in the admin table
   knex("admin")
-    .where({ admin_user_name : username })
+    .where({ admin_user_name: username })
     .first()
     .then((admin) => {
       if (!admin) {
@@ -857,24 +862,24 @@ app.post("/submitEventForm", (req, res) => {
 });
 
 app.post("/submitVolunteerForm", (req, res) => {
-  // Extract form values from req.body
-  const vol_email = req.body.vol_email;
-  const vol_first_name = req.body.vol_first_name;
-  const vol_last_name = req.body.vol_last_name;
-  const vol_phone = req.body.vol_phone;
-  const sewing_level = parseInt(req.body.sewing_level, 10);
-  const num_hours = parseFloat(req.body.num_hours, 10);
-  const origin = req.body.origin;
-  const zip = req.body.zip;
-  const password = req.body.password; // Capture the password if provided
+  const {
+    vol_email,
+    vol_first_name,
+    vol_last_name,
+    vol_phone,
+    sewing_level,
+    num_hours,
+    origin,
+    zip,
+    password,
+  } = req.body;
 
-  // Check if email exists in volunteers table
   knex("volunteers")
-    .where({ vol_email: vol_email })
+    .where({ vol_email })
     .first()
     .then((existingVolunteer) => {
       if (existingVolunteer) {
-        return res.status(400).json({ message: "Email already exists." });
+        return res.status(400).json({ message: "Email already exists in volunteers." });
       }
 
       // Insert into volunteers table
@@ -924,7 +929,9 @@ app.post("/submitVolunteerForm", (req, res) => {
     })
     .catch((error) => {
       console.error("Error handling volunteer submission:", error);
-      res.status(500).send("Internal Server Error");
+      if (!res.headersSent) {
+        res.status(500).send("Internal Server Error");
+      }
     });
 });
 
@@ -967,6 +974,14 @@ app.get("/teamMemberRsvp", isAuthenticatedTeamMember, (req, res) => {
       res.status(500).send("Internal Server Error");
     });
 });
+
+app.post("/teamMemberRsvp", (req, res) => {
+  
+})
+
+app.post("/teamMemberRsvp", (req, res) => {
+  
+})
 
 // display the thank you page for a volunteer submission
 app.get("/volunteerFormSubmission", (req, res) => {
