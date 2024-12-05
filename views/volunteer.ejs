@@ -21,12 +21,12 @@
     <nav class="navbar">
       <div class="navbar-logo">
         <form action="/" method="GET">
-          <button type="submit" style="border: none; background: none; padding: 0;">
+          <button type="submit" style="border: none; background: none; padding: 0">
             <img class="logo-circle" src="/img/logo-remove-background.com.png" alt="Logo Image" />
           </button>
         </form>
         Turtle Shelter Project
-    </div>
+      </div>
       <div class="navbar-buttons">
         <form action="/" method="GET"><button class="btn" type="submit">Home</button></form>
         <form action="/jensStory" method="GET">
@@ -47,14 +47,12 @@
     </nav>
 
     <main>
-
       <div class="login-button-container">
         <form action="/teamMemberLogin" method="GET">
           <button type="submit" class="btn btn-login">Team Member Login</button>
         </form>
       </div>
-      
-      
+
       <section class="form-section">
         <!-- <div class="login-button-container">
           <form action="/teamMemberLogin" method="GET">
@@ -130,7 +128,7 @@
                 <option value="Other">Other</option>
               </select>
             </div>
-                        <div class="form-group">
+            <div class="form-group">
               <label>
                 <input type="checkbox" id="teamMemberCheckbox" />
                 Become a team member?
@@ -165,15 +163,15 @@
         </a>
       </div>
     </footer>
-        <script>
-      const checkbox = document.getElementById('teamMemberCheckbox');
-      const passwordDropdown = document.getElementById('passwordDropdown');
+    <script>
+      const checkbox = document.getElementById("teamMemberCheckbox");
+      const passwordDropdown = document.getElementById("passwordDropdown");
 
-      checkbox.addEventListener('change', () => {
+      checkbox.addEventListener("change", () => {
         if (checkbox.checked) {
-          passwordDropdown.style.display = 'block';
+          passwordDropdown.style.display = "block";
         } else {
-          passwordDropdown.style.display = 'none';
+          passwordDropdown.style.display = "none";
         }
       });
     </script>
