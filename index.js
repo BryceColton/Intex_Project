@@ -505,6 +505,21 @@ app.get("/editVolunteer/:vol_email", isAuthenticated, (req, res) => {
     });
 });
 
+app.get("/liveCounter", (req, res) => {
+  knex("completed_events")
+    .sum("num_distributed as totalCompleted")  // Sum the num_completed column
+    .first()  // We only want one row with the sum
+    .then((result) => {
+      // Check if the sum is returned correctly
+      console.log(result);  // Log the result to verify
+      res.json(result);  // Send the sum as a JSON response
+    })
+    .catch((error) => {
+      console.error("Error fetching live counter:", error);
+      res.status(500).send("Internal Server Error");
+    });
+});
+
 app.get("/publicEvents", (req, res) => {
   knex("events")
     .join("finalized_events", "events.eventid", "=", "finalized_events.eventid")
@@ -535,21 +550,30 @@ app.get("/adminCompletedEvents", (req, res) => {
 
 app.post("/viewCompletedEvent/:eventid", isAuthenticated, (req, res) => {
   let eventid = req.params.eventid;
-  const { num_actual, num_pocket, num_collar, num_envelopes, num_vests, num_completed, status } =
-    req.body;
-  // Extract form values from req.body
-  // Insert the database
+  const { num_actual, num_pocket, num_collar, num_envelopes, num_vests, num_completed, num_distributed, status } = req.body;
+
+  // Set defaults for optional fields if they are not provided (i.e., set to 0)
+  const numPocket = num_pocket || 0;
+  const numCollar = num_collar || 0;
+  const numEnvelopes = num_envelopes || 0;
+  const numVests = num_vests || 0;
+  const numCompleted = num_completed || 0;
+  const numdistributed = num_distributed || 0;
+
+  // Insert the data into the "completed_events" table
   knex("completed_events")
     .insert({
       eventid: eventid,
       num_actual: num_actual,
-      num_pocket: num_pocket,
-      num_collar: num_collar,
-      num_envelopes: num_envelopes,
-      num_vests: num_vests,
-      num_completed: num_completed,
+      num_pocket: numPocket,
+      num_collar: numCollar,
+      num_envelopes: numEnvelopes,
+      num_vests: numVests,
+      num_completed: numCompleted,
+      num_distributed: numdistributed
     })
     .then(() => {
+      // Update the event status in the "events" table
       knex("events")
         .where({ eventid: eventid })
         .update({

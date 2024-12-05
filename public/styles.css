@@ -302,3 +302,23 @@ main {
   margin-bottom: 10px;
 
 }
+
+.counting {
+  font-family: 'Montserrat', sans-serif;
+  border: 2px solid white; /* Reduced border thickness */
+  font-size: 0.9rem; /* Same font size for both */
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  border-radius: 11px;
+  padding: 5px 5px;
+  font-weight: 600;
+  box-sizing: border-box; /* Includes padding and border in the element's size */
+  background: #424242;
+  margin-bottom: 25px;
+  max-width: 250px;
+
+  display: inline-flex; /* Aligns the element in line with other content */
+  justify-content: center; /* Centers content horizontally inside the element */
+  align-items: center; /* Centers content vertically inside the element */
+}

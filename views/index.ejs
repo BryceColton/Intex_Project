@@ -25,6 +25,32 @@
     height: auto; /* Maintain aspect ratio */
   }
   </style>
+
+<script>
+  // Function to fetch live counter data
+  function fetchLiveCounter() {
+    fetch('/liveCounter')
+      .then(response => response.json())
+      .then(data => {
+        if (data.totalCompleted !== undefined) {
+          document.getElementById('live-counter').textContent = data.totalCompleted || 0;
+        } else {
+          document.getElementById('live-counter').textContent = "No data available";
+        }
+      })
+      .catch(error => {
+        console.error("Error fetching live counter:", error);
+        document.getElementById('live-counter').textContent = "Error";
+      });
+  }
+
+  // Update the counter every 5 seconds (you can adjust this interval)
+  setInterval(fetchLiveCounter, 5000);
+
+  // Initial fetch when the page loads
+  fetchLiveCounter();
+</script>
+
   <body>
     <nav class="navbar">
       <div class="navbar-logo">Turtle Shelter Project</div>
@@ -42,6 +68,11 @@
     <main id="no-style">
       <section class="hero">
         <div class="hero-content">
+          <div class="counting"id="live-counter-container">
+            <h2>Vests Distributed: <span id="live-counter">Loading...</span></h2>
+        </div>
+
+
           <h1 class="hero-description">
             Helping to save lives of people experiencing homelessness
           </h1>
