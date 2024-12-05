@@ -929,18 +929,41 @@ app.post("/submitVolunteerForm", (req, res) => {
 });
 
 //TEAM MEMBER ROUTES ****************************************************************************************************************
-app.get("/teamMemberRsvp", isAuthenticatedTeamMember ,(req, res) => {
-  // Get data from finalized events table to send with the upcoming events
+app.get("/teamMemberRsvp", isAuthenticatedTeamMember, (req, res) => {
+  // Fetch approved events with counts of team members registered
   knex("events")
-    .select()
-    .join("finalized_events", "events.eventid", "=", "finalized_events.eventid") // Join the tables
+    .select(
+      "events.eventid",
+      "finalized_events.date",
+      "events.event_name",
+      "events.organization",
+      "events.event_type",
+      "events.city",
+      "events.state",
+      "finalized_events.volunteers_needed",
+      knex.raw("COUNT(tm_event.team_email) AS team_members_registered") // Count of team_email
+    )
+    .join("finalized_events", "events.eventid", "=", "finalized_events.eventid")
+    .leftJoin("tm_event", "events.eventid", "=", "tm_event.eventid") // Join tm_event to count team_email
     .where("status", "approved")
-    .orderBy([{ column: "date", order: "asc" }])
+    .groupBy(
+      "events.eventid",
+      "finalized_events.date",
+      "events.event_name",
+      "events.organization",
+      "events.event_type",
+      "events.city",
+      "events.state",
+      "finalized_events.volunteers_needed"
+    ) // Group by all non-aggregated columns
+    .orderBy([{ column: "finalized_events.date", order: "asc" }]) // Ensure column is correct
     .then((approved_events) => {
+      // Render the view with approved events
       res.render("teamMemberRsvp", { approved_events });
     })
     .catch((error) => {
-      console.error("Error fetching finalized event details:", error);
+      // Handle any errors
+      console.error("Error fetching event details:", error);
       res.status(500).send("Internal Server Error");
     });
 });
