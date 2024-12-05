@@ -200,9 +200,9 @@
               <!-- dynamically create html table rows for each row in the database -->
               <!--says that for each record, one at a time, send it to that variable "row"-->
               <tr>
-                <input type="hidden" name="eventid" value="<%= row.eventid %>" />
+                <!-- <input type="hidden" name="eventid" value="<%= row.eventid %>" /> -->
                 <td><%= row.date %></td>
-                <td><%= row.volunteers_needed %></td>
+                <td><%= row.team_members_needed %></td>
                 <td><%= row.team_members_registered %></td>
                 <td><%= row.event_name %></td>
                 <td><%= row.organization %></td>
@@ -211,7 +211,7 @@
                 <td><%= row.state %></td>
                 <!-- Edit button to go to the editEvent page where the admin will be able to mark the event as completed and input event stats -->
                 <td>
-                  <form action="/teamMemberRsvp" method="POST" style="display: inline">
+                  <form action="/teamMemberRsvp/<%= row.eventid %>" method="POST" style="display: inline">
                     <!--The action is the route. You have to write this. the stuff after the / is a parameter-->
                     <button class="btn-table" type="submit">RSVP</button>
                   </form>
