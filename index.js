@@ -929,7 +929,7 @@ app.get("/teamMemberRsvp", isAuthenticatedTeamMember, (req, res) => {
       "events.event_type",
       "events.city",
       "events.state",
-      "finalized_events.volunteers_needed",
+      "finalized_events.team_members_needed",
       knex.raw("COUNT(tm_event.team_email) AS team_members_registered") // Count of team_email
     )
     .join("finalized_events", "events.eventid", "=", "finalized_events.eventid")
@@ -943,7 +943,7 @@ app.get("/teamMemberRsvp", isAuthenticatedTeamMember, (req, res) => {
       "events.event_type",
       "events.city",
       "events.state",
-      "finalized_events.volunteers_needed"
+      "finalized_events.team_members_needed"
     ) // Group by all non-aggregated columns
     .orderBy([{ column: "finalized_events.date", order: "asc" }]) // Ensure column is correct
     .then((approved_events) => {
@@ -958,7 +958,36 @@ app.get("/teamMemberRsvp", isAuthenticatedTeamMember, (req, res) => {
     });
 });
 
-app.post("/teamMemberRsvp", (req, res) => {});
+app.post("/teamMemberRsvp", isAuthenticatedTeamMember, (req, res) => {
+  const { eventid } = req.body;
+  const team_email = req.session.team_email;
+
+  console.log(eventid, team_email);
+
+  // Prevent duplicate RSVPs
+  knex("tm_event")
+    .where({ eventid: eventid, team_email: team_email })
+    .first()
+    .then((existingRsvp) => {
+      if (existingRsvp) {
+        res.status(400).send("You have already RSVP'd for this event.");
+      } else {
+        knex("tm_event")
+          .insert({ eventid, team_email })
+          .then(() => {
+            res.redirect("/teamMemberRsvp"); // Redirect to the RSVP page or another success page
+          })
+          .catch((error) => {
+            console.error("Error saving RSVP:", error.message, error.stack);
+            res.status(500).send("Internal Server Error");
+          });
+      }
+    })
+    .catch((error) => {
+      console.error("Error checking existing RSVP:", error.message, error.stack);
+      res.status(500).send("Internal Server Error");
+    });
+});
 
 // display the thank you page for a volunteer submission
 app.get("/volunteerFormSubmission", (req, res) => {
