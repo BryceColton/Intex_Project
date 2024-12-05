@@ -868,20 +868,21 @@ app.post("/submitVolunteerForm", (req, res) => {
   const num_hours = parseFloat(req.body.num_hours, 10);
   const origin = req.body.origin;
   const zip = req.body.zip;
+  const password = req.body.password; // Capture the password if provided
 
-  // Check if email already exists
+  // Check if email exists in volunteers table
   knex("volunteers")
     .where({ vol_email: vol_email })
-    .first() // Returns the first match or null if no match
+    .first()
     .then((existingVolunteer) => {
       if (existingVolunteer) {
         return res.status(400).json({ message: "Email already exists." });
       }
 
-      // If the email doesn't exist, proceed to insert the new volunteer
+      // Insert into volunteers table
       return knex("volunteers")
         .insert({
-          vol_email: vol_email, // Ensure description is uppercase
+          vol_email: vol_email,
           vol_first_name: vol_first_name,
           vol_last_name: vol_last_name,
           vol_phone: vol_phone,
@@ -891,18 +892,39 @@ app.post("/submitVolunteerForm", (req, res) => {
           zip: zip,
         })
         .then(() => {
-          res.redirect("/"); // Redirect to the home page after adding
-        })
-        .catch((error) => {
-          console.error("Error adding Volunteer:", error);
-          res.status(500).send("Internal Server Error");
+          if (password) {
+            // Check if email exists in the team_member table
+            return knex("team_member")
+              .where({ team_email: vol_email }) // Correct column name
+              .first()
+              .then((existingTeamMember) => {
+                if (existingTeamMember) {
+                  return res.status(400).json({
+                    message: "Email already exists in team members.",
+                  });
+                }
+
+                // Insert into team_member table
+                return knex("team_member")
+                  .insert({
+                    team_email: vol_email, // Correct column name
+                    password: password, // Store the password securely (hashed)
+                  })
+                  .then(() => {
+                    res.redirect("/");
+                  });
+              });
+          } else {
+            res.redirect("/");
+          }
         });
     })
     .catch((error) => {
-      console.error("Error checking email:", error);
+      console.error("Error handling volunteer submission:", error);
       res.status(500).send("Internal Server Error");
     });
 });
+
 
 // This starts the server to start listening to requests
 app.listen(port, () => console.log(`Listening on port ${port}`));
