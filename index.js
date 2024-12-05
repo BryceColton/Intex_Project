@@ -730,8 +730,70 @@ app.post("/editVolunteer/:vol_email", isAuthenticated, (req, res) => {
     });
 });
 
+app.post("/editTeamMember/:vol_email", isAuthenticated, (req, res) => {
+  const id = req.params.vol_email;
+
+  const vol_email = req.body.vol_email;
+  const vol_first_name = req.body.vol_first_name;
+  const vol_last_name = req.body.vol_last_name;
+  const vol_phone = req.body.vol_phone;
+  const origin = req.body.origin;
+  const zip = req.body.zip;
+  const sewing_level = parseInt(req.body.sewing_level);
+  const num_hours = parseInt(req.body.num_hours);
+  const status = req.body.status;
+  const password = req.body.password;
+
+  // First update the volunteers table
+  knex("volunteers")
+    .where("vol_email", id)
+    .update({
+      vol_email: vol_email,
+      vol_first_name: vol_first_name,
+      vol_last_name: vol_last_name,
+      vol_phone: vol_phone,
+      origin: origin,
+      zip: zip,
+      sewing_level: sewing_level,
+      num_hours: num_hours,
+    })
+    .then(() => {
+      // Once the first update finishes, update the team_member table
+      return knex("team_member")
+        .where("team_email", id)
+        .update({
+          team_email: vol_email,
+          password: password,
+          status: status
+        });
+    })
+    .then(() => {
+      // Redirect after both updates
+      res.redirect("/manageVolunteers");
+    })
+    .catch((error) => {
+      console.error("Error updating Volunteer:", error);
+      res.status(500).send("Internal Server Error");
+    });
+});
+
+
 // This is the route to delete a volunteer from the volunteers table
 app.post("/deleteVolunteer/:vol_email", isAuthenticated, (req, res) => {
+  const id = req.params.vol_email;
+  knex("volunteers")
+    .where("vol_email", id)
+    .del() // Deletes the record with the specified ID
+    .then(() => {
+      res.redirect("/manageVolunteers"); // Redirect to the volunteers list after deletion
+    })
+    .catch((error) => {
+      console.error("Error deleting Volunteer:", error);
+      res.status(500).send("Internal Server Error");
+    });
+});
+
+app.post("/deleteTeamMember/:vol_email", isAuthenticated, (req, res) => {
   const id = req.params.vol_email;
   knex("volunteers")
     .where("vol_email", id)

@@ -21,8 +21,8 @@
         <button type="submit" style="border: none; background: none; padding: 0;">
           <img class="logo-circle" src="/img/logo-remove-background.com.png" alt="Logo Image" />
         </button>
-          </form>
           Turtle Shelter Project
+          </form>
       </div>    
   <div class="navbar-buttons">
       <!-- These will be navbar buttons to take the admin to pages that will manage the volunteers and events -->
@@ -48,6 +48,16 @@
                   id="vol_email"
                   name="vol_email"
                   value="<%= volunteer.vol_email %>"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="password">Password:</label>
+                <input
+                  type="text"
+                  id="password"
+                  name="password"
+                  value="<%= volunteer.password %>"
                   required
                 />
               </div>
