@@ -424,21 +424,34 @@ app.post("/adminAddEvent", isAuthenticated, (req, res) => {
     });
 });
 
-// This is the get method to render the manageVolunteers page and display data from the volunteers table
 app.get("/manageVolunteers", isAuthenticated, (req, res) => {
+  // Query for volunteers whose vol_email is NOT in team_member
   knex("volunteers")
     .select()
+    .whereNotIn(
+      "volunteers.vol_email",  // Column from the volunteers table
+      knex("team_member").select("team_email")  // Subquery selecting team_email from team_member table
+    )
     .then((volunteers) => {
-      //.then() says, I just queried all this data, send it to this variable planets.
-      //the array of rows gets stored in this variable called planets.
-      // Render the maintainPlanets template and pass the data
-      res.render("manageVolunteers", { volunteers }); //render index.ejs and pass it planets.
+      // Query for volunteers whose vol_email is in team_member
+      knex("volunteers")
+        .select()
+        .whereIn(
+          "volunteers.vol_email",  // Column from the volunteers table
+          knex("team_member").select("team_email")  // Subquery selecting team_email from team_member table
+        )
+        .then((volunteersInTeam) => {
+          // Render the manageVolunteers template and pass both sets of data
+          res.render("manageVolunteers", { volunteers, volunteersInTeam });
+        });
     })
     .catch((error) => {
       console.error("Error querying database:", error);
       res.status(500).send("Internal Server Error");
     });
 });
+
+
 
 // This is the get route to add a volunteer from the admin page
 app.get("/adminAddVolunteer", isAuthenticated, (req, res) => {
@@ -476,7 +489,7 @@ app.post("/adminAddVolunteer", isAuthenticated, (req, res) => {
     });
 });
 
-app.get("/viewCompletedEvent/:eventid", (req, res) => {
+app.get("/viewCompletedEvent/:eventid", isAuthenticated, (req, res) => {
   const eventid = req.params.eventid;
   const date = req.body.date;
   knex("events")
@@ -517,7 +530,7 @@ app.post("/deleteFinishedEvent/:eventid", isAuthenticated, (req, res) => {
     });
 });
 
-app.get("/viewFinishedEvent/:eventid", (req, res) => {
+app.get("/viewFinishedEvent/:eventid", isAuthenticated, (req, res) => {
   const eventid = req.params.eventid;
   knex("events")
     .join("finalized_events", "events.eventid", "=", "finalized_events.eventid")
@@ -594,7 +607,7 @@ app.get("/publicEvents", (req, res) => {
     });
 });
 
-app.get("/adminCompletedEvents", (req, res) => {
+app.get("/adminCompletedEvents", isAuthenticated, (req, res) => {
   knex("completed_events")
     .select()
     .join("events", "completed_events.eventid", "=", "events.eventid")
