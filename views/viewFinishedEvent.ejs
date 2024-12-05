@@ -45,31 +45,6 @@
         transition: background-color 0.3s;
       }
 
-      .form-section {
-        margin: 40px auto;
-        padding: 20px;
-        background-color: #fff;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        width: 80%;
-        border-radius: 8px;
-      }
-
-      .form-title {
-        text-align: center;
-        font-size: 24px;
-        color: #333;
-      }
-
-      .form-group {
-        margin-bottom: 15px;
-        font-size: 16px;
-        color: #555;
-      }
-
-      .form-group b {
-        color: #333;
-      }
-
       table {
         width: 100%;
         border-collapse: collapse;
@@ -84,7 +59,7 @@
 
       th,
       td {
-        padding: 12px;
+        padding: 8px;
         text-align: left;
         font-size: 16px;
       }
@@ -102,11 +77,11 @@
     <nav class="navbar">
       <div class="navbar-logo">Turtle Shelter Project</div>
       <div class="navbar-buttons">
-        <!-- These will be navbar buttons to take the admin to pages that will manage the volunteers and events -->
-        <form action="/admin" method="GET"><button class="btn" type="submit">Admin Home</button></form>
-        <form action="/manageUsers" method="GET"><button class="btn" type="submit">Manage Admin Users</button></form>
-        <form action="/manageVolunteers" method="GET"><button class="btn" type="submit">Manage Volunteers</button></form>
-        <form action="/manageEvents" method="GET"><button class="btn" type="submit">Manage Events</button></form>
+          <!-- These will be navbar buttons to take the admin to pages that will manage the volunteers and events -->
+          <form action="/admin" method="GET"><button class="btn" type="submit">Admin Home</button></form>
+          <form action="/manageUsers" method="GET"><button class="btn" type="submit">Manage Admin Users</button></form>
+          <form action="/manageVolunteers" method="GET"><button class="btn" type="submit">Manage Volunteers</button></form>
+          <form action="/manageEvents" method="GET"><button class="btn" type="submit">Manage Events</button></form>
       </nav>
 
     <!-- Event Info Here -->
@@ -186,10 +161,6 @@
               <table>
                 <tbody>
                   <tr>
-                    <td>Event ID:</td>
-                    <td><b><%= event.eventid %></b></td>
-                  </tr>
-                  <tr>
                     <td>Total Number of Attendees:</td>
                     <td><b><%= event.num_actual %></b></td>
                   </tr>
@@ -215,7 +186,7 @@
                   </tr>
                   <tr>
                     <td>Total Number of Vests Distributed:</td>
-                    <td><b><%= event.num_distributed %></b></td>
+                    <td><b><%= event.num_distributed == null ? 0 : event.num_distributed%></b></td>
                   </tr>
                 </tbody>
               </table>
@@ -224,9 +195,5 @@
         </form>
       </section>
     </main>
-
-    <form action="/adminCompletedEvents" method="GET">
-      <button class="btn-table" type="submit">View Completed Events</button>
-    </form>
   </body>
 </html>
