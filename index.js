@@ -35,13 +35,12 @@ const knex = require("knex")({
   client: "pg",
   connection: {
     host:
-      process.env.RDS_HOSTNAME ||
-      "awseb-e-auisjkadk8-stack-awsebrdsdatabase-evtdlb1elxoo.c98cyywwyjtd.us-east-1.rds.amazonaws.com",
-    user: process.env.RDS_USERNAME || "ebroot",
-    password: process.env.RDS_PASSWORD || "Yodayoda663!",
-    database: process.env.RDS_DB_NAME || "ebdb",
-    port: process.env.RDS_PORT || 5432,
-    ssl: process.env.DB_SSL ? { rejectUnauthorized: false } : false,
+      process.env.RDS_HOSTNAME,
+      user: process.env.RDS_USERNAME,
+      password: process.env.RDS_PASSWORD,
+      database: process.env.RDS_DB_NAME,
+      port: process.env.RDS_PORT || 5432,
+      ssl: process.env.DB_SSL ? { rejectUnauthorized: false } : false,
   },
 });
 // This is all of the information needed to access postgres
@@ -68,9 +67,6 @@ app.get("/jensStory", (req, res) => {
   res.render("jensStory");
 });
 
-// app.get("/publicEvents", (req, res) => {
-//   res.render("publicEvents");
-// });
 
 function isAuthenticated(req, res, next) {
   if (req.session && req.session.isLoggedIn) {
