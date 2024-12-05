@@ -420,6 +420,11 @@ app.get("/viewCompletedEvent/:eventid", (req, res) => {
     });
 });
 
+app.get("/something", (req, res) => {
+    res.render("something")
+})
+
+
 app.get("/viewFinishedEvent/:eventid", (req, res) => {
   const eventid = req.params.eventid;
   knex("events")
