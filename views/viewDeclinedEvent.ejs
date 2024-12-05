@@ -100,14 +100,14 @@
   </head>
   <body>
     <nav class="navbar">
-      <div class="navbar-logo">Turtle Shelter Project</div>
-      <div class="navbar-buttons">
-        <!-- These will be navbar buttons to take the admin to pages that will manage the volunteers and events -->
-        <form action="/admin" method="GET"><button class="btn" type="submit">Admin Home</button></form>
-        <form action="/manageUsers" method="GET"><button class="btn" type="submit">Manage Admin Users</button></form>
-        <form action="/manageVolunteers" method="GET"><button class="btn" type="submit">Manage Volunteers</button></form>
-        <form action="/manageEvents" method="GET"><button class="btn" type="submit">Manage Events</button></form>
-      </nav>
+        <div class="navbar-logo">Turtle Shelter Project</div>
+        <div class="navbar-buttons">
+          <!-- These will be navbar buttons to take the admin to pages that will manage the volunteers and events -->
+          <form action="/admin" method="GET"><button class="btn" type="submit">Admin Home</button></form>
+          <form action="/manageUsers" method="GET"><button class="btn" type="submit">Manage Admin Users</button></form>
+          <form action="/manageVolunteers" method="GET"><button class="btn" type="submit">Manage Volunteers</button></form>
+          <form action="/manageEvents" method="GET"><button class="btn" type="submit">Manage Events</button></form>
+        </nav>
 
     <!-- Event Info Here -->
     <main style="display: flex; justify-content: center; align-items: center">
@@ -143,8 +143,11 @@
           <fieldset>
             <legend>Event Details</legend>
             <div class="form-group">
-              <label for="date">Date: <b><%= event.date %></b></label>
+              <label for="date">Date Option 1: <b><%= event.eventdatetime1 %></b></label>
             </div>
+            <div class="form-group">
+                <label for="date">Date Option 2: <b><%= event.eventdatetime2 %></b></label>
+              </div>
             <div class="form-group">
               <label for="event_address"
                 >Event Address:
@@ -179,50 +182,12 @@
               >
             </div>
           </fieldset>
-
-          <fieldset>
-            <legend>Event Numbers</legend>
-            <div class="form-group">
-              <table>
-                <tbody>
-                  <tr>
-                    <td>Event ID:</td>
-                    <td><b><%= event.eventid %></b></td>
-                  </tr>
-                  <tr>
-                    <td>Total Number of Attendees:</td>
-                    <td><b><%= event.num_actual %></b></td>
-                  </tr>
-                  <tr>
-                    <td>Total Number of Pockets:</td>
-                    <td><b><%= event.num_pocket %></b></td>
-                  </tr>
-                  <tr>
-                    <td>Total Number of Collars:</td>
-                    <td><b><%= event.num_collar %></b></td>
-                  </tr>
-                  <tr>
-                    <td>Total Number of Envelopes:</td>
-                    <td><b><%= event.num_envelopes %></b></td>
-                  </tr>
-                  <tr>
-                    <td>Total Number of Vests:</td>
-                    <td><b><%= event.num_vests %></b></td>
-                  </tr>
-                  <tr>
-                    <td>Total Number of Completed Products:</td>
-                    <td><b><%= event.num_completed %></b></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </fieldset>
         </form>
       </section>
     </main>
 
     <form action="/adminCompletedEvents" method="GET">
-      <button class="btn-table" type="submit">View Completed Events</button>
+      <button class="btn-table" type="submit">Back to Declined Events</button>
     </form>
   </body>
 </html>

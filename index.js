@@ -213,6 +213,7 @@ app.post("/handlePendingEvent/:eventid", async (req, res) => {
   const eventid = req.params.eventid;
   const status = req.body.status;
   const final_date = req.body.date; // Date from the form
+  const volunteers_needed = req.body.volunteers_needed;
 
   try {
     // Convert the date to UTC for both tables
@@ -226,6 +227,7 @@ app.post("/handlePendingEvent/:eventid", async (req, res) => {
       await trx("finalized_events").insert({
         eventid: eventid,
         date: formattedDate,
+        volunteers_needed: volunteers_needed,
       });
     });
 
@@ -257,6 +259,25 @@ app.get("/adminDeclinedEvents", isAuthenticated, (req, res) => {
     .select()
     .where("status", "declined")
     .then((declined_events) => res.render("declinedEvents", { declined_events }));
+});
+
+// This is the get route to view a declined event's information
+app.get("/viewDeclinedEvent/:eventid", isAuthenticated, (req, res) => {
+  let eventid = req.params.eventid;
+  knex("events")
+    .where("eventid", eventid)
+    .first() //returns an object representing one record
+    .then((event) => {
+      //This variable represents one object that has attributes, which are the column names
+      if (!event) {
+        return res.status(404).send("Event not found");
+      }
+      res.render("viewDeclinedEvent", { event });
+    })
+    .catch((error) => {
+      console.error("Error fetching event details:", error);
+      res.status(500).send("Internal Server Error");
+    });
 });
 
 // This route deletes a declined event and redirects to the declined events page.
@@ -300,6 +321,7 @@ app.post("/adminAddEvent", isAuthenticated, (req, res) => {
     numexpected,
     duration,
     eventdatetime1,
+    volunteers_needed,
   } = req.body;
 
   knex("events")
@@ -331,6 +353,7 @@ app.post("/adminAddEvent", isAuthenticated, (req, res) => {
       return knex("finalized_events").insert({
         eventid: eventid,
         date: new Date(eventdatetime1), // Ensure the date is in a valid format
+        volunteers_needed: volunteers_needed,
       });
     })
     .then(() => {
