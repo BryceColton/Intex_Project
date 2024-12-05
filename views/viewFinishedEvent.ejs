@@ -12,77 +12,158 @@
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
       rel="stylesheet"
     />
-    <style>
-      .btn-table {
-        display: inline-block;
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
 
+    <style>
+       body {
+        font-family: 'Roboto', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f8f9fa;
+      }
+    
+      h1 {
+        text-align: center;
+        margin-top: 30px;
+        color: #424242;
+        font-size: 2em;
+      }
+    
+      /* Table Styles */
+      table {
+        width: 100%;
+        margin: 30px auto;
+        border-collapse: collapse;
+        background-color: #ffffff;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        overflow: hidden;
+        table-layout: fixed; /* Ensure columns don't overflow */
+      }
+    
+      th, td {
+        padding: 12px 20px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+        word-wrap: break-word; /* Prevent text from overflowing */
+      }
+    
+      th {
         background-color: #424242;
         color: white;
-        text-align: center;
-        text-decoration: none;
-        border-radius: 5px;
-        font-size: 16px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-        position: fixed;
-        bottom: 0px; /* Adjust this value as needed */
-        left: 50%;
-        transform: translateX(-50%); /* Centers the button horizontally */
+      }
+    
+      td {
+        background-color: #f1f1f1;
       }
 
+            /* Target the 6th column (Delete) */
+  th:nth-child(8), td:nth-child(8) {
+    width: 120px; /* Make the 6th column a bit wider */
+    text-align: center; /* Center align the buttons */
+  }
+
+  /* Target the 4th column (Last Name) */
+  th:nth-child(9), td:nth-child(9) {
+    width: 80px; /* Reduce the width of the Last Name column */
+  }
+  
+    
+      tr:hover td {
+        background-color: #424242;
+        color: white;
+      }
+    
+      /* Container for table to enable scrolling on smaller screens */
+      .table-container {
+        overflow-x: auto; /* Enables horizontal scrolling */
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on mobile */
+        width: 100%;
+        margin-bottom: 30px; /* To separate the table from the content below */
+      }
+    
+      /* Buttons inside the table */
+      .btn-table {
+        padding: 8px 15px;
+        background-color: #424242;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.9em;
+        transition: background-color 0.3s;
+      }
+    
       .btn-table:hover {
         background-color: white;
         color: #424242;
       }
-
-      button {
-        padding: 12px 25px;
-        font-size: 16px;
+    
+      .btn-delete {
+        background-color: #e74a3b;
+        margin-left: 5px;
+      }
+    
+      .btn-delete:hover {
+        background-color: #c0392b;
+      }
+    
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        table {
+          width: 100%;
+          overflow-x: auto;
+        }
+    
+        th, td {
+          font-size: 0.9em; /* Adjust font size for smaller screens */
+          padding: 8px;
+        }
+    
+        .form-container button {
+          width: 100%; /* Makes the form button more responsive */
+        }
+      }
+    
+      /* Form Styles */
+      .form-container {
+        text-align: center;
+        margin-top: 30px;
+      }
+    
+      .form-container button {
+        padding: 10px 20px;
+        background-color: #424242;
+        color: white;
         border: none;
-        cursor: pointer;
         border-radius: 5px;
-        width: 100%;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 1em;
         transition: background-color 0.3s;
       }
+    
 
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 10px;
-      }
+      .bottom-buttons {
+        display: flex;
+        justify-content: center; /* Center the buttons horizontally */
+        gap: 20px; /* Add spacing between buttons */
+        margin-top: 30px;
+        padding: 20px 0;
 
-      table,
-      th,
-      td {
-        border: 1px solid #ddd;
-      }
-
-      th,
-      td {
-        padding: 8px;
-        text-align: left;
-        font-size: 16px;
-      }
-
-      th {
-        background-color: #f2f2f2;
-      }
-
-      td {
-        background-color: #fafafa;
-      }
+    }
     </style>
   </head>
   <body>
     <nav class="navbar">
-      <div class="navbar-logo">Turtle Shelter Project</div>
-      <div class="navbar-buttons">
+        <div class="navbar-logo">Turtle Shelter Project</div>
+        <div class="navbar-buttons">
           <!-- These will be navbar buttons to take the admin to pages that will manage the volunteers and events -->
           <form action="/admin" method="GET"><button class="btn" type="submit">Admin Home</button></form>
           <form action="/manageUsers" method="GET"><button class="btn" type="submit">Manage Admin Users</button></form>
           <form action="/manageVolunteers" method="GET"><button class="btn" type="submit">Manage Volunteers</button></form>
           <form action="/manageEvents" method="GET"><button class="btn" type="submit">Manage Events</button></form>
-      </nav>
+        </nav>
 
     <!-- Event Info Here -->
     <main style="display: flex; justify-content: center; align-items: center">

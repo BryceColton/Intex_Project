@@ -16,6 +16,17 @@
 
   </head>
   <style>
+
+    .logo-circle {
+        width: 50px; /* Adjust size as needed */
+        height: 50px; /* Ensure it's a square for a perfect circle */
+        border-radius: 50%; /* Makes the image circular */
+        margin-right: 10px; /* Space between logo and text */
+        vertical-align: middle; /* Aligns the logo with the text */
+        border: 2px solid white
+    }
+
+
     .image-container {
         display: flex;
         justify-content: center;
@@ -55,6 +66,7 @@
 
   <body>
     <nav class="navbar">
+      <img class="logo-circle" src ="/img/logo-remove-background.com.png" alt="Logo Image" />
       <div class="navbar-logo">Turtle Shelter Project</div>
       <div class="navbar-buttons">
         <form action="/" method="GET"><button class="btn" type="submit">Home</button></form>
