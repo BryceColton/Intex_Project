@@ -67,9 +67,6 @@ app.get("/jensStory", (req, res) => {
   res.render("jensStory");
 });
 
-// app.get("/publicEvents", (req, res) => {
-//   res.render("publicEvents");
-// });
 
 function isAuthenticated(req, res, next) {
   if (req.session && req.session.isLoggedIn) {
