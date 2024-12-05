@@ -315,7 +315,7 @@ main {
   font-weight: 600;
   box-sizing: border-box; /* Includes padding and border in the element's size */
   background: #424242;
-  margin-bottom: 5px;
+  margin-bottom: 25px;
   max-width: 250px;
 
   display: inline-flex; /* Aligns the element in line with other content */
