@@ -167,6 +167,7 @@
         <table>
           <thead>
             <tr>
+                    <th>Organization Name</th>
                     <th>Number of Attendees</th>
                     <th>Number of Pockets</th>
                     <th>Number of Collars</th>
@@ -183,6 +184,7 @@
             <!--says that for each record, one at a time, send it to that variable "row"-->
             <tr>
               <input type="hidden" value="row.eventid" />
+              <td><%= row.organization%></td>
               <td><%= row.num_actual %></td>
               <td><%= row.num_pocket %></td>
               <td><%= row.num_collar %></td>

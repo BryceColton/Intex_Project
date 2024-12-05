@@ -507,12 +507,12 @@ app.get("/editVolunteer/:vol_email", isAuthenticated, (req, res) => {
 
 app.get("/liveCounter", (req, res) => {
   knex("completed_events")
-    .sum("num_distributed as totalCompleted")  // Sum the num_completed column
-    .first()  // We only want one row with the sum
+    .sum("num_distributed as totalCompleted") // Sum the num_completed column
+    .first() // We only want one row with the sum
     .then((result) => {
       // Check if the sum is returned correctly
-      console.log(result);  // Log the result to verify
-      res.json(result);  // Send the sum as a JSON response
+      console.log(result); // Log the result to verify
+      res.json(result); // Send the sum as a JSON response
     })
     .catch((error) => {
       console.error("Error fetching live counter:", error);
@@ -539,6 +539,7 @@ app.get("/publicEvents", (req, res) => {
 app.get("/adminCompletedEvents", (req, res) => {
   knex("completed_events")
     .select()
+    .join("events", "completed_events.eventid", "=", "events.eventid")
     .then((completed_events) => {
       res.render("completedEvents", { completed_events }); //render index.ejs and pass it planets.
     })
@@ -550,7 +551,16 @@ app.get("/adminCompletedEvents", (req, res) => {
 
 app.post("/viewCompletedEvent/:eventid", isAuthenticated, (req, res) => {
   let eventid = req.params.eventid;
-  const { num_actual, num_pocket, num_collar, num_envelopes, num_vests, num_completed, num_distributed, status } = req.body;
+  const {
+    num_actual,
+    num_pocket,
+    num_collar,
+    num_envelopes,
+    num_vests,
+    num_completed,
+    num_distributed,
+    status,
+  } = req.body;
 
   // Set defaults for optional fields if they are not provided (i.e., set to 0)
   const numPocket = num_pocket || 0;
@@ -570,7 +580,7 @@ app.post("/viewCompletedEvent/:eventid", isAuthenticated, (req, res) => {
       num_envelopes: numEnvelopes,
       num_vests: numVests,
       num_completed: numCompleted,
-      num_distributed: numdistributed
+      num_distributed: numdistributed,
     })
     .then(() => {
       // Update the event status in the "events" table
