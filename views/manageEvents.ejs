@@ -168,9 +168,11 @@
             <form action="/manageVolunteers" method="GET"><button class="btn" type="submit">Manage Volunteers</button></form>
             <form action="/manageEvents" method="GET"><button class="btn" type="submit">Manage Events</button></form>
         </nav>
-
+  
         <h1 style="text-align: center">Pending Event Requests</h1>
-
+        <form action="/adminAddEvent" method="GET">
+          <button class="btn-table" type="submit">Add New Event</button>
+        </form>
         <!-- Pending events table -->
         <table>
           <thead>
@@ -278,9 +280,7 @@
 
 
     <!-- Button to add a new event. -->
-    <form action="/adminAddEvent" method="GET">
-        <button type="submit">Add New Event</button>
-    </form>
+
 
     <!-- Button to view completed events. -->
     <form action="/adminCompletedEvents" method="GET">
