@@ -73,7 +73,6 @@ function isAuthenticatedTeamMember(req, res, next) {
   res.redirect("/teamMemberLogin"); // Redirect to login page if not authenticated
 }
 
-
 function isAuthenticated(req, res, next) {
   if (req.session && req.session.isLoggedIn) {
     return next(); // User is authenticated, proceed to the next middleware
@@ -156,7 +155,9 @@ app.post("/teamMemberLogin", (req, res) => {
     })
     .catch((error) => {
       console.error("Error during login:", error);
-      res.render("teamMemberLogin", { error: "Sorry inconvenience were having (DB) Connection issues." });
+      res.render("teamMemberLogin", {
+        error: "Sorry inconvenience were having (DB) Connection issues.",
+      });
     });
 });
 
@@ -967,13 +968,8 @@ app.get("/teamMemberRsvp", isAuthenticatedTeamMember, (req, res) => {
     });
 });
 
-<<<<<<< HEAD
-=======
-app.post("/teamMemberRsvp", (req, res) => {
-  
-})
+app.post("/teamMemberRsvp", (req, res) => {});
 
->>>>>>> e74ce949e3c49b6f8f3807e1746fb8781a694494
 // display the thank you page for a volunteer submission
 app.get("/volunteerFormSubmission", (req, res) => {
   res.render("volunteerFormSubmission");
@@ -986,5 +982,3 @@ app.get("/eventFormSubmission", (req, res) => {
 
 // This starts the server to start listening to requests
 app.listen(port, () => console.log(`Listening on port ${port}`));
-
-
