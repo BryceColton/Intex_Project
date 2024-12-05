@@ -476,7 +476,7 @@ app.post("/adminAddVolunteer", isAuthenticated, (req, res) => {
     });
 });
 
-app.get("/viewCompletedEvent/:eventid", (req, res) => {
+app.get("/viewCompletedEvent/:eventid", isAuthenticated, (req, res) => {
   const eventid = req.params.eventid;
   const date = req.body.date;
   knex("events")
@@ -517,7 +517,7 @@ app.post("/deleteFinishedEvent/:eventid", isAuthenticated, (req, res) => {
     });
 });
 
-app.get("/viewFinishedEvent/:eventid", (req, res) => {
+app.get("/viewFinishedEvent/:eventid", isAuthenticated, (req, res) => {
   const eventid = req.params.eventid;
   knex("events")
     .join("finalized_events", "events.eventid", "=", "finalized_events.eventid")
@@ -595,7 +595,7 @@ app.get("/publicEvents", (req, res) => {
     });
 });
 
-app.get("/adminCompletedEvents", (req, res) => {
+app.get("/adminCompletedEvents", isAuthenticated, (req, res) => {
   knex("completed_events")
     .select()
     .join("events", "completed_events.eventid", "=", "events.eventid")
