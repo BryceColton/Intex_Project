@@ -76,6 +76,13 @@ function isAuthenticatedTeamMember(req, res, next) {
   res.redirect("/teamMemberLogin"); // Redirect to login page if not authenticated
 }
 
+function isAuthenticatedTeamMember(req, res, next) {
+  if (req.session && req.session.isLoggedInTeamMember) {
+    return next(); // User is authenticated, proceed to the next middleware
+  }
+  res.redirect("/teamMemberLogin"); // Redirect to login page if not authenticated
+}
+
 function isAuthenticated(req, res, next) {
   if (req.session && req.session.isLoggedIn) {
     return next(); // User is authenticated, proceed to the next middleware
@@ -855,74 +862,65 @@ app.post("/submitEventForm", (req, res) => {
 });
 
 app.post("/submitVolunteerForm", (req, res) => {
-  // Extract form values from req.body
-  const vol_email = req.body.vol_email;
-  const vol_first_name = req.body.vol_first_name;
-  const vol_last_name = req.body.vol_last_name;
-  const vol_phone = req.body.vol_phone;
-  const sewing_level = parseInt(req.body.sewing_level, 10);
-  const num_hours = parseFloat(req.body.num_hours, 10);
-  const origin = req.body.origin;
-  const zip = req.body.zip;
-  const password = req.body.password; // Capture the password if provided
+  const {
+    vol_email,
+    vol_first_name,
+    vol_last_name,
+    vol_phone,
+    sewing_level,
+    num_hours,
+    origin,
+    zip,
+    password,
+  } = req.body;
 
-  // Check if email exists in volunteers table
   knex("volunteers")
-    .where({ vol_email: vol_email })
+    .where({ vol_email })
     .first()
     .then((existingVolunteer) => {
       if (existingVolunteer) {
-        return res.status(400).json({ message: "Email already exists." });
+        return res.status(400).json({ message: "Email already exists in volunteers." });
       }
 
       // Insert into volunteers table
-      return knex("volunteers")
-        .insert({
-          vol_email: vol_email,
-          vol_first_name: vol_first_name,
-          vol_last_name: vol_last_name,
-          vol_phone: vol_phone,
-          sewing_level: sewing_level,
-          num_hours: num_hours,
-          origin: origin,
-          zip: zip,
-        })
-        .then(() => {
-          if (password) {
-            // Check if email exists in the team_member table
-            return knex("team_member")
-              .where({ team_email: vol_email }) // Correct column name
-              .first()
-              .then((existingTeamMember) => {
-                if (existingTeamMember) {
-                  return res.status(400).json({
-                    message: "Email already exists in team members.",
-                  });
-                }
+      return knex("volunteers").insert({
+        vol_email,
+        vol_first_name,
+        vol_last_name,
+        vol_phone,
+        sewing_level,
+        num_hours,
+        origin,
+        zip,
+      });
+    })
+    .then(() => {
+      if (password) {
+        // Check if email exists in the team_member table
+        return knex("team_member")
+          .where({ team_email: vol_email })
+          .first()
+          .then((existingTeamMember) => {
+            if (existingTeamMember) {
+              return Promise.reject(new Error("Email already exists in team members."));
+            }
 
-                // Insert into team_member table
-                return knex("team_member")
-                  .insert({
-                    team_email: vol_email, // Correct column name
-                    password: password, // Store the password securely (hashed)
-                  })
-                  .then(() => {
-                    res.redirect("/");
-                  });
-              });
-          } else {
-            res.redirect("/");
-          }
-          res.redirect("/volunteerFormSubmission"); // Redirect to thank you page
-        })
-        .catch((error) => {
-          console.error("Error adding Volunteer:", error);
-          res.status(500).send("Internal Server Error");
-        });
+            // Insert into team_member table
+            return knex("team_member").insert({
+              team_email: vol_email,
+              password, // Note: Hash this password in production!
+            });
+          });
+      }
+    })
+    .then(() => {
+      res.redirect("/volunteerFormSubmission"); // Redirect to thank you page
     })
     .catch((error) => {
       console.error("Error handling volunteer submission:", error);
-      res.status(500).send("Internal Server Error");
+      if (!res.headersSent) {
+        res.status(500).send("Internal Server Error");
+      }
     });
 });
 
