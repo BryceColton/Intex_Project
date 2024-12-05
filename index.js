@@ -573,13 +573,34 @@ app.get("/editVolunteer/:vol_email", isAuthenticated, (req, res) => {
     });
 });
 
+app.get("/editTeamMember/:vol_email", isAuthenticated, (req, res) => {
+  //This is the route for editVolunteer. The /: means there is a parameter passed in called vol_email.
+  const id = req.params.vol_email;
+  // Query the Volunteer by email first
+  knex("volunteers")
+  .join("team_member", "team_member.team_email", "=", "volunteers.vol_email")
+
+    .where("team_email", id)
+    .first() //returns an object representing one record
+    .then((volunteer) => {
+      //This variable represents one object that has attributes, which are the column names
+      if (!volunteer) {
+        return res.status(404).send("Volunteer not found");
+      }
+      res.render("editTeamMember", { volunteer });
+    })
+    .catch((error) => {
+      console.error("Error fetching Volunteer for editing:", error);
+      res.status(500).send("Internal Server Error");
+    });
+});
+
 app.get("/liveCounter", (req, res) => {
   knex("completed_events")
     .sum("num_distributed as totalCompleted") // Sum the num_completed column
     .first() // We only want one row with the sum
     .then((result) => {
       // Check if the sum is returned correctly
-      console.log(result); // Log the result to verify
       res.json(result); // Send the sum as a JSON response
     })
     .catch((error) => {
