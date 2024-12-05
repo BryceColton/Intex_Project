@@ -76,13 +76,6 @@ function isAuthenticatedTeamMember(req, res, next) {
   res.redirect("/teamMemberLogin"); // Redirect to login page if not authenticated
 }
 
-function isAuthenticatedTeamMember(req, res, next) {
-  if (req.session && req.session.isLoggedInTeamMember) {
-    return next(); // User is authenticated, proceed to the next middleware
-  }
-  res.redirect("/teamMemberLogin"); // Redirect to login page if not authenticated
-}
-
 function isAuthenticated(req, res, next) {
   if (req.session && req.session.isLoggedIn) {
     return next(); // User is authenticated, proceed to the next middleware
