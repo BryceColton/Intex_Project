@@ -964,7 +964,7 @@ app.get("/teamMemberRsvp", isAuthenticatedTeamMember, (req, res) => {
     ) // Group by all non-aggregated columns
     .orderBy([{ column: "finalized_events.date", order: "asc" }]) // Ensure column is correct
     .then((approved_events) => {
-      console.log("Approved Events:", approved_events);
+      // console.log("Approved Events:", approved_events);
       // Render the view with approved events
       res.render("teamMemberRsvp", { approved_events });
     })
@@ -975,13 +975,12 @@ app.get("/teamMemberRsvp", isAuthenticatedTeamMember, (req, res) => {
     });
 });
 
-app.post("/teamMemberRsvp", isAuthenticatedTeamMember, (req, res) => {
-  const { eventid } = req.body;
+app.post("/teamMemberRsvp/:eventid", isAuthenticatedTeamMember, (req, res) => {
+  const { eventid } = req.params;
   const team_email = req.session.team_email;
 
   console.log(eventid, team_email);
 
-  // Prevent duplicate RSVPs
   knex("tm_event")
     .where({ eventid: eventid, team_email: team_email })
     .first()
@@ -990,23 +989,25 @@ app.post("/teamMemberRsvp", isAuthenticatedTeamMember, (req, res) => {
         res.status(400).send("You have already RSVP'd for this event.");
       } else {
         knex("tm_event")
-          .insert({ eventid, team_email })
+          .insert({ 
+            eventid: eventid, 
+            team_email: team_email 
+          })
           .then(() => {
             res.redirect("/teamMemberRsvp"); // Redirect to the RSVP page or another success page
           })
           .catch((error) => {
-            console.error("Error saving RSVP:", error.message, error.stack);
+            console.error("Error saving RSVP:", error);
             res.status(500).send("Internal Server Error");
           });
       }
     })
     .catch((error) => {
-      console.error("Error checking existing RSVP:", error.message, error.stack);
+      console.error("Error checking existing RSVP:", error);
       res.status(500).send("Internal Server Error");
     });
 });
 
-// display the thank you page for a volunteer submission
 app.get("/volunteerFormSubmission", (req, res) => {
   res.render("volunteerFormSubmission");
 });
