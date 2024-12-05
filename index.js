@@ -936,7 +936,7 @@ app.get("/teamMemberRsvp", isAuthenticatedTeamMember ,(req, res) => {
     .where("status", "approved")
     .orderBy([{ column: "date", order: "asc" }])
     .then((approved_events) => {
-      res.render("teamMemberRspv", { approved_events });
+      res.render("teamMemberRsvp", { approved_events });
     })
     .catch((error) => {
       console.error("Error fetching finalized event details:", error);
