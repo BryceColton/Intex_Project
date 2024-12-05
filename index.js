@@ -956,9 +956,7 @@ app.post("/teamMemberRsvp", (req, res) => {
   
 })
 
-app.post("/teamMemberRsvp", (req, res) => {
-  
-})
+
 
 // display the thank you page for a volunteer submission
 app.get("/volunteerFormSubmission", (req, res) => {
