@@ -97,9 +97,34 @@
     </style>
   </head>
   <body>
+    <nav class="navbar">
+        <div class="navbar-logo">
+          <form action="/" method="GET">
+            <button type="submit" style="border: none; background: none; padding: 0;">
+              <img class="logo-circle" src="/img/logo-remove-background.com.png" alt="Logo Image" />
+            </button>
+              </form>
+              Turtle Shelter Project
+          </div>
+            <div class="navbar-buttons">
+          <form action="/admin" method="GET">
+            <button class="btn" type="submit">Admin Home</button>
+          </form>
+          <form action="/manageUsers" method="GET">
+            <button class="btn" type="submit">Manage Admin Users</button>
+          </form>
+          <form action="/manageVolunteers" method="GET">
+            <button class="btn" type="submit">Manage Volunteers</button>
+          </form>
+          <form action="/manageEvents" method="GET">
+            <button class="btn" type="submit">Manage Events</button>
+          </form>
+        </div>
+      </nav>
+  
     <h1>Login</h1>
     <div class="form-container">
-      <form action="/login" method="POST" class="login-form">
+      <form action="/teamMemberLogin" method="POST" class="login-form">
         <div>
           <label for="username">Username:</label>
           <input type="text" id="username" name="username" required />
