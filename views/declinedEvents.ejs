@@ -58,6 +58,15 @@
       td {
         background-color: #f1f1f1;
       }
+      th:nth-child(9), td:nth-child(9) {
+    width: 80px; /* Make the 6th column a bit wider */
+    text-align: center; /* Center align the buttons */
+  }
+
+  /* Target the 4th column (Last Name) */
+  th:nth-child(10), td:nth-child(10) {
+    width: 120px; /* Reduce the width of the Last Name column */
+  }
     
       tr:hover td {
         background-color: #424242;
@@ -173,7 +182,8 @@
               <th>City</th>
               <th>State</th>
               <th>Status</th>
-              <th>View / Delete</th>
+              <th>View</th>
+              <th>Delete</th>
             </tr>
           </thead>
           <tbody>
@@ -196,7 +206,9 @@
                   <!--The action is the route. You have to write this. the stuff after the / is a parameter-->
                   <button class="btn-table" type="submit">View</button>
                 </form>
+              </td>
                 <!-- Delete button so that the admin can handle unwanted event requests -->
+                <td>
                 <form action="/deleteDeclinedEvent/<%= row.eventid %>" method="POST" style="display: inline">
                   <button
                     class="btn-table btn-delete"
