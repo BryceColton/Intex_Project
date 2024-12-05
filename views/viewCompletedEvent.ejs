@@ -58,6 +58,9 @@
                             <label for="date">Date: <b><%=event.date %></b></label>
                         </div>
                         <div class="form-group">
+                            <label for="volunteers_needed">Volunteers Needed: <b><%=event.volunteers_needed%></b></label>
+                        </div>
+                        <div class="form-group">
                             <label for="event_address">Event Address: <b><%=event.event_address %>, <%=event.city %>, <%=event.state %>, <%=event.zip %></b></label>
                         </div>
                         <div class="form-group">
@@ -84,7 +87,7 @@
                         <legend>Event Numbers</legend>
                         <!-- Approve/Decline (Radio Buttons) -->
                         <div class="form-group">
-                                <label for="num_actual">Number of Actual People:</label>
+                                <label for="num_actual">Actual Number of People:</label>
                                 <input
                                   type="number"
                                   id="num_actual"

@@ -213,6 +213,7 @@ app.post("/handlePendingEvent/:eventid", async (req, res) => {
   const eventid = req.params.eventid;
   const status = req.body.status;
   const final_date = req.body.date; // Date from the form
+  const volunteers_needed = req.body.volunteers_needed;
 
   try {
     // Convert the date to UTC for both tables
@@ -226,6 +227,7 @@ app.post("/handlePendingEvent/:eventid", async (req, res) => {
       await trx("finalized_events").insert({
         eventid: eventid,
         date: formattedDate,
+        volunteers_needed: volunteers_needed,
       });
     });
 
@@ -257,6 +259,25 @@ app.get("/adminDeclinedEvents", isAuthenticated, (req, res) => {
     .select()
     .where("status", "declined")
     .then((declined_events) => res.render("declinedEvents", { declined_events }));
+});
+
+// This is the get route to view a declined event's information
+app.get("/viewDeclinedEvent/:eventid", isAuthenticated, (req, res) => {
+  let eventid = req.params.eventid;
+  knex("events")
+    .where("eventid", eventid)
+    .first() //returns an object representing one record
+    .then((event) => {
+      //This variable represents one object that has attributes, which are the column names
+      if (!event) {
+        return res.status(404).send("Event not found");
+      }
+      res.render("viewDeclinedEvent", { event });
+    })
+    .catch((error) => {
+      console.error("Error fetching event details:", error);
+      res.status(500).send("Internal Server Error");
+    });
 });
 
 // This route deletes a declined event and redirects to the declined events page.
@@ -300,6 +321,7 @@ app.post("/adminAddEvent", isAuthenticated, (req, res) => {
     numexpected,
     duration,
     eventdatetime1,
+    volunteers_needed,
   } = req.body;
 
   knex("events")
@@ -331,6 +353,7 @@ app.post("/adminAddEvent", isAuthenticated, (req, res) => {
       return knex("finalized_events").insert({
         eventid: eventid,
         date: new Date(eventdatetime1), // Ensure the date is in a valid format
+        volunteers_needed: volunteers_needed,
       });
     })
     .then(() => {
@@ -420,10 +443,20 @@ app.get("/viewCompletedEvent/:eventid", (req, res) => {
     });
 });
 
-app.get("/something", (req, res) => {
-    res.render("something")
-})
-
+//This route is to post a delete completed event request
+app.post("/deleteFinishedEvent/:eventid", isAuthenticated, (req, res) => {
+  const id = req.params.eventid;
+  knex("events")
+    .where("eventid", id)
+    .del() // Deletes the record with the specified ID
+    .then(() => {
+      res.redirect("/adminCompletedEvents"); // Redirect to the declined events list after deletion
+    })
+    .catch((error) => {
+      console.error("Error deleting Event:", error);
+      res.status(500).send("Internal Server Error");
+    });
+});
 
 app.get("/viewFinishedEvent/:eventid", (req, res) => {
   const eventid = req.params.eventid;
@@ -450,6 +483,7 @@ app.get("/viewFinishedEvent/:eventid", (req, res) => {
       res.status(500).send("Internal Server Error");
     });
 });
+
 // This is the get route to edit a volunteer's data from the admin page
 app.get("/editVolunteer/:vol_email", isAuthenticated, (req, res) => {
   //This is the route for editVolunteer. The /: means there is a parameter passed in called vol_email.
@@ -473,12 +507,12 @@ app.get("/editVolunteer/:vol_email", isAuthenticated, (req, res) => {
 
 app.get("/liveCounter", (req, res) => {
   knex("completed_events")
-    .sum("num_distributed as totalCompleted")  // Sum the num_completed column
-    .first()  // We only want one row with the sum
+    .sum("num_distributed as totalCompleted") // Sum the num_completed column
+    .first() // We only want one row with the sum
     .then((result) => {
       // Check if the sum is returned correctly
-      console.log(result);  // Log the result to verify
-      res.json(result);  // Send the sum as a JSON response
+      console.log(result); // Log the result to verify
+      res.json(result); // Send the sum as a JSON response
     })
     .catch((error) => {
       console.error("Error fetching live counter:", error);
@@ -505,6 +539,7 @@ app.get("/publicEvents", (req, res) => {
 app.get("/adminCompletedEvents", (req, res) => {
   knex("completed_events")
     .select()
+    .join("events", "completed_events.eventid", "=", "events.eventid")
     .then((completed_events) => {
       res.render("completedEvents", { completed_events }); //render index.ejs and pass it planets.
     })
@@ -516,7 +551,16 @@ app.get("/adminCompletedEvents", (req, res) => {
 
 app.post("/viewCompletedEvent/:eventid", isAuthenticated, (req, res) => {
   let eventid = req.params.eventid;
-  const { num_actual, num_pocket, num_collar, num_envelopes, num_vests, num_completed, num_distributed, status } = req.body;
+  const {
+    num_actual,
+    num_pocket,
+    num_collar,
+    num_envelopes,
+    num_vests,
+    num_completed,
+    num_distributed,
+    status,
+  } = req.body;
 
   // Set defaults for optional fields if they are not provided (i.e., set to 0)
   const numPocket = num_pocket || 0;
@@ -536,7 +580,7 @@ app.post("/viewCompletedEvent/:eventid", isAuthenticated, (req, res) => {
       num_envelopes: numEnvelopes,
       num_vests: numVests,
       num_completed: numCompleted,
-      num_distributed: numdistributed
+      num_distributed: numdistributed,
     })
     .then(() => {
       // Update the event status in the "events" table

@@ -161,16 +161,13 @@
         </nav>
 
         <h1 style="text-align: center">Completed Events</h1>
-        <br>
-        <form action="/adminAddEvent" method="GET">
-            <button class="btn-table fixed" type="submit">Add New Event</button>
-        </form>
+
 
         <!-- Pending events table -->
         <table>
           <thead>
             <tr>
-                    <th>Event ID</th>
+                    <th>Organization Name</th>
                     <th>Number of Attendees</th>
                     <th>Number of Pockets</th>
                     <th>Number of Collars</th>
@@ -187,21 +184,21 @@
             <!--says that for each record, one at a time, send it to that variable "row"-->
             <tr>
               <input type="hidden" value="row.eventid" />
-              <td><%= row.eventid %></td>
+              <td><%= row.organization%></td>
               <td><%= row.num_actual %></td>
               <td><%= row.num_pocket %></td>
               <td><%= row.num_collar %></td>
               <td><%= row.num_envelopes %></td>
               <td><%= row.num_vests %></td>
               <td><%= row.num_completed %></td>
-              <!-- Edit button to go to the editEvent page where the admin will be able to accept/decline event requests -->
+              <!-- View button to see more details about the completed event -->
               <td>
                 <form action="/viewFinishedEvent/<%= row.eventid %>" method="GET" style="display: inline">
                   <!--The action is the route. You have to write this. the stuff after the / is a parameter-->
                   <button class="btn-table" type="submit">View</button>
                 </form>
                 <!-- Delete button so that the admin can handle unwanted event requests -->
-                <form action="/deleteEvent/<%= row.eventid %>" method="POST" style="display: inline">
+                <form action="/deleteFinishedEvent/<%= row.eventid %>" method="POST" style="display: inline">
                   <button
                     class="btn-table btn-delete"
                     type="submit"
@@ -222,19 +219,4 @@
 
         <br><br>
 
-
-
-    <!-- Button to add a new event. -->
-
-    <div class="bottom-buttons">
-
-        <form action="/adminCompletedEvents" method="GET">
-            <button class="btn-table" type="submit">View Completed Events</button>
-        </form>
-
-        <!-- Button to view declined events -->
-        <form action="/adminDeclinedEvents" method="GET">
-            <button class="btn-table" type="submit">View Declined Events</button>
-        </form>
-    </div>
 </html>
