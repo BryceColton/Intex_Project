@@ -242,10 +242,6 @@
               <table>
                 <tbody>
                   <tr>
-                    <td>Event ID:</td>
-                    <td><b><%= event.eventid %></b></td>
-                  </tr>
-                  <tr>
                     <td>Total Number of Attendees:</td>
                     <td><b><%= event.num_actual %></b></td>
                   </tr>
@@ -271,7 +267,7 @@
                   </tr>
                   <tr>
                     <td>Total Number of Vests Distributed:</td>
-                    <td><b><%= event.num_distributed %></b></td>
+                    <td><b><%= event.num_distributed == null ? 0 : event.num_distributed%></b></td>
                   </tr>
                 </tbody>
               </table>
@@ -280,9 +276,9 @@
         </form>
       </section>
     </main>
-
+    <br><br>
     <form action="/adminCompletedEvents" method="GET">
-      <button class="btn-table" type="submit">View Completed Events</button>
+      <button class="btn-table" type="submit">Back to Completed Events</button>
     </form>
   </body>
 </html>
