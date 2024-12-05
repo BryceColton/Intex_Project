@@ -56,9 +56,6 @@ app.get("/volunteer", (req, res) => {
   res.render("volunteer");
 });
 
-app.get("/teamMemberRsvp", isAuthenticatedTeamMember, (req, res) => {
-  res.render("teamMemberRsvp");
-});
 // This is the get method for the host event request page
 app.get("/hostEvent", (req, res) => {
   res.render("hostEvent");
@@ -936,15 +933,12 @@ app.get("/teamMemberRsvp", isAuthenticatedTeamMember, (req, res) => {
     });
 });
 
-<<<<<<< HEAD
-=======
 app.post("/teamMemberRsvp", (req, res) => {
   
 })
 
 
 
->>>>>>> 887b9705a94c5964516007fcfce5a9fdd1f35705
 // display the thank you page for a volunteer submission
 app.get("/volunteerFormSubmission", (req, res) => {
   res.render("volunteerFormSubmission");
