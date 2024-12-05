@@ -58,11 +58,6 @@
         background-color: #f1f1f1;
       }
 
-      table:nth-of-type(2) th:nth-child(9) {
-        width: 160px; /* Make the 8th column (Status) narrower */
-        text-align: center; /* Center align the text */
-      }
-
       /* Target the 6th column (Delete) */
   th:nth-child(10), td:nth-child(10) {
     width: 130px; /* Make the 6th column a bit wider */
@@ -79,15 +74,48 @@
     width: 150px; /* Reduce the width of the Last Name column */
   }
 
-
-  table:nth-of-type(2) th:nth-child(1), td:nth-child(1) {
-        width: 300px; /* Make the 8th column (Status) narrower */
-        text-align: center; /* Center align the text */
-      }
   th:nth-child(4), td:nth-child(4) {
     width: 140px; /* Make the 6th column a bit wider */
     text-align: center; /* Center align the buttons */
   }
+
+  table:nth-of-type(2) th:nth-child(1), td:nth-child(1) {
+        width: 200px; /* Make the 8th column (Status) narrower */
+        text-align: center; /* Center align the text */
+      }
+  table:nth-of-type(2) th:nth-child(2), td:nth-child(2) {
+    width: 115px; /* Make the 8th column (Status) narrower */
+    text-align: center; /* Center align the text */
+  }
+  table:nth-of-type(2) th:nth-child(3), td:nth-child(3) {
+    width: 120px; /* Make the 8th column (Status) narrower */
+    text-align: center; /* Center align the text */
+  }
+  table:nth-of-type(2) th:nth-child(5), td:nth-child(5) {
+    width: 135px; /* Make the 8th column (Status) narrower */
+    text-align: center; /* Center align the text */
+  }
+
+  table:nth-of-type(2) th:nth-child(6), td:nth-child(6) {
+    width: 135px; /* Make the 8th column (Status) narrower */
+    text-align: center; /* Center align the text */
+  }
+  table:nth-of-type(2) th:nth-child(7), td:nth-child(7) {
+    /* Make the 8th column (Status) narrower */
+    text-align: left; /* Center align the text */
+  }
+  table:nth-of-type(2) th:nth-child(9), td:nth-child(9) {
+    /* Make the 8th column (Status) narrower */
+    width: 110px;
+    text-align: left; /* Center align the text */
+  }
+  table:nth-of-type(2) th:nth-child(10), td:nth-child(10) {
+    /* Make the 8th column (Status) narrower */
+    width: 100px;
+    text-align: left; /* Center align the text */
+  }
+
+
   
     
       tr:hover td {
@@ -268,7 +296,8 @@
             <thead>
               <tr>
                 <th>Event Date</th>
-                <th>Volunteers Needed</th>
+                <th>Team Members Needed</th>
+                <th>Team Members Registered</th>
                 <th>Event Name</th>
                 <th>Organization</th>
                 <th>Event Type</th>
@@ -286,6 +315,7 @@
                 <input type="hidden" value="row.eventid" />
                 <td><%= row.date %></td>
                 <td><%= row.volunteers_needed %></td>
+                <td></td>
                 <td><%= row.event_name %></td>
                 <td><%= row.organization %></td>
                 <td><%= row.event_type %></td>
