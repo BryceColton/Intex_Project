@@ -24,33 +24,6 @@
             padding: 0;
         }
 
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #333;
-            color: white;
-            padding: 10px 20px;
-        }
-
-        .navbar-logo {
-            font-size: 20px;
-            font-weight: bold;
-        }
-
-        .navbar-buttons .btn {
-            margin-left: 10px;
-            padding: 8px 15px;
-            background-color: #555;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-
-        .navbar-buttons .btn:hover {
-            background-color: #777;
-        }
-
         .dashboard-container {
             display: flex;
             justify-content: center;
@@ -71,20 +44,12 @@
     <nav class="navbar">
         <div class="navbar-logo">Turtle Shelter Project</div>
         <div class="navbar-buttons">
-            <form action="/admin" method="GET">
-                <button class="btn" type="submit">Admin Home</button>
-            </form>
-            <form action="/manageUsers" method="GET">
-                <button class="btn" type="submit">Manage Admin Users</button>
-            </form>
-            <form action="/manageVolunteers" method="GET">
-                <button class="btn" type="submit">Manage Volunteers</button>
-            </form>
-            <form action="/manageEvents" method="GET">
-                <button class="btn" type="submit">Manage Events</button>
-            </form>
-        </div>
-    </nav>
+            <!-- These will be navbar buttons to take the admin to pages that will manage the volunteers and events -->
+            <form action="/admin" method="GET"><button class="btn" type="submit">Admin Home</button></form>
+            <form action="/manageUsers" method="GET"><button class="btn" type="submit">Manage Admin Users</button></form>
+            <form action="/manageVolunteers" method="GET"><button class="btn" type="submit">Manage Volunteers</button></form>
+            <form action="/manageEvents" method="GET"><button class="btn" type="submit">Manage Events</button></form>
+        </nav>
 
     <!-- Dashboard Container -->
     <div class="dashboard-container">
