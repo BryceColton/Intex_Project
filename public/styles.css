@@ -86,6 +86,12 @@ body {
   gap: 80px; /* Adjust the gap as needed */
 }
 
+.image-container-2 {
+  display: flex;
+  align-items: space-between;
+  justify-content: space-between;
+  flex-direction: column;
+}
 .logo-image {
   max-width: 100%; /* Ensures the image scales well */
 }
@@ -305,7 +311,7 @@ main {
 
 .counting {
   font-family: 'Montserrat', sans-serif;
-  border: 2px solid white; /* Reduced border thickness */
+  border: 5px solid white;
   font-size: 0.9rem; /* Same font size for both */
   cursor: pointer;
   transition: all 0.3s ease;
@@ -315,10 +321,11 @@ main {
   font-weight: 600;
   box-sizing: border-box; /* Includes padding and border in the element's size */
   background: #424242;
-  margin-bottom: 25px;
+  margin-top: 30px;
+  color: white;
   max-width: 250px;
 
-  display: inline-flex; /* Aligns the element in line with other content */
-  justify-content: center; /* Centers content horizontally inside the element */
-  align-items: center; /* Centers content vertically inside the element */
 }
+/* display: inline-flex; /* Aligns the element in line with other content */
+/* justify-content: center; Centers content horizontally inside the element
+align-items: center; */ 

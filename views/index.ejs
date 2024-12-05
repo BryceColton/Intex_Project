@@ -19,7 +19,9 @@
     .image-container {
         display: flex;
         justify-content: center;
-        align-items: center;}
+        align-items: center;
+
+    }  
       img {
     width: 250px; /* Adjust width */
     height: auto; /* Maintain aspect ratio */
@@ -68,9 +70,7 @@
     <main id="no-style">
       <section class="hero">
         <div class="hero-content">
-          <div class="counting"id="live-counter-container">
-            <h2>Vests Distributed: <span id="live-counter">Loading...</span></h2>
-        </div>
+
 
 
           <h1 class="hero-description">
@@ -85,7 +85,12 @@
       </section>
       <br>
       <div class="image-container">
-        <img class="logo-image" src ="/img/logo-remove-background.com.png" alt="Logo Image" />
+        <div class="image-container-2">
+            <img class="logo-image" src ="/img/logo-remove-background.com.png" alt="Logo Image" />
+            <div class="counting"id="live-counter-container">
+                <h2>Vests Distributed: <span id="live-counter">Loading...</span></h2>
+            </div>
+        </div>
         <iframe class="youtube-embed" width="560" height="315" src="https://www.youtube.com/embed/51UNMu5S7Xw?si=jmlyytul8cUxCuzj" 
         title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
         referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
