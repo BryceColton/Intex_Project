@@ -28,6 +28,11 @@ Dependencies:
 Run NPM Install once cloning or unzipping the file
 
 
+FOR TA's:
+
+To Access The RDS Database and PG Admin Our .env file contains the information.
+
+
 🚀 Features Overview
 Navigation
 The application features a user-friendly navigation bar with the following routes:
