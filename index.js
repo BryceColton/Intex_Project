@@ -132,7 +132,7 @@ app.post("/teamMemberLogin", (req, res) => {
   // Simple validation to check if both fields are provided
   if (!username || !password) {
     return res.render("teamMemberLogin", { error: "Both username and password are required." });
-  }
+  } 
 
   // Check if the user exists in the admin table
   knex("team_member")
@@ -143,6 +143,9 @@ app.post("/teamMemberLogin", (req, res) => {
         return res.render("teamMemberLogin", { error: "Invalid username or password." });
       }
 
+      if (team_member.status !== 'approved') {
+        return res.render("teamMemberLogin", { error: "Your account is not approved." });
+      }
       // Check if the provided password matches the stored password
       if (team_member.password !== password) {
         return res.render("teamMemberLogin", { error: "Invalid username or password." });
