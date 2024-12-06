@@ -92,8 +92,8 @@ body {
 .login-button-container {
   display: flex;
   justify-content: flex-end; /* Aligns the content to the right */
-/* Optional spacing below the button */
-width: 50%;
+  /* Optional spacing below the button */
+  /* width: 50%; */
 }
 
 /* Hero Section */
@@ -212,7 +212,6 @@ width: 50%;
   display: none;
 }
 
-
 /* Project Details Section */
 .project-details {
   padding: 4rem 5%;
@@ -233,7 +232,7 @@ width: 50%;
   border-radius: 50%; /* Makes the image circular */
   margin-right: 10px; /* Space between logo and text */
   vertical-align: middle;
-  border: 2px solid white
+  border: 2px solid white;
 }
 
 .project-details-content {
@@ -350,8 +349,8 @@ main {
 .counting {
   display: flex;
   justify-content: center;
-  font-family: 'Montserrat', sans-serif;
-    /* border: 2px solid green; */
+  font-family: "Montserrat", sans-serif;
+  /* border: 2px solid green; */
   font-size: 0.9rem; /* Same font size for both */
   cursor: pointer;
   transition: all 0.3s ease;
@@ -365,8 +364,7 @@ main {
   margin-top: 30px;
   color: white;
   width: 100%;
-
 }
 /* display: inline-flex; /* Aligns the element in line with other content */
 /* justify-content: center; Centers content horizontally inside the element
-align-items: center; */ 
+align-items: center; */
