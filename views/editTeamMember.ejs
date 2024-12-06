@@ -21,7 +21,7 @@
         <button type="submit" style="border: none; background: none; padding: 0;">
           <img class="logo-circle" src="/img/logo-remove-background.com.png" alt="Logo Image" />
         </button>
-        Turtle Shelter Project
+          Turtle Shelter Project
           </form>
       </div>    
   <div class="navbar-buttons">
@@ -36,7 +36,7 @@
     <main style="display: flex; justify-content: center; align-items: center; height: 100vh">
         <section class="form-section">
           <h2 class="form-title">Edit Volunteer</h2>
-          <form action="/editVolunteer/<%= volunteer.vol_email %>" method="POST" class="volunteer-form">
+          <form action="/editTeamMember/<%= volunteer.vol_email %>" method="POST" class="volunteer-form">
             <fieldset>
               <legend>Volunteer Information</legend>
               <div class="form-group">
@@ -48,6 +48,16 @@
                   id="vol_email"
                   name="vol_email"
                   value="<%= volunteer.vol_email %>"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="password">Password:</label>
+                <input
+                  type="text"
+                  id="password"
+                  name="password"
+                  value="<%= volunteer.password %>"
                   required
                 />
               </div>
@@ -133,6 +143,16 @@
                   <option value="Other" <%= volunteer.origin == 'Other' ? 'selected' : '' %>>Other</option>
                 </select>                
               </div>
+
+              <div class="form-group">
+                <label>
+                <input type="radio" name="status" value="approved" required> Approve
+                </label>
+                <br>
+                <label>
+                <input type="radio" name="status" value="declined" required> Decline
+                </label>
+            </div>
             </fieldset>
   
             <button type="submit" class="btn-donate">Submit</button>

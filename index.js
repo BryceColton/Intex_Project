@@ -132,7 +132,7 @@ app.post("/teamMemberLogin", (req, res) => {
   // Simple validation to check if both fields are provided
   if (!username || !password) {
     return res.render("teamMemberLogin", { error: "Both username and password are required." });
-  }
+  } 
 
   // Check if the user exists in the admin table
   knex("team_member")
@@ -143,6 +143,9 @@ app.post("/teamMemberLogin", (req, res) => {
         return res.render("teamMemberLogin", { error: "Invalid username or password." });
       }
 
+      if (team_member.status !== 'approved') {
+        return res.render("teamMemberLogin", { error: "Your account is not approved." });
+      }
       // Check if the provided password matches the stored password
       if (team_member.password !== password) {
         return res.render("teamMemberLogin", { error: "Invalid username or password." });
@@ -424,21 +427,30 @@ app.post("/adminAddEvent", isAuthenticated, (req, res) => {
     });
 });
 
-// This is the get method to render the manageVolunteers page and display data from the volunteers table
 app.get("/manageVolunteers", isAuthenticated, (req, res) => {
+  // Query for volunteers whose vol_email is NOT in team_member
   knex("volunteers")
-    .select()
+    .select("volunteers.*")  // Select all columns from volunteers table
+    .leftJoin("team_member", "volunteers.vol_email", "team_member.team_email")  // Left join with team_member on vol_email and team_email
+    .whereNull("team_member.team_email")  // Only select volunteers whose email is NOT in team_member
     .then((volunteers) => {
-      //.then() says, I just queried all this data, send it to this variable planets.
-      //the array of rows gets stored in this variable called planets.
-      // Render the maintainPlanets template and pass the data
-      res.render("manageVolunteers", { volunteers }); //render index.ejs and pass it planets.
+      // Query for volunteers whose vol_email is in team_member
+      knex("volunteers")
+        .select("volunteers.*", "team_member.team_email", "team_member.status")  // Select all columns from volunteers and team_member status
+        .join("team_member", "volunteers.vol_email", "team_member.team_email")  // Inner join with team_member on vol_email and team_email
+        .then((volunteersInTeam) => {
+          // Render the manageVolunteers template and pass both sets of data
+          res.render("manageVolunteers", { volunteers, volunteersInTeam });
+        });
     })
     .catch((error) => {
       console.error("Error querying database:", error);
       res.status(500).send("Internal Server Error");
     });
 });
+
+
+
 
 // This is the get route to add a volunteer from the admin page
 app.get("/adminAddVolunteer", isAuthenticated, (req, res) => {
@@ -564,13 +576,34 @@ app.get("/editVolunteer/:vol_email", isAuthenticated, (req, res) => {
     });
 });
 
+app.get("/editTeamMember/:vol_email", isAuthenticated, (req, res) => {
+  //This is the route for editVolunteer. The /: means there is a parameter passed in called vol_email.
+  const id = req.params.vol_email;
+  // Query the Volunteer by email first
+  knex("volunteers")
+  .join("team_member", "team_member.team_email", "=", "volunteers.vol_email")
+
+    .where("team_email", id)
+    .first() //returns an object representing one record
+    .then((volunteer) => {
+      //This variable represents one object that has attributes, which are the column names
+      if (!volunteer) {
+        return res.status(404).send("Volunteer not found");
+      }
+      res.render("editTeamMember", { volunteer });
+    })
+    .catch((error) => {
+      console.error("Error fetching Volunteer for editing:", error);
+      res.status(500).send("Internal Server Error");
+    });
+});
+
 app.get("/liveCounter", (req, res) => {
   knex("completed_events")
     .sum("num_distributed as totalCompleted") // Sum the num_completed column
     .first() // We only want one row with the sum
     .then((result) => {
       // Check if the sum is returned correctly
-      console.log(result); // Log the result to verify
       res.json(result); // Send the sum as a JSON response
     })
     .catch((error) => {
@@ -696,8 +729,70 @@ app.post("/editVolunteer/:vol_email", isAuthenticated, (req, res) => {
     });
 });
 
+app.post("/editTeamMember/:vol_email", isAuthenticated, (req, res) => {
+  const id = req.params.vol_email;
+
+  const vol_email = req.body.vol_email;
+  const vol_first_name = req.body.vol_first_name;
+  const vol_last_name = req.body.vol_last_name;
+  const vol_phone = req.body.vol_phone;
+  const origin = req.body.origin;
+  const zip = req.body.zip;
+  const sewing_level = parseInt(req.body.sewing_level);
+  const num_hours = parseInt(req.body.num_hours);
+  const status = req.body.status;
+  const password = req.body.password;
+
+  // First update the volunteers table
+  knex("volunteers")
+    .where("vol_email", id)
+    .update({
+      vol_email: vol_email,
+      vol_first_name: vol_first_name,
+      vol_last_name: vol_last_name,
+      vol_phone: vol_phone,
+      origin: origin,
+      zip: zip,
+      sewing_level: sewing_level,
+      num_hours: num_hours,
+    })
+    .then(() => {
+      // Once the first update finishes, update the team_member table
+      return knex("team_member")
+        .where("team_email", id)
+        .update({
+          team_email: vol_email,
+          password: password,
+          status: status
+        });
+    })
+    .then(() => {
+      // Redirect after both updates
+      res.redirect("/manageVolunteers");
+    })
+    .catch((error) => {
+      console.error("Error updating Volunteer:", error);
+      res.status(500).send("Internal Server Error");
+    });
+});
+
+
 // This is the route to delete a volunteer from the volunteers table
 app.post("/deleteVolunteer/:vol_email", isAuthenticated, (req, res) => {
+  const id = req.params.vol_email;
+  knex("volunteers")
+    .where("vol_email", id)
+    .del() // Deletes the record with the specified ID
+    .then(() => {
+      res.redirect("/manageVolunteers"); // Redirect to the volunteers list after deletion
+    })
+    .catch((error) => {
+      console.error("Error deleting Volunteer:", error);
+      res.status(500).send("Internal Server Error");
+    });
+});
+
+app.post("/deleteTeamMember/:vol_email", isAuthenticated, (req, res) => {
   const id = req.params.vol_email;
   knex("volunteers")
     .where("vol_email", id)
