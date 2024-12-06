@@ -89,6 +89,28 @@
                             <label for="venuedescription">Venue Description: <b><%=event.venuedescription %></b></label>
                         </div>
                     </fieldset>
+
+                    <fieldset>
+                        <legend>Team Members RSVP'd</legend>
+                            <table>
+                                <thead>
+                                </thead>
+                                <tbody>
+                                    <tbody>
+                                        <% if (team_members.length > 0) { %> <% team_members.forEach(row => { %>
+                                        <tr>
+                                          <td><%= row.team_email %></td>
+                                        </tr>
+                                        <% }) %> <% } else { %>
+                                        <tr>
+                                          <td colspan="9">No data available</td>
+                                        </tr>
+                                        <% } %>
+                                      </tbody>
+                                </tbody>
+                            </table>                  
+                    </fieldset>
+    
                 
                     <fieldset>
                         <legend>Event Numbers</legend>

@@ -132,7 +132,7 @@ app.post("/teamMemberLogin", (req, res) => {
   // Simple validation to check if both fields are provided
   if (!username || !password) {
     return res.render("teamMemberLogin", { error: "Both username and password are required." });
-  } 
+  }
 
   // Check if the user exists in the admin table
   knex("team_member")
@@ -143,7 +143,7 @@ app.post("/teamMemberLogin", (req, res) => {
         return res.render("teamMemberLogin", { error: "Invalid username or password." });
       }
 
-      if (team_member.status !== 'approved') {
+      if (team_member.status !== "approved") {
         return res.render("teamMemberLogin", { error: "Your account is not approved." });
       }
       // Check if the provided password matches the stored password
@@ -223,6 +223,7 @@ app.get("/manageEvents", isAuthenticated, (req, res) => {
           "events.event_type",
           "events.city",
           "events.state",
+          "events.status",
           "finalized_events.team_members_needed",
           knex.raw("COUNT(tm_event.team_email) AS team_members_registered") // Count team emails
         )
@@ -249,7 +250,6 @@ app.get("/manageEvents", isAuthenticated, (req, res) => {
       res.status(500).send("Internal Server Error");
     });
 });
-
 
 // This route is tied to the view button on pending event requests.
 app.get("/viewEvent/:eventid", isAuthenticated, (req, res) => {
@@ -430,14 +430,14 @@ app.post("/adminAddEvent", isAuthenticated, (req, res) => {
 app.get("/manageVolunteers", isAuthenticated, (req, res) => {
   // Query for volunteers whose vol_email is NOT in team_member
   knex("volunteers")
-    .select("volunteers.*")  // Select all columns from volunteers table
-    .leftJoin("team_member", "volunteers.vol_email", "team_member.team_email")  // Left join with team_member on vol_email and team_email
-    .whereNull("team_member.team_email")  // Only select volunteers whose email is NOT in team_member
+    .select("volunteers.*") // Select all columns from volunteers table
+    .leftJoin("team_member", "volunteers.vol_email", "team_member.team_email") // Left join with team_member on vol_email and team_email
+    .whereNull("team_member.team_email") // Only select volunteers whose email is NOT in team_member
     .then((volunteers) => {
       // Query for volunteers whose vol_email is in team_member
       knex("volunteers")
-        .select("volunteers.*", "team_member.team_email", "team_member.status")  // Select all columns from volunteers and team_member status
-        .join("team_member", "volunteers.vol_email", "team_member.team_email")  // Inner join with team_member on vol_email and team_email
+        .select("volunteers.*", "team_member.team_email", "team_member.status") // Select all columns from volunteers and team_member status
+        .join("team_member", "volunteers.vol_email", "team_member.team_email") // Inner join with team_member on vol_email and team_email
         .then((volunteersInTeam) => {
           // Render the manageVolunteers template and pass both sets of data
           res.render("manageVolunteers", { volunteers, volunteersInTeam });
@@ -448,9 +448,6 @@ app.get("/manageVolunteers", isAuthenticated, (req, res) => {
       res.status(500).send("Internal Server Error");
     });
 });
-
-
-
 
 // This is the get route to add a volunteer from the admin page
 app.get("/adminAddVolunteer", isAuthenticated, (req, res) => {
@@ -488,25 +485,38 @@ app.post("/adminAddVolunteer", isAuthenticated, (req, res) => {
     });
 });
 
+// route to get the view completed event form
 app.get("/viewCompletedEvent/:eventid", isAuthenticated, (req, res) => {
   const eventid = req.params.eventid;
-  const date = req.body.date;
+
   knex("events")
     .join("finalized_events", "events.eventid", "=", "finalized_events.eventid") // Join the tables
     .where("events.eventid", eventid)
-    .first() //returns an object representing one record
+    .first() // Returns one record
     .then((event) => {
-      //This variable represents one object t hat has attributes, which are the column names
+      // If no event is found
       if (!event) {
-        return res.status(404).send("Event not found");
+        res.status(404).send("Event not found");
+        return; // Stop further execution
       }
 
-      if (event && event.date) {
+      // Format the date if it exists
+      if (event.date) {
         event.date = new Date(event.date).toString();
       }
 
-      console.log(event);
-      res.render("viewCompletedEvent", { event });
+      // Fetch team members
+      knex("tm_event")
+        .where("eventid", eventid)
+        .then((team_members) => {
+          // Render the view with both event and team member data
+          console.log(team_members);
+          res.render("viewCompletedEvent", { event, team_members });
+        })
+        .catch((error) => {
+          console.error("Error fetching team members:", error);
+          res.status(500).send("Internal Server Error");
+        });
     })
     .catch((error) => {
       console.error("Error fetching event details:", error);
@@ -581,7 +591,7 @@ app.get("/editTeamMember/:vol_email", isAuthenticated, (req, res) => {
   const id = req.params.vol_email;
   // Query the Volunteer by email first
   knex("volunteers")
-  .join("team_member", "team_member.team_email", "=", "volunteers.vol_email")
+    .join("team_member", "team_member.team_email", "=", "volunteers.vol_email")
 
     .where("team_email", id)
     .first() //returns an object representing one record
@@ -758,13 +768,11 @@ app.post("/editTeamMember/:vol_email", isAuthenticated, (req, res) => {
     })
     .then(() => {
       // Once the first update finishes, update the team_member table
-      return knex("team_member")
-        .where("team_email", id)
-        .update({
-          team_email: vol_email,
-          password: password,
-          status: status
-        });
+      return knex("team_member").where("team_email", id).update({
+        team_email: vol_email,
+        password: password,
+        status: status,
+      });
     })
     .then(() => {
       // Redirect after both updates
@@ -775,7 +783,6 @@ app.post("/editTeamMember/:vol_email", isAuthenticated, (req, res) => {
       res.status(500).send("Internal Server Error");
     });
 });
-
 
 // This is the route to delete a volunteer from the volunteers table
 app.post("/deleteVolunteer/:vol_email", isAuthenticated, (req, res) => {
@@ -1084,9 +1091,9 @@ app.post("/teamMemberRsvp/:eventid", isAuthenticatedTeamMember, (req, res) => {
         res.status(400).send("You have already RSVP'd for this event.");
       } else {
         knex("tm_event")
-          .insert({ 
-            eventid: eventid, 
-            team_email: team_email 
+          .insert({
+            eventid: eventid,
+            team_email: team_email,
           })
           .then(() => {
             res.redirect("/teamMemberRsvp"); // Redirect to the RSVP page or another success page
