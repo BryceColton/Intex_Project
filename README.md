@@ -117,7 +117,7 @@ Admin Login:
 Username: newAdmin@gmail.com
 Password: something
 
-Let me know if you'd like additional revisions or more details! 😊
+Let me know if you'd like additional details
   
   
   
