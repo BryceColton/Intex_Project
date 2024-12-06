@@ -15,6 +15,19 @@ https://github.com/BryceColton/Intex_Project
 Turtle Shelter Project 🌍
 The Turtle Shelter Project is a web application created to support the efforts of the nonprofit organization Turtle Shelter Project. This platform simplifies event management, volunteer coordination, and donation tracking, enabling the organization to focus on its mission of making a difference.
 
+
+Dependencies:
+    "dayjs": "^1.11.13",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.21.1",
+    "express-session": "^1.18.1",
+    "knex": "^3.1.0",
+    "pg": "^8.13.1"
+
+Run NPM Install once cloning or unzipping the file
+
+
 🚀 Features Overview
 Navigation
 The application features a user-friendly navigation bar with the following routes:
