@@ -34,6 +34,7 @@ Enables users to propose new events for the organization.
 Donate
 Redirects to the official donation page:
 Turtle Shelter Project Donation.
+https://turtleshelterproject.org/checkout/donate?donatePageId=5b6a44c588251b72932df5a0
 
 🏠 Home Page
 The homepage also includes a View Events button (/publicEvents) that displays upcoming public events, encouraging community engagement.
